@@ -1,0 +1,60 @@
+﻿<Window x:Class="KrishnaRajamannar.NEA.Views.MainMenu"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:KrishnaRajamannar.NEA.Views"
+        mc:Ignorable="d"
+        Title="Main Menu" Height="375" Width="750" WindowStartupLocation="CenterScreen" ResizeMode="NoResize"> 
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="20"></ColumnDefinition>
+            <ColumnDefinition Width="auto"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="20"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="15"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Horizontal" Grid.Column="2" Grid.Row="1">
+            <TextBlock x:Name="pointsTxtBlock" Text="Points: " FontSize="18" Grid.Column="2" Grid.Row="1" 
+                   HorizontalAlignment="Left" Margin="10" FontFamily="Segoe UI Light"></TextBlock>
+
+            <TextBlock x:Name="userIDTxtBlock" Text="UserID: " Grid.Column="2" Grid.Row="1" 
+                   FontSize="18" HorizontalAlignment="Left" Margin="10" FontFamily="Segoe UI Light"></TextBlock>
+
+        </StackPanel>
+
+        <TextBlock x:Name="usernameTxtBlock" Text="Username: " FontSize="18" Grid.Column="2" 
+                   Grid.Row="1" Width="300" Height="30" HorizontalAlignment="Center" 
+                   TextAlignment="Center" FontFamily="Segoe UI Light"></TextBlock>
+
+        <Button x:Name="logOutBtn" Content="Log Out" FontSize="16" Grid.Column="2" 
+                Grid.Row="1" Margin="10" HorizontalAlignment="Right" Width="75" 
+                Height="30" Background="White" BorderBrush="Black" FontFamily="Segoe UI Light" 
+                Click="logOutBtn_Click"></Button>
+
+        <Button x:Name="viewQuizzesBtn" Content="View Quizzes" Grid.Column="2" Grid.Row="2" 
+                FontSize="20" Height="40" Margin="10" Background="#FFABADB3" 
+                Foreground="White" BorderBrush="Black" FontFamily="Segoe UI Light" Click="viewQuizzesBtn_Click"></Button>
+        
+        <Button x:Name="leaderboardBtn" Content="View Leaderboard" Grid.Column="2" Grid.Row="3" 
+                FontSize="20" Height="40" Margin="10" Background="#FFABADB3" 
+                Foreground="White" BorderBrush="Black" FontFamily="Segoe UI Light" Click="leaderboardBtn_Click" ></Button>
+        
+        <Button x:Name="hostSessionBtn" Content="Host a Session" Grid.Column="2" Grid.Row="4" 
+                FontSize="20" Height="40" Margin="10" Background="#FFABADB3" 
+                Foreground="White" BorderBrush="Black" FontFamily="Segoe UI Light" Click="hostSessionBtn_Click"></Button>
+        
+        <Button x:Name="joinSessionBtn" Content="Join a Session" Grid.Column="2" Grid.Row="5" 
+                FontSize="20" Height="40" Margin="10" VerticalAlignment="Top" 
+                Background="#FFABADB3" Foreground="#FFFFFDFD" BorderBrush="Black" FontFamily="Segoe UI Light"
+                Click="joinSessionBtn_Click"></Button>
+    </Grid>
+</Window>

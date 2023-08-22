@@ -1,0 +1,42 @@
+﻿<Window x:Class="KrishnaRajamannar.NEA.Views.ViewLeaderboard"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:KrishnaRajamannar.NEA.Views"
+        mc:Ignorable="d"
+        Title="Leaderboard" Height="700" Width="800" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
+
+    <Window.Resources>
+        <Style TargetType="DataGridColumnHeader">
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="10"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="10"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top">
+            <Button Content="Back" Grid.Column="1" Grid.Row="1" Height="30" 
+                    Width="75" Margin="10" FontSize="16"></Button>
+
+            <Button Content="Refresh" Grid.Column="0" Grid.Row="0" Height="30" 
+                    Width="75" Margin="10" FontSize="16"></Button>
+        </StackPanel>
+
+        <TextBlock Text="Top 10 Users with the Highest Number of Points" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" 
+                   VerticalAlignment="Center" Margin="10" FontSize="32" FontFamily="Segoe UI Bold"></TextBlock>
+        
+        <DataGrid x:Name="leaderboardDataGrid" Grid.Column="1" Grid.Row="2" Height="500" 
+                  Width="600" ColumnWidth="*" Margin="10" CanUserSortColumns="True" 
+                  IsReadOnly="True" FontSize="20"></DataGrid>
+    </Grid>
+</Window>
