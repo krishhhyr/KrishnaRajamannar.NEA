@@ -1,0 +1,59 @@
+﻿<Window x:Class="KrishnaRajamannar.NEA.Views.HostSession"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:KrishnaRajamannar.NEA.Views"
+        mc:Ignorable="d"
+        Title="HostSession" Height="500" Width="750" FontFamily="Segoe UI Light">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"></ColumnDefinition>
+            <ColumnDefinition Width="10*"></ColumnDefinition>
+            <ColumnDefinition Width="95"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="10*"></RowDefinition>
+            <RowDefinition Height="1*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Button x:Name="backBtn" Content="Back" Height="30" Width="75" Margin="10" FontSize="16"></Button>
+
+        <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Horizontal">
+            
+            <ComboBox x:Name="quizSelectionComboBox" Grid.Column="1" Height="30" Width="300" 
+                      HorizontalAlignment="Left" Margin="10"></ComboBox>
+
+            <Border BorderThickness="2" BorderBrush="Gainsboro" Margin="10">
+                <TextBlock Text="Game PIN: 182722" Margin="10" HorizontalAlignment="Left" FontSize="20" 
+                           Height="30" Width="180" VerticalAlignment="Top" TextAlignment="Center"></TextBlock>
+            </Border>
+        </StackPanel>
+
+        <StackPanel x:Name="quizConditionStackPanel"  Orientation="Vertical" Grid.Column="1" Grid.Row="1" Height="350" VerticalAlignment="Top">
+
+            <StackPanel Orientation="Vertical">
+                <TextBlock x:Name="numberOfParticipantsTxtBlock" Text="No Particpants have joined the Session" FontSize="20" HorizontalAlignment="Center"></TextBlock>
+
+                <ListBox x:Name="usernamesOfParticpants" Height="150" Margin="10"></ListBox>
+            </StackPanel>
+
+
+
+            <StackPanel x:Name="conditionTypeStackPanel" Orientation="Horizontal" Grid.Column="1" Grid.Row="1">
+                <TextBlock Text="Condition to End Quiz:" Height="30" Margin="10" FontSize="20" HorizontalAlignment="Left" VerticalAlignment="Top"></TextBlock>
+
+                <ComboBox x:Name="quizConditionComboBox" Grid.Column="1" Height="30" Margin="10" Width="300" HorizontalAlignment="Left" VerticalAlignment="Top"></ComboBox>
+            </StackPanel>
+
+            <StackPanel x:Name="conditionInputStackPanel" Orientation="Horizontal" Grid.Column="1" Grid.Row="1">
+                <TextBlock Text="Enter the Number of Questions/Time Limit:" Height="30" Margin="10" FontSize="20" HorizontalAlignment="Left" VerticalAlignment="Top"></TextBlock>
+
+                <TextBox x:Name="conditionTxtBox" Height="30" Width="100" HorizontalAlignment="Left" 
+                         TextAlignment="Center" VerticalAlignment="Top" Margin="10" FontSize="20" MaxLength="4"></TextBox>
+            </StackPanel>
+
+            <Button x:Name="startBtn" Content="Start the Quiz" Height="30" Width="150" FontSize="20" Margin="10"></Button>
+        </StackPanel>
+    </Grid>
+</Window>
