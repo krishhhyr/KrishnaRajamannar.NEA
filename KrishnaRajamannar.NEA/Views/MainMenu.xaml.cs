@@ -23,23 +23,20 @@ namespace KrishnaRajamannar.NEA.Views
     public partial class MainMenu : Window
     {
         UserViewModel _userViewModel;
+        MainMenuViewModel _mainMenuViewModel;
 
-        public MainMenu(UserViewModel userViewModel)
+        public MainMenu(UserViewModel userViewModel, MainMenuViewModel mainMenuViewModel)
         {
             InitializeComponent();
 
             _userViewModel = userViewModel;
-          
+            _mainMenuViewModel = mainMenuViewModel;
         }
 
         private void logOutBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (MessageBox.Show("Do you want to log out of this account?", "Account Logout", MessageBoxButton.YesNo) == MessageBoxResult.Yes) 
-            {
-                //AccountLogin accountLogin = new AccountLogin();
-                //accountLogin.Show();
-                //this.Close();
-            }
+            _mainMenuViewModel.Logout();
+            this.Close();
         }
 
         public void LoadData()
@@ -51,26 +48,28 @@ namespace KrishnaRajamannar.NEA.Views
 
         private void viewQuizzesBtn_Click(object sender, RoutedEventArgs e)
         {
-            ViewQuizzes viewQuizzes = new ViewQuizzes(_userViewModel.GetUserID());
-            viewQuizzes.Show();
+            _mainMenuViewModel.ViewQuizzes(_userViewModel.GetUserID());
             this.Close();
+
+            
         }
 
         private void leaderboardBtn_Click(object sender, RoutedEventArgs e)
-        {
-            ViewLeaderboard leaderboard = new ViewLeaderboard();    
-            leaderboard.Show();
+        {   
+            _mainMenuViewModel.LeaderboardWindow();
             this.Close();
         }
 
         private void hostSessionBtn_Click(object sender, RoutedEventArgs e)
         {
-
+            _mainMenuViewModel.HostSessionWindow();
+            this.Close();
         }
 
         private void joinSessionBtn_Click(object sender, RoutedEventArgs e)
         {
-
+            _mainMenuViewModel.JoinSessionWindow();
+            this.Close();
         }
     }
 }

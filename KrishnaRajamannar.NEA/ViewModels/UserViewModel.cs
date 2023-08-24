@@ -1,4 +1,5 @@
-﻿using KrishnaRajamannar.NEA.Services;
+﻿using KrishnaRajamannar.NEA.Models;
+using KrishnaRajamannar.NEA.Services;
 using KrishnaRajamannar.NEA.Views;
 using System;
 using System.Collections.Generic;
@@ -17,14 +18,15 @@ namespace KrishnaRajamannar.NEA.ViewModels
         private readonly AccountCreation _accountCreation;
         private readonly AccountLogin _accountLogin;
         private readonly MainMenu _mainMenu;
-       
+        private readonly UserModel _userModel;
          
-        public UserViewModel(IUserService userService )
+        public UserViewModel(IUserService userService, MainMenuViewModel mainMenuViewModel, UserModel userModel)
         {
             _userService = userService;
             _accountCreation = new AccountCreation(this);
             _accountLogin = new AccountLogin(this); 
-            _mainMenu = new MainMenu(this);
+            _userModel = userModel;
+            _mainMenu = new MainMenu(this, mainMenuViewModel);
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -134,6 +136,8 @@ namespace KrishnaRajamannar.NEA.ViewModels
         {
             if ((ValidateUserName(Username) == true) && (ValidatePasswordLogin(Username,Password) == true))
             {
+                _userModel.Username = Username;
+                _userModel.UserID = _userService.GetUserID(Username);
                 MessageBox.Show("Successful Account Login.");
                 ShowMainMenu();
 

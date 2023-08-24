@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using KrishnaRajamannar.NEA.Models;
 using KrishnaRajamannar.NEA.Services;
 using KrishnaRajamannar.NEA.ViewModels;
 using KrishnaRajamannar.NEA.Views;
@@ -18,12 +19,13 @@ namespace KrishnaRajamannar.NEA
     /// </summary>
     public partial class App : Application
     {
-        public IServiceProvider ServiceProvider { get; private set; }
+        public static IServiceProvider ServiceProvider { get; private set; }
         private void ConfigureServices(ServiceCollection services)
         {
             //Registering All the services to the DI Container
             services.AddSingleton<ILeaderboardService, LeaderboardService>();
             services.AddSingleton<IUserService, UserService>();
+            services.AddSingleton(typeof(UserModel));
 
             //Register all UI windows
             services.AddTransient(typeof(AccountLogin));
@@ -31,7 +33,8 @@ namespace KrishnaRajamannar.NEA
 
             //Register all ViewModels
             services.AddTransient(typeof(UserViewModel));
-           
+            services.AddTransient(typeof(MainMenuViewModel));
+
 
         }
 

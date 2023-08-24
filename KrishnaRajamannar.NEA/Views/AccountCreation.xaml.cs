@@ -22,7 +22,7 @@ namespace KrishnaRajamannar.NEA.Views
     {
         private readonly UserViewModel _userViewModel;
 
-        public AccountCreation(UserViewModel userViewModel )
+        public AccountCreation(UserViewModel userViewModel)
         {
             InitializeComponent();
             _userViewModel = userViewModel;
