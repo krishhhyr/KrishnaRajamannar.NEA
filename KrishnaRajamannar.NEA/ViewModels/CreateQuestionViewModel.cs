@@ -14,13 +14,13 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
         public QuizService _quizService { get; set; }
 
-        public QuizFeedbackService _quizFeedbackService { get; set; }
+        public IndependentReviewQuizService _independentReviewQuizService { get; set;}
 
         public CreateQuestionViewModel()
         {
             _questionService = new QuestionService();
             _quizService = new QuizService();
-            _quizFeedbackService = new QuizFeedbackService();
+            _independentReviewQuizService = new IndependentReviewQuizService();
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -191,7 +191,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
             int textQuestionID = _questionService.GetTextQuestionID(Question, Answer, quizID);
 
-            _quizFeedbackService.InsertTextQuestionQuizFeedback(textQuestionID, NumberOfPoints, quizID);
+            _independentReviewQuizService.InsertTextQuestionQuizFeedback(textQuestionID, NumberOfPoints, quizID);
 
             return "Successful Text Question Creation.";
         }
@@ -220,7 +220,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
             int MCQuestionID = _questionService.GetMultipleChoiceQuestionID(Question, Answer, quizID);
 
-            _quizFeedbackService.InsertMultipleChoiceQuestionQuizFeedback(MCQuestionID, NumberOfPoints, quizID);
+            _independentReviewQuizService.InsertMultipleChoiceQuestionQuizFeedback(MCQuestionID, NumberOfPoints, quizID);
 
             return "Successful Multiple Choice Question Creation.";
         }

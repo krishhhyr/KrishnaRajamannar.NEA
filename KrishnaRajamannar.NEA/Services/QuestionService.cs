@@ -22,8 +22,7 @@ namespace KrishnaRajamannar.NEA.Services
         // It groups functions like; displaying questions in a quiz, updating number of questions in a quiz
         // and deleting a question from a quiz.
 
-        //NOTE: add deleting a question from quiz & updating no. of questions in a quiz.
-        #region Miscellanous Question Services
+        #region Generalised Question Details
 
         // A function which returns a list of questions for a particular quiz.
         // It passes the quizID to indicate which quiz the list of questions is for.
@@ -103,27 +102,11 @@ namespace KrishnaRajamannar.NEA.Services
                     NumberOfPoints = numberOfPoints
                 });
             }
-            
-            //if (data.Read() == false)
-            //{
-            //    questions.Add(new QuestionModel()
-            //    {
-            //        Question = "NO QUESTION CREATED",
-            //        Answer = "NO ANSWER CREATED",
-            //        Option1 = "NO OPTION CREATED",
-            //        Option2 = "NO OPTION CREATED",
-            //        Option3 = "NO OPTION CREATED",
-            //        Option4 = "NO OPTION CREATED",
-            //        Option5 = "NO OPTION CREATED",
-            //        Option6 = "NO OPTION CREATED",
-            //        Duration = 0,
-            //        NumberOfPoints = 0
-            //    });
-            //}
-
-
             return questions;
         }
+
+
+        // A function which gets the number of questions in a quiz using the aggregate SQL function COUNT
 
         public int GetNumberOfQuestions(int quizID) 
         {
@@ -170,7 +153,8 @@ namespace KrishnaRajamannar.NEA.Services
 
         //NOTE: Need to check if a question exists!
 
-        // A region which groups services targeting only questions with a text question type
+        // A region which groups services targeting only questions with a text question type.
+
         #region Text Question Services
 
         // Procedure which inserts the text question data into the Text Question table.
@@ -199,6 +183,8 @@ namespace KrishnaRajamannar.NEA.Services
 
             connection.Close();
         }
+
+
         // Procedure which inserts values into the QuizTextQuestionLink table in the database.
         // This allows text questions and the quizzes to have a Many-to-many relationship via QuizTextQuestionLink
         public void InsertTextQuestionLink(int quizID) 
@@ -223,6 +209,8 @@ namespace KrishnaRajamannar.NEA.Services
 
             connection.Close();
         }
+
+
         // Function which uses aggregate SQL functions to get the text question ID of the most recent question added to the database.
         // This is used to insert values into QuizTextQuestionLink which requires the Quiz ID and the Text Question ID
         public int GetRecentTextQuestionID() 
@@ -249,6 +237,11 @@ namespace KrishnaRajamannar.NEA.Services
             connection.Close();
             return textQuestionID;
         }
+
+
+        // This deletes a text question from the data base by deleting the data from the QuizTextQuestionLink table 
+        // and by deleting the data from TextQuestion.
+        // It uses the TextQuestionID to do so. 
         public void DeleteTextQuestion(string question, string answer, int quizID)
         {
             int textQuestionID = GetTextQuestionID(question, answer, quizID);
@@ -273,6 +266,9 @@ namespace KrishnaRajamannar.NEA.Services
 
             connection.Close();
         }
+
+
+        // This gets the ID of a TextQuestion
         public int GetTextQuestionID(string question, string answer, int quizID)
         {
             int textQuestionID = 0;
@@ -308,7 +304,8 @@ namespace KrishnaRajamannar.NEA.Services
         }
         #endregion
 
-        // A region which groups services targeting only questions that are multiple choice
+        // A region which groups services targeting only questions that are multiple choice.
+
         #region Multiple Choice Question Services
 
         // This function retrieves the inputs for the options and groups them as a dictionary 
@@ -334,6 +331,8 @@ namespace KrishnaRajamannar.NEA.Services
 
             return options;
         }
+
+
         // Procedure which inserts the values for a Multiple Choice question into the MCQuestion table in the DB.
         // A dictionary has been used for options to prevent this prodecure from having too many parameters.
         public void CreateMultipleChoiceQuestion(string question, string correctAnswer, int duration, int numberOfPoints, int quizID, Dictionary<string, string> options)
@@ -387,10 +386,6 @@ namespace KrishnaRajamannar.NEA.Services
                 command.Parameters.AddWithValue("@Option6", options["Option6"]);
             }
 
-            //command.Parameters.AddWithValue("@Option4", options["Option4"]);
-            //command.Parameters.AddWithValue("@Option5", options["Option5"]);
-            //command.Parameters.AddWithValue("@Option6", options["Option6"]);
-
             command.Parameters.AddWithValue("@CorrectAnswer", correctAnswer);
             command.Parameters.AddWithValue("@Duration", duration);
             command.Parameters.AddWithValue("@NumberOfPoints", numberOfPoints);
@@ -402,6 +397,8 @@ namespace KrishnaRajamannar.NEA.Services
 
             connection.Close();
         }
+
+
         // Procedure which updates the QuizMultipleChoiceQuestionLink table in the database
         public void InsertMultipleChoiceQuestionLink(int quizID)
         {
@@ -427,6 +424,8 @@ namespace KrishnaRajamannar.NEA.Services
 
             connection.Close();
         }
+
+
         // Function which retrieves the question ID for the most recent multiple choice question created.
         public int GetRecentMultipleChoiceQuestionID()
         {
@@ -455,6 +454,9 @@ namespace KrishnaRajamannar.NEA.Services
 
             return mcQuestionID;
         }
+
+
+        // This deletes a multiple choice question form the database
         public void DeleteMultipleChoiceQuestion(string question, string answer, int quizID) 
         {
             int mcQuestionID = GetMultipleChoiceQuestionID(question, answer, quizID);
@@ -479,6 +481,9 @@ namespace KrishnaRajamannar.NEA.Services
 
             connection.Close();
         }
+
+
+        // This gets the ID of a Multiple Choice Question
         public int GetMultipleChoiceQuestionID(string question, string answer, int quizID) 
         {
             int mcQuestionID = 0;
@@ -510,7 +515,6 @@ namespace KrishnaRajamannar.NEA.Services
                 return mcQuestionID;
             }
             return mcQuestionID;
-
         }
         #endregion
     }

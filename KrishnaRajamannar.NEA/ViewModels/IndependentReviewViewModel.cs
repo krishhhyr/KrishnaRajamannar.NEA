@@ -9,6 +9,9 @@ namespace KrishnaRajamannar.NEA.ViewModels
 {
     public class IndependentReviewViewModel: INotifyPropertyChanged
     {
+        private readonly QuizQuestionViewModel _quizQuestionViewModel;
+        
+
         public IndependentReviewViewModel()
         {
             

@@ -19,7 +19,5 @@ namespace KrishnaRajamannar.NEA.Models
         string Option5 { get; set; }
         string Option6 { get; set; }
 
-        
-
     }
 }
