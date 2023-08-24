@@ -53,10 +53,8 @@ namespace KrishnaRajamannar.NEA.Views
             // Checks if CreateQuiz is closed so that the data grid can refresh.
             // could add a button
 
-            if (PresentationSource.FromVisual(createQuiz) == null) 
-            {
-                this.quizDataGrid.ItemsSource = _quizQuestionViewModel.LoadQuiz(userID);
-            }
+           this.quizDataGrid.ItemsSource = _quizQuestionViewModel.LoadQuiz(userID);
+
         }
 
         private void deleteQuizMenuItem_Click(object sender, RoutedEventArgs e)
@@ -77,6 +75,7 @@ namespace KrishnaRajamannar.NEA.Views
         {
             CreateQuestion createQuestion = new CreateQuestion(_quizQuestionViewModel.GetRowQuizID());
             createQuestion.Show();
+
         }
 
         private void deleteQuestionMenuItem_Click(object sender, RoutedEventArgs e)

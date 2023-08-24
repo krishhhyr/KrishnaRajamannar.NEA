@@ -46,8 +46,9 @@
 
             <Button x:Name="textAnswerBtn" Content="Submit" FontSize="16" Height="30" Width="100" Margin="10"></Button>
 
-            <Label x:Name="correctTextAnswerLbl" Foreground="Green" Content="The correct answer is 2" FontSize="20" Height="40" 
-                   VerticalContentAlignment="Center" HorizontalContentAlignment="Center"></Label>
+            <Label x:Name="correctTextAnswerLbl" Foreground="Green" Content="The correct answer is 2" FontSize="20" 
+                   Height="50" Width="500" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
+                   Margin="10"></Label>
         </StackPanel>
 
         <StackPanel x:Name="multipleChoiceAnswerStackPanel" Grid.Column="1" Grid.Row="1" Height="250" 
