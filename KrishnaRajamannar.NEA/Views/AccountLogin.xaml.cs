@@ -1,4 +1,5 @@
-﻿using KrishnaRajamannar.NEA.ViewModels;
+﻿using KrishnaRajamannar.NEA.Services;
+using KrishnaRajamannar.NEA.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,13 +21,15 @@ namespace KrishnaRajamannar.NEA.Views
     /// </summary>
     public partial class AccountLogin : Window
     {
-        private UserViewModel _userViewModel = new UserViewModel();
+        private readonly UserViewModel _userViewModel;
+         
 
-        public AccountLogin()
+        public AccountLogin(UserViewModel userViewModel)
         {
             InitializeComponent();
+            _userViewModel = userViewModel;           
             this.DataContext = _userViewModel;
-            
+
         }
 
         private void loginBtn_Click(object sender, RoutedEventArgs e)
@@ -34,21 +37,12 @@ namespace KrishnaRajamannar.NEA.Views
             //Ugly way of doing due security reasons
             _userViewModel.Password = passwordInputTxt.Password;
 
-            string accountLoginMessage = _userViewModel.Login();
-            MessageBox.Show(accountLoginMessage, "Account Login");
-            if (accountLoginMessage == "Successful Account Login.") 
-            {
-                // Displays a new window which is the main menu of the application.
-                MainMenu mainMenu = new MainMenu(_userViewModel.Username);
-                mainMenu.Show();
-                this.Close();
-            }
+            if (_userViewModel.Login() == true) { this.Close(); }
         }
 
         private void registerBtn_Click(object sender, RoutedEventArgs e)
-        {
-            AccountCreation accountCreation = new AccountCreation();
-            accountCreation.Show();
+        {           
+            _userViewModel.ShowAccountCreation();
             this.Close();
         }
     }

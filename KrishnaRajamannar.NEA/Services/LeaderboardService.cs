@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace KrishnaRajamannar.NEA.Services
 {
-    public class LeaderboardService
+    public class LeaderboardService : ILeaderboardService
     {
         const string connectionString = $"Data Source=KRISHNASXPS\\SQLEXPRESS;Initial Catalog=quizApp;Persist Security Info=True;User ID=sa;Password=passw0rd;TrustServerCertificate=True";
 

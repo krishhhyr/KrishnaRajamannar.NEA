@@ -20,11 +20,13 @@ namespace KrishnaRajamannar.NEA.Views
     /// </summary>
     public partial class AccountCreation : Window
     {
-        private UserViewModel _userViewModel = new UserViewModel();
+        private readonly UserViewModel _userViewModel;
 
-        public AccountCreation()
+        public AccountCreation(UserViewModel userViewModel )
         {
             InitializeComponent();
+            _userViewModel = userViewModel;
+         
             this.DataContext = _userViewModel;
         }
 
@@ -34,21 +36,12 @@ namespace KrishnaRajamannar.NEA.Views
             _userViewModel.Password = initialPasswordInputTxt.Password;
             _userViewModel.RetypedPassword = secondPasswordInputTxt.Password;
 
-            string accountCreationMessage = _userViewModel.Creation();
-            MessageBox.Show(accountCreationMessage, "Account Creation");
-            if (accountCreationMessage == "Successful Account Creation.")
-            {
-                // Displays a new window which is the main menu of the application.
-                MainMenu mainMenu = new MainMenu(_userViewModel.Username);
-                mainMenu.Show();
-                this.Close();
-            }
+            if (_userViewModel.Creation() == true) { this.Close(); }
         }
 
         private void backBtn_Click(object sender, RoutedEventArgs e)
         {
-            AccountLogin accountLogin = new AccountLogin();
-            accountLogin.Show();
+            _userViewModel.ShowAccountLogin();
             this.Close();
         }
     }

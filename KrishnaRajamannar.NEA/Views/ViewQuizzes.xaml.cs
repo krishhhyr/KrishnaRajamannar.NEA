@@ -29,6 +29,7 @@ namespace KrishnaRajamannar.NEA.Views
 
         public ViewQuizzes(int _userID)
         {
+            
             userID = _userID;
 
             InitializeComponent();
@@ -104,9 +105,9 @@ namespace KrishnaRajamannar.NEA.Views
             // this is not the right parameter to pass back to Main Menu!
             // should be a username
 
-            MainMenu mainMenu = new MainMenu(Convert.ToString(userID));
-            mainMenu.Show();
-            this.Close();
+            //MainMenu mainMenu = new MainMenu(Convert.ToString(userID));
+            //mainMenu.Show();
+            //this.Close();
         }
     }
 }

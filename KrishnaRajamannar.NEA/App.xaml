@@ -1,8 +1,7 @@
 ﻿<Application x:Class="KrishnaRajamannar.NEA.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:KrishnaRajamannar.NEA"
-             StartupUri="Views/AccountLogin.xaml">
+             xmlns:local="clr-namespace:KrishnaRajamannar.NEA">
     <Application.Resources>
          
     </Application.Resources>

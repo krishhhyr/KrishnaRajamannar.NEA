@@ -1,5 +1,6 @@
 ﻿using KrishnaRajamannar.NEA.Models;
 using KrishnaRajamannar.NEA.Services;
+using KrishnaRajamannar.NEA.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,39 +22,36 @@ namespace KrishnaRajamannar.NEA.Views
     /// </summary>
     public partial class MainMenu : Window
     {
-        int userID;
-        string username;
-        int points;
+        UserViewModel _userViewModel;
 
-        UserService userService = new UserService();
-
-        public MainMenu(string _username)
+        public MainMenu(UserViewModel userViewModel)
         {
             InitializeComponent();
 
-            username = _username;
-            userID = userService.GetUserID(username);
-            points = userService.GetPoints(username);
-
-            // Not great code...
-            pointsTxtBlock.Text = "Points: " + points;
-            userIDTxtBlock.Text = "User ID: " + userID;
-            usernameTxtBlock.Text = "Username: " + username;   
+            _userViewModel = userViewModel;
+          
         }
 
         private void logOutBtn_Click(object sender, RoutedEventArgs e)
         {
             if (MessageBox.Show("Do you want to log out of this account?", "Account Logout", MessageBoxButton.YesNo) == MessageBoxResult.Yes) 
             {
-                AccountLogin accountLogin = new AccountLogin();
-                accountLogin.Show();
-                this.Close();
+                //AccountLogin accountLogin = new AccountLogin();
+                //accountLogin.Show();
+                //this.Close();
             }
+        }
+
+        public void LoadData()
+        {
+            pointsTxtBlock.Text = "Points: " + _userViewModel.GetPoints();
+            userIDTxtBlock.Text = "User ID: " + _userViewModel.GetUserID();
+            usernameTxtBlock.Text = "Username: " + _userViewModel.Username;
         }
 
         private void viewQuizzesBtn_Click(object sender, RoutedEventArgs e)
         {
-            ViewQuizzes viewQuizzes = new ViewQuizzes(userID);
+            ViewQuizzes viewQuizzes = new ViewQuizzes(_userViewModel.GetUserID());
             viewQuizzes.Show();
             this.Close();
         }

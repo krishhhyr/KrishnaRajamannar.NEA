@@ -12,13 +12,13 @@ namespace KrishnaRajamannar.NEA.Services
     // A class which groups the subroutines relating to user and the database.
     // Represents actions like inserting the data into the database about a user
     // or retrieving data about a user.
-    public class UserService
+    public class UserService : IUserService
     {
         const string connectionString = $"Data Source=KRISHNASXPS\\SQLEXPRESS;Initial Catalog=quizApp;Persist Security Info=True;User ID=sa;Password=passw0rd;TrustServerCertificate=True";
 
         public UserService()
         {
-            
+
         }
 
         #region AccountLogin
@@ -27,7 +27,7 @@ namespace KrishnaRajamannar.NEA.Services
         // Function checks if the username inputted exists in the database.
 
         //source: https://learn.microsoft.com/en-us/dotnet/standard/data/sqlite/?tabs=netcore-cli
-        public bool IsUserExists(string username) 
+        public bool IsUserExists(string username)
         {
             string foundUsername;
 
@@ -60,7 +60,7 @@ namespace KrishnaRajamannar.NEA.Services
             return false;
 
         }
-        public string GetPassword(string username) 
+        public string GetPassword(string username)
         {
 
             //string dbPath = GetDatabasePath();
@@ -93,7 +93,7 @@ namespace KrishnaRajamannar.NEA.Services
         //check if username does not exist in database
         //store data in database
         //hash password and store that in DB
-        public void CreateUser(string username, string password) 
+        public void CreateUser(string username, string password)
         {
             SqlConnection connection = new SqlConnection($"Data Source=KRISHNASXPS\\SQLEXPRESS;Initial Catalog=quizApp;Persist Security Info=True;" +
                 $"User ID=sa;Password=passw0rd;TrustServerCertificate=True");
@@ -103,7 +103,7 @@ namespace KrishnaRajamannar.NEA.Services
             connection.Open();
 
             var command = connection.CreateCommand();
-            command.CommandText = 
+            command.CommandText =
                 @"
                     INSERT INTO UserDetails(username, password, numberOfPoints) VALUES (@username, @password, @numberofpoints)
                 ";
@@ -111,13 +111,13 @@ namespace KrishnaRajamannar.NEA.Services
 
             //command.Parameters.AddWithValue("@userID", userID);
             command.Parameters.AddWithValue("@username", username);
-            command.Parameters.AddWithValue ("@password", HashPassword(password));
+            command.Parameters.AddWithValue("@password", HashPassword(password));
             command.Parameters.AddWithValue("@numberofpoints", 0);
             command.ExecuteNonQuery();
 
             connection.Close();
         }
-        public int GetNumberOfRows() 
+        public int GetNumberOfRows()
         {
             SqlConnection connection = new SqlConnection($"Data Source=KRISHNASXPS\\SQLEXPRESS;Initial Catalog=quizApp;Persist Security Info=True;" +
                 $"User ID=sa;Password=passw0rd;TrustServerCertificate=True");
@@ -132,14 +132,14 @@ namespace KrishnaRajamannar.NEA.Services
                 ";
 
             var result = command.ExecuteScalar();
-            if (result == null) 
+            if (result == null)
             {
                 return -1;
             }
             return 1;
 
         }
-        public string HashPassword(string password) 
+        public string HashPassword(string password)
         {
             string hashedPassword;
 
@@ -158,8 +158,10 @@ namespace KrishnaRajamannar.NEA.Services
         #endregion
 
         #region AccountServices
-        public int GetUserID(string username) 
+        public int GetUserID(string username)
         {
+            if (username == null) return -1;
+
             using (SqlConnection connection = new SqlConnection($"Data Source=KRISHNASXPS\\SQLEXPRESS;Initial Catalog=quizApp;Persist Security Info=True;User ID=sa;Password=passw0rd;TrustServerCertificate=True"))
             {
                 connection.Open();
@@ -184,7 +186,7 @@ namespace KrishnaRajamannar.NEA.Services
         }
 
         // This function gets the number of points that a particular user has. 
-        public int GetPoints(string username) 
+        public int GetPoints(string username)
         {
             int numberOfPoints = 0;
 
@@ -204,10 +206,10 @@ namespace KrishnaRajamannar.NEA.Services
 
             var data = command.ExecuteReader();
 
-            while (data.Read()) 
+            while (data.Read())
             {
                 numberOfPoints = data.GetInt32(0);
-                
+
                 return numberOfPoints;
             }
 
