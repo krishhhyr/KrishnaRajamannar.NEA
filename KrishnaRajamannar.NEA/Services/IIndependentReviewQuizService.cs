@@ -1,4 +1,7 @@
-﻿namespace KrishnaRajamannar.NEA.Services
+﻿using KrishnaRajamannar.NEA.Models;
+using System.Collections.Generic;
+
+namespace KrishnaRajamannar.NEA.Services
 {
     public interface IIndependentReviewQuizService
     {
@@ -6,6 +9,6 @@
 
         void InsertMultipleChoiceQuestionQuizFeedback(int MCquestionID, int points, int quizID);
 
-
+        public IList<IndependentReviewQuizModel> GetAllQuestions(int quizID);
     }
 }

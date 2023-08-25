@@ -44,8 +44,8 @@ namespace KrishnaRajamannar.NEA
             ConfigureServices(services);
             ServiceProvider = services.BuildServiceProvider();
             //Show the login screen 
-            var accountLogin = ServiceProvider.GetService<AccountLogin>();
-            accountLogin.Show();             
+            //var accountLogin = ServiceProvider.GetService<AccountLogin>();
+            //accountLogin.Show();             
         }
 
        

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using KrishnaRajamannar.NEA.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,9 +20,13 @@ namespace KrishnaRajamannar.NEA.Views
     /// </summary>
     public partial class IndependentReviewQuiz : Window
     {
+        IndependentReviewViewModel viewModel;
+
         public IndependentReviewQuiz()
         {
             InitializeComponent();
+
+            viewModel.GetQuestionsInOrder();
         }
     }
 }
