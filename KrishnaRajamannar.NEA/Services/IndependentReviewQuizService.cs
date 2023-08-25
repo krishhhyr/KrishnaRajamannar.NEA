@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using KrishnaRajamannar.NEA.Models;
+using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -62,6 +63,62 @@ namespace KrishnaRajamannar.NEA.Services
             command.ExecuteNonQuery();
 
             connection.Close();
+        }
+
+        public IList<IndependentReviewQuizModel> GetAllQuestions(int quizID) 
+        {
+            string question, answer;
+            string? option1, option2, option3, option4, option5, option6;
+            option1 = option2 = option3 = option4 = option5 = option6 = "";
+            int points, answerStreak;
+            bool IsCorrect;
+
+            const string sqlQuery =
+                @"
+                    SELECT Question, CorrectAnswer, Option1, Option2, Option3, Option4, Option5, Option6, Points, IsCorrect, AnswerStreak FROM MultipleChoiceQuestion,QuizFeedback
+                    WHERE MultipleChoiceQuestion.MCQuestionID = QuizFeedback.MCQuestionID
+                    And QuizFeedback.QuizID = @QuizID
+
+                    UNION All
+
+                    SELECT Question, Answer, Null as Option1, null as Option2, null as Option3, null as Option4, null as Option5, null as Option6, Points,  IsCorrect, AnswerStreak  FROM TextQuestion,QuizFeedback
+                    WHERE TextQuestion.TextQuestionID = QuizFeedback.TextQuestionID
+                    And QuizFeedback.QuizID = @QuizID
+                ";
+
+            using SqlConnection connection = new SqlConnection(connectionString);
+            connection.Open();
+
+            var command = connection.CreateCommand();
+            command.CommandText = sqlQuery;
+
+            command.Parameters.AddWithValue("@QuizID", quizID);
+
+            var data = command.ExecuteReader();
+
+            while (data.Read()) 
+            {
+                question = data.GetString(0);
+
+                answer = data.GetString(1);
+
+                string[]? options = { option1, option2, option3, option4, option5, option6 };
+                for (int i = 1; i <= 6; i++)
+                {
+                    // Checks if the data in the database is null or not for an option.
+                    // If it is not, it assigns the value to the respective option in the array.
+                    if (data.IsDBNull(i + 1))
+                    {
+                        options[i - 1] = "NULL";
+                    }
+                    else
+                    {
+                        options[i - 1] = data.GetString(i + 1);
+                    }
+                }
+
+
+            }
         }
     }
 }

@@ -11,13 +11,17 @@ namespace KrishnaRajamannar.NEA.Models
         string Question { get; set; }
 
         string Answer { get; set; }
-        int Points { get; set; }
+        
         string Option1 { get; set; }
         string Option2 { get; set; }
         string Option3 { get; set; }
         string Option4 { get; set; }
         string Option5 { get; set; }
         string Option6 { get; set; }
+        int Points { get; set; }
 
+        bool IsCorrect { get; set; }
+
+        int AnswerStreak { get; set; }
     }
 }
