@@ -20,7 +20,7 @@ namespace KrishnaRajamannar.NEA.Views
     /// </summary>
     public partial class IndependentReviewQuiz : Window
     {
-        IndependentReviewViewModel viewModel;
+        IndependentReviewViewModel viewModel = new IndependentReviewViewModel();
 
         public IndependentReviewQuiz()
         {
