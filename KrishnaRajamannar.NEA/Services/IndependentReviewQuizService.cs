@@ -67,11 +67,13 @@ namespace KrishnaRajamannar.NEA.Services
 
         public IList<IndependentReviewQuizModel> GetAllQuestions(int quizID) 
         {
+            IList<IndependentReviewQuizModel> questionsToReview = new List<IndependentReviewQuizModel>();
+            
             string question, answer;
             string? option1, option2, option3, option4, option5, option6;
             option1 = option2 = option3 = option4 = option5 = option6 = "";
             int points, answerStreak;
-            bool IsCorrect;
+            bool isCorrect;
 
             const string sqlQuery =
                 @"
@@ -117,8 +119,23 @@ namespace KrishnaRajamannar.NEA.Services
                     }
                 }
 
+                points = data.GetInt32(2);
 
+                isCorrect = data.GetBoolean(3);
+
+                answerStreak = data.GetInt32(4);
+
+                questionsToReview.Add(new IndependentReviewQuizModel() 
+                {
+                    Question = question, Answer = answer,
+
+                    Option1 = options[0], Option2 = options[1], Option3 = options[2], 
+                    Option4 = options[3], Option5 = options[4], Option6 = options[5],
+
+                    Points = points, IsCorrect = isCorrect, AnswerStreak = answerStreak,
+                });
             }
+            return questionsToReview;
         }
     }
 }

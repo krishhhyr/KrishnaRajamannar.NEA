@@ -8,20 +8,16 @@ namespace KrishnaRajamannar.NEA.Models
 {
     public class IndependentReviewQuizModel
     {
-        string Question { get; set; }
-
-        string Answer { get; set; }
-        
-        string Option1 { get; set; }
-        string Option2 { get; set; }
-        string Option3 { get; set; }
-        string Option4 { get; set; }
-        string Option5 { get; set; }
-        string Option6 { get; set; }
-        int Points { get; set; }
-
-        bool IsCorrect { get; set; }
-
-        int AnswerStreak { get; set; }
+        public string Question { get; set; }
+        public string Answer { get; set; }
+        public string? Option1 { get; set; }
+        public string? Option2 { get; set; }
+        public string? Option3 { get; set; }
+        public string? Option4 { get; set; }
+        public string? Option5 { get; set; }
+        public string? Option6 { get; set; }
+        public int Points { get; set; }
+        public bool IsCorrect { get; set; }
+        public int AnswerStreak { get; set; }
     }
 }
