@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace KrishnaRajamannar.NEA.ViewModels
 {
@@ -175,15 +176,15 @@ namespace KrishnaRajamannar.NEA.ViewModels
             return true;
         }
 
-        public string CreateTextQuestion(int quizID) 
+        public void CreateTextQuestion(int quizID) 
         {
             if ((ValidateQuestion() == false) || (ValidateAnswer() == false)) 
             {
-                return "A question or an answer has not been inputted. Try again.";
+                MessageBox.Show("A question or an answer has not been inputted. Try again.", "Question Creation");
             } 
             if ((ValidateNumberOfPoints() == false) || (ValidateDuration() == false))
             {
-                return "The number of points must be between 1-5. The duration must not be 0. Try again.";
+                MessageBox.Show("The number of points must be between 1-5. The duration must not be 0. Try again.", "Question Creation");
             }
             _questionService.CreateTextQuestion(Question, Answer, Duration, NumberOfPoints, quizID);
 
@@ -193,21 +194,21 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
             _independentReviewQuizService.InsertTextQuestionQuizFeedback(textQuestionID, NumberOfPoints, quizID);
 
-            return "Successful Text Question Creation.";
+            MessageBox.Show("Successful Text Question Creation.", "Question Creation");
         }
-        public string CreateMultipleChoiceQuestion(int quizID) 
+        public void CreateMultipleChoiceQuestion(int quizID) 
         {
             if ((ValidateQuestion() == false) || (ValidateAnswer() == false))
             {
-                return "A question or an answer has not been inputted. Try again.";
+                MessageBox.Show("A question or an answer has not been inputted. Try again.", "Question Creation");
             }
             if (ValidateOptions() == false) 
             {
-                return "Option 1 and Option 2 must not be empty. Try again.";
+                MessageBox.Show("Option 1 and Option 2 must not be empty. Try again.", "Question Creation");
             }
             if ((ValidateNumberOfPoints() == false) || (ValidateDuration() == false))
             {
-                return "The number of points must be between 1-5. The duration must not be 0. Try again.";
+                MessageBox.Show("The number of points must be between 1-5. The duration must not be 0. Try again.", "Question Creation");
             }
             
             Dictionary<string, string> options = new Dictionary<string, string>();
@@ -222,7 +223,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
             _independentReviewQuizService.InsertMultipleChoiceQuestionQuizFeedback(MCQuestionID, NumberOfPoints, quizID);
 
-            return "Successful Multiple Choice Question Creation.";
+            MessageBox.Show("Successful Multiple Choice Question Creation.", "Question Creation");
         }
     }
 }

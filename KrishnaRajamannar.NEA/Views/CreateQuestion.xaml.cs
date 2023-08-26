@@ -48,10 +48,7 @@ namespace KrishnaRajamannar.NEA.Views
                         multipleChoiceStackPanel.Visibility = Visibility.Hidden;
                         textQuestionStackPanel.Visibility = Visibility.Visible;
                     }
-                    else
-                    {
-                        return;
-                    }
+                    else { return; }
                 }
                 else
                 {
@@ -60,36 +57,22 @@ namespace KrishnaRajamannar.NEA.Views
                         textQuestionStackPanel.Visibility = Visibility.Hidden;
                         multipleChoiceStackPanel.Visibility = Visibility.Visible;
                     }
-                    else
-                    {
-                        return;
-                    }
+                    else { return; }
                 }
             }
-            else 
-            {
-                return; 
-            }
+            else { return; }
         }
 
         private void createTextQuestionBtn_Click(object sender, RoutedEventArgs e)
         {
-            string textQuestionCreationMessage = _createQuestionviewModel.CreateTextQuestion(quizID);
-            MessageBox.Show(textQuestionCreationMessage, "Question Creation");
-            if (textQuestionCreationMessage == "Successful Text Question Creation.") 
-            {
-                this.Close();
-            }
+            _createQuestionviewModel.CreateTextQuestion(quizID);
+            this.Close();  
         }
 
         private void mcCreateQuestion_Click(object sender, RoutedEventArgs e)
         {
-            string multipleChoiceQuestionCreationMessage = _createQuestionviewModel.CreateMultipleChoiceQuestion(quizID);
-            MessageBox.Show(multipleChoiceQuestionCreationMessage, "Question Creation");
-            if (multipleChoiceQuestionCreationMessage == "Successful Multiple Choice Question Creation.")
-            {
-                this.Close();
-            }
+            _createQuestionviewModel.CreateMultipleChoiceQuestion(quizID);
+            this.Close();
         }
     }
 }
