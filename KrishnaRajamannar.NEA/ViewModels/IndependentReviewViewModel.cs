@@ -30,6 +30,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
         // check if answer is correct
         // display correct answer + calculate no of points awarded
         // update no of points in database, update label for points
+        // total number of points = use sum function. 
         // provide user feedback when quiz has ended - data grid?
 
         public IList<IndependentReviewQuizModel> GetQuestionsInOrder() 
@@ -61,6 +62,12 @@ namespace KrishnaRajamannar.NEA.ViewModels
             return sortedquestions;
         }
 
+        public string SendQuestion(IList<IndependentReviewQuizModel> questions) 
+        {
+            int questionIndex = 1;
+
+            
+        }
         public static List<int> MSort(List<int> points)
         {
             List<int> left, right;
