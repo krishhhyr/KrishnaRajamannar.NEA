@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace KrishnaRajamannar.NEA.Services
 {
     // A class which represents all the functions/procedures that the Quiz table has in the database
-    public class QuizService
+    public class QuizService : IQuizService
     {
         const string connectionString = $"Data Source=KRISHNASXPS\\SQLEXPRESS;Initial Catalog=quizApp;Persist Security Info=True;User ID=sa;Password=passw0rd;TrustServerCertificate=True";
 

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace KrishnaRajamannar.NEA.Services
 {
-    public class QuestionService
+    public class QuestionService : IQuestionService
     {
         // A string which defines the data source for the SQL Server database.
         private const string connectionString = $"Data Source=KRISHNASXPS\\SQLEXPRESS;Initial Catalog=quizApp;Persist Security Info=True;User ID=sa;Password=passw0rd;TrustServerCertificate=True";

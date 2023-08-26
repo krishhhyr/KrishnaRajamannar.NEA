@@ -1,5 +1,7 @@
 ﻿using KrishnaRajamannar.NEA.Models;
 using KrishnaRajamannar.NEA.Services;
+using KrishnaRajamannar.NEA.Views;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,6 +16,16 @@ namespace KrishnaRajamannar.NEA.ViewModels
     {
         public QuizService _quizService { get; set; }
         public QuestionService _questionService { get; set; }
+
+        //services
+        private readonly IQuizService _quizServicea;
+        private readonly IQuestionService _questionServicea;   
+        //models 
+        private readonly QuizModel quizModel;
+        //windows 
+        private readonly CreateQuestion createQuestion;
+        private readonly CreateQuiz createQuiz; 
+
 
         //public QuizTitle SelectedRow { get; set; }
 
@@ -43,7 +55,6 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 RaisePropertyChange("SelectedQuiz");
             }
         }
-
         private QuestionModel _selectedQuestion;
 
         public QuestionModel SelectedQuestion 
@@ -55,7 +66,6 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 RaisePropertyChange("SelectedQuestion");
             }
         }
-
         public int GetRowQuizID() 
         {
             if (SelectedQuiz == null) 
@@ -115,14 +125,6 @@ namespace KrishnaRajamannar.NEA.ViewModels
             // https://www.techiedelight.com/check-if-all-items-are-same-in-a-list-in-csharp/
             bool isOptionsNull = options.Distinct().Count() == 1 ;
 
-            //foreach (string option in options) 
-            //{
-            //    if (option == "NULL") 
-            //    {
-
-            //    }
-            //}
-
             int quizID = SelectedQuiz.QuizID;
 
             if (isOptionsNull == false) 
@@ -130,8 +132,6 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 _questionService.DeleteMultipleChoiceQuestion(SelectedQuestion.Question, SelectedQuestion.Answer, SelectedQuiz.QuizID);
 
                 _quizService.UpdateNumberOfQuestions(_questionService.GetNumberOfQuestions(quizID), quizID);
-
-
             }
             if (isOptionsNull == true) 
             {
