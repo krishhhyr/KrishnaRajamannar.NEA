@@ -33,6 +33,9 @@ namespace KrishnaRajamannar.NEA.ViewModels
         // total number of points = use sum function. 
         // provide user feedback when quiz has ended - data grid?
 
+        public 
+
+
         public IList<IndependentReviewQuizModel> GetQuestionsInOrder() 
         {
             IList<IndependentReviewQuizModel> unsortedquestions = _independentReviewQuizService.GetAllQuestions(4);
@@ -64,9 +67,62 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
         public string SendQuestion(IList<IndependentReviewQuizModel> questions) 
         {
-            int questionIndex = 1;
+            foreach (IndependentReviewQuizModel question in questions) 
+            {
+                return question.Question;   
+            }
 
-            
+            return "No question to return";    
+        }
+        public string SendAnswer(IList<IndependentReviewQuizModel> questions)
+        {
+            foreach (IndependentReviewQuizModel question in questions)
+            {
+                return question.Answer;
+            }
+
+            return "No answer to return";
+        }
+        public List<string?> SendOptions(IList<IndependentReviewQuizModel> questions)
+        {
+            List<string?> options = new List<string?>();
+            bool isMultipleChoice = false;
+
+            foreach (IndependentReviewQuizModel question in questions)
+            {
+                
+                options.Add(question.Option1);
+                options.Add(question.Option2);
+                options.Add(question.Option3);
+                options.Add(question.Option4);
+                options.Add(question.Option5);
+                options.Add(question.Option6);
+
+                if (options.Distinct().Count() != -1) 
+                {
+                    isMultipleChoice = true;
+                }
+            }
+            if (isMultipleChoice == true) 
+            {
+                return options;
+            }
+            return options;
+        }
+
+        public string CompareAnswers(string answerInput, IList<IndependentReviewQuizModel> question) 
+        {
+            string correctAnswer = SendAnswer(question);
+
+            if (correctAnswer == answerInput)
+            {
+
+            }
+            else 
+            {
+
+                return correctAnswer;
+            }
         }
         public static List<int> MSort(List<int> points)
         {
