@@ -32,78 +32,71 @@ namespace KrishnaRajamannar.NEA.ViewModels
         // update no of points in database, update label for points
         // provide user feedback when quiz has ended - data grid?
 
-        public int GetQuestionsInOrder() 
+        public IList<IndependentReviewQuizModel> GetQuestionsInOrder() 
         {
-            IList<IndependentReviewQuizModel> questions = _independentReviewQuizService.GetAllQuestions(4);
+            IList<IndependentReviewQuizModel> unsortedquestions = _independentReviewQuizService.GetAllQuestions(4);
 
             List<int> pointsForQuestion = new List<int>();
 
-            foreach (IndependentReviewQuizModel question in questions) 
+            foreach (IndependentReviewQuizModel question in unsortedquestions) 
             {
                 pointsForQuestion.Add(question.Points);
             }
 
-            List<int> test = new List<int>();
+            List<int> sortedPoints = MSort(pointsForQuestion);
 
-            List<int> answer = new List<int>();
+            IList<IndependentReviewQuizModel> sortedquestions = new List<IndependentReviewQuizModel>();
 
-            test.Add(1);
-            test.Add(6);
-            test.Add(-2);
-            test.Add(323);
-            test.Add(32);
-            test.Add(-32);
-            test.Add(23);
-            test.Add(3);
-            test.Add(123);
-            test.Add(5);
+            foreach (int point in sortedPoints) 
+            {
+                foreach (IndependentReviewQuizModel question in unsortedquestions)
+                {
+                    if (point == question.Points) 
+                    {
+                        sortedquestions.Add(question);
+                    }
+                }
+            }
 
-          answer = Sort(test);
-            ;
-
-            return 7;
+            return sortedquestions;
         }
 
-        public List<int> Sort(List<int> points) 
+        public static List<int> MSort(List<int> points)
         {
-            List<int> left, right; 
+            List<int> left, right;
             List<int> result = new List<int>(points.Count);
 
-            if (points.Count <= -1) { return points; }
+            if (points.Count <= 1) { return points; }
 
             int midpoint = points.Count / 2;
 
             left = new List<int>(midpoint);
 
-            if ((points.Count % 2) == 0) 
+            if ((points.Count % 2) == 0)
             {
                 right = new List<int>(midpoint);
             }
             else { right = new List<int>(midpoint + 1); }
 
-
-            // Assigns values to the left side of the list.
-            for (int i = 0; i < midpoint; i++) 
+            for (int i = 0; i < midpoint; i++)
             {
-                left[i] = points[i];    
+                left.Add(points[i]);
             }
 
-            int temp = 0;
-
-            for (int j = midpoint; j < points.Count; j++) 
+            for (int j = midpoint; j < points.Count; j++)
             {
-                right[temp] = points[j];
-                temp++;
+                right.Add(points[j]);
             }
 
-            left = Sort(left);
-            right = Sort(right);
+            left = MSort(left);
+            right = MSort(right);
 
-           return result = Merge(left, right);
+            result = Merge(left, right);
+            return result;
 
         }
 
-        public List<int> Merge(List<int> left, List<int> right) 
+        public static List<int> Merge(List<int> left, List<int> right)
         {
             int length = left.Count + right.Count;
 
@@ -118,26 +111,26 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 {
                     if (left[leftIndex] <= right[rightIndex])
                     {
-                        result[resultIndex] = left[leftIndex];
+                        result.Add(left[leftIndex]);
                         leftIndex++;
                         resultIndex++;
                     }
                     else
                     {
-                        result[resultIndex] = right[rightIndex];
+                        result.Add(right[rightIndex]);
                         rightIndex++;
                         resultIndex++;
                     }
                 }
-                else if (leftIndex < left.Count) 
+                else if (leftIndex < left.Count)
                 {
-                    result[resultIndex] = left[leftIndex];
+                    result.Add(left[leftIndex]);
                     leftIndex++;
                     resultIndex++;
                 }
-                else if (rightIndex < right.Count) 
+                else if (rightIndex < right.Count)
                 {
-                    result[resultIndex] = right[rightIndex];
+                    result.Add(right[rightIndex]);
                     rightIndex++;
                     resultIndex++;
                 }
