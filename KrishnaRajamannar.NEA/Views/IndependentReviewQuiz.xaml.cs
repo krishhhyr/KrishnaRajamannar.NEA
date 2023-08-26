@@ -1,4 +1,6 @@
-﻿using KrishnaRajamannar.NEA.ViewModels;
+﻿using KrishnaRajamannar.NEA.Models;
+using KrishnaRajamannar.NEA.Services;
+using KrishnaRajamannar.NEA.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,8 +22,10 @@ namespace KrishnaRajamannar.NEA.Views
     /// </summary>
     public partial class IndependentReviewQuiz : Window
     {
-        IndependentReviewViewModel viewModel = new IndependentReviewViewModel();
+        IIndependentReviewQuizService _independentReviewQuizService;
+        IndependentReviewQuizModel _independentReviewQuizModel;
 
+        IndependentReviewViewModel viewModel = new IndependentReviewViewModel();
         public IndependentReviewQuiz()
         {
             InitializeComponent();
