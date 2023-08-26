@@ -50,8 +50,6 @@ namespace KrishnaRajamannar.NEA.Views
         {
             _mainMenuViewModel.ViewQuizzes(_userViewModel.GetUserID());
             this.Close();
-
-            
         }
 
         private void leaderboardBtn_Click(object sender, RoutedEventArgs e)

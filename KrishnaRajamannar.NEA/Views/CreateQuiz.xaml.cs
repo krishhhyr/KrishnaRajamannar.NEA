@@ -33,21 +33,12 @@ namespace KrishnaRajamannar.NEA.Views
 
         private void createBtn_Click(object sender, RoutedEventArgs e)
         {
-
             // I don't know why it doesn't work with data binding.
             _createQuizViewModel.QuizTitle = quizTitleTxtBox.Text;
 
-            if (_createQuizViewModel.CreateQuiz(userID) != true)
-            {
-                MessageBox.Show("Invalid Input. Try again.");
-            }
-            else
-            {
-                MessageBox.Show("Quiz created.");
-                this.Close();
-            }
+            _createQuizViewModel.CreateQuiz(userID);
+            this.Close();
         }
-
         private void cancelBtn_Click(object sender, RoutedEventArgs e)
         {
             this.Close();

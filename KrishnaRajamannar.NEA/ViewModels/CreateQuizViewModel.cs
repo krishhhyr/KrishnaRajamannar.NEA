@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace KrishnaRajamannar.NEA.ViewModels
 {
@@ -38,18 +39,17 @@ namespace KrishnaRajamannar.NEA.ViewModels
             }
         }
 
-        public bool CreateQuiz(int userID) 
+        public void CreateQuiz(int userID) 
         {
-            if (QuizTitle == null)
-            {
-                return false;
-            }
-            if (QuizTitle != null) 
+            if (QuizTitle != null)
             {
                 _quizService.CreateQuiz(userID, QuizTitle);
-                return true;
+                MessageBox.Show("Quiz created.");
             }
-            return false;
+            else  
+            {
+                MessageBox.Show("Invalid Input. Try again.");
+            }
         }
     }
 }

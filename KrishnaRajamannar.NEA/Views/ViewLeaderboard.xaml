@@ -33,7 +33,7 @@
         </StackPanel>
 
         <TextBlock Text="Top 10 Users with the Highest Number of Points" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" 
-                   VerticalAlignment="Center" Margin="10" FontSize="32" FontFamily="Segoe UI Bold"></TextBlock>
+                   VerticalAlignment="Center" Margin="10" FontSize="32" FontFamily="Segoe UI Light"></TextBlock>
         
         <DataGrid x:Name="leaderboardDataGrid" Grid.Column="1" Grid.Row="2" Height="500" 
                   Width="600" ColumnWidth="*" Margin="10" CanUserSortColumns="True" 
