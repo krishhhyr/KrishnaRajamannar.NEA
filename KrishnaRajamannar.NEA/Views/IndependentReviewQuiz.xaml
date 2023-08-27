@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:KrishnaRajamannar.NEA.Views"
         mc:Ignorable="d"
-        Title="IndependentReviewQuiz" Height="450" Width="800" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" FontFamily="Segoe UI Light">
+        Title="IndependentReviewQuiz" Height="500" Width="800" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" FontFamily="Segoe UI Light">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"></ColumnDefinition>
@@ -39,35 +39,39 @@
                Height="50" Width="550" HorizontalAlignment="Center" HorizontalContentAlignment="Center" 
                VerticalAlignment="Top" FontSize="30" Margin="10"></Label>
 
-        <StackPanel x:Name="textAnswerStackPanel" Grid.Column="1" Grid.Row="1" Height="200" 
+        <StackPanel x:Name="textAnswerStackPanel" Grid.Column="1" Grid.Row="1" Height="230" 
                     VerticalAlignment="Center" Margin="10" Visibility="Visible">
             <TextBox x:Name="answerTxtBox" Height="50" Width="500" Margin="10" 
                      FontSize="20" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"></TextBox>
 
             <Button x:Name="textAnswerBtn" Content="Submit" FontSize="16" Height="30" Width="100" Margin="10" Click="textAnswerBtn_Click"></Button>
 
-            <Label x:Name="correctTextAnswerLbl" Foreground="Green" Content="The correct answer is 2" FontSize="20" 
+            <Label x:Name="correctTextAnswerLbl" Foreground="Green" Content="The correct answer is 2" FontSize="30" 
                    Height="50" Width="500" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
-                   Margin="10"></Label>
+                   Margin="0,30,0,0"></Label>
         </StackPanel>
 
         <StackPanel x:Name="multipleChoiceAnswerStackPanel" Grid.Column="1" Grid.Row="1" Height="250" 
-                    Width="400" VerticalAlignment="Bottom" Margin="10" HorizontalAlignment="Center"
+                    VerticalAlignment="Center" Margin="10" HorizontalAlignment="Center"
                     Visibility="Hidden">
             <RadioButton x:Name="option1rb" Content="Option 1" FontSize="20" Height="30" 
-                         Width="100" HorizontalAlignment="Left" VerticalContentAlignment="Center"></RadioButton>
+                         Width="400" HorizontalAlignment="Right" VerticalContentAlignment="Center"></RadioButton>
             <RadioButton x:Name="option2rb" Content="Option 2" FontSize="20" Height="30" 
-                         Width="100" HorizontalAlignment="Left" VerticalContentAlignment="Center"></RadioButton>
+                         Width="400" HorizontalAlignment="Left" VerticalContentAlignment="Center"></RadioButton>
             <RadioButton x:Name="option3rb" Content="Option 3" FontSize="20" Height="30" 
-                         Width="100" HorizontalAlignment="Left"  VerticalContentAlignment="Center"></RadioButton>
+                         Width="400" HorizontalAlignment="Left"  VerticalContentAlignment="Center"></RadioButton>
             <RadioButton x:Name="option4rb" Content="Option 4" FontSize="20" Height="30" 
-                         Width="100" HorizontalAlignment="Left" VerticalContentAlignment="Center"></RadioButton>
+                         Width="400" HorizontalAlignment="Left" VerticalContentAlignment="Center"></RadioButton>
             <RadioButton x:Name="option5rb" Content="Option 5" FontSize="20" Height="30" 
-                         Width="100" HorizontalAlignment="Left"  VerticalContentAlignment="Center"></RadioButton>
+                         Width="400" HorizontalAlignment="Left"  VerticalContentAlignment="Center"></RadioButton>
             <RadioButton x:Name="option6rb" Content="Option 6" FontSize="20" Height="30" 
-                         Width="100" HorizontalAlignment="Left"  VerticalContentAlignment="Center"></RadioButton>
+                         Width="400" HorizontalAlignment="Left"  VerticalContentAlignment="Center"></RadioButton>
 
-            <Button x:Name="multipleChoiceAnswerBtn" Content="Submit" FontSize="16" Height="30" Width="100" Margin="10"></Button>
+            <Button x:Name="multipleChoiceAnswerBtn" Content="Submit" FontSize="16" Height="30" Width="100" Margin="10" Click="multipleChoiceAnswerBtn_Click"></Button>
         </StackPanel>
+
+        <Button x:Name="nextBtn" Content="Next" Grid.Column="1" Grid.Row="1"
+                FontSize="16" Height="30" Width="100" Margin="40"
+                VerticalAlignment="Bottom" Click="nextBtn_Click"></Button>
     </Grid>
 </Window>

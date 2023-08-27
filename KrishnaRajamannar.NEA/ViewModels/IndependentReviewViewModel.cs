@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Automation;
 using System.Windows.Navigation;
 
@@ -53,17 +54,20 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
             IList<IndependentReviewQuizModel> sortedquestions = new List<IndependentReviewQuizModel>();
 
-            foreach (int point in sortedPoints) 
+            foreach (IndependentReviewQuizModel question in unsortedquestions)
             {
-                foreach (IndependentReviewQuizModel question in unsortedquestions)
+
+                //prevents duplicate questions
+                IndependentReviewQuizModel recentQuestionAdded = new IndependentReviewQuizModel();
+                foreach (int point in sortedPoints)
                 {
-                    if (point == question.Points) 
+                    if ((point == question.Points) && (recentQuestionAdded != question)) 
                     {
                         sortedquestions.Add(question);
+                        recentQuestionAdded = question;
                     }
                 }
             }
-
             return sortedquestions;
         }
 
@@ -71,70 +75,70 @@ namespace KrishnaRajamannar.NEA.ViewModels
         {
             IndependentReviewQuizModel currentQuestion = questions[questionNumber];
             questionNumber++;
+
+            if (questionNumber > questions.Count) 
+            {
+                MessageBox.Show("No more questions");
+                return "END";
+            }
+
+
             return currentQuestion.Question;    
         }
         public string SendQuestionNumber(IList<IndependentReviewQuizModel> questions)
         {
-            return $"Question: {questionNumber + 1}/{questions.Count}";
-        }
-        public string SendAnswer(IList<IndependentReviewQuizModel> questions)
-        {
-            foreach (IndependentReviewQuizModel question in questions)
+            if (questionNumber > questions.Count)
             {
-                return question.Answer;
+                MessageBox.Show("You have answered all the questions");
+                return "END";
+                //display quiz feedback
             }
 
-            return "No answer to return";
+            return $"Question: {questionNumber}/{questions.Count}";
         }
+        //public string SendAnswer(IList<IndependentReviewQuizModel> questions)
+        //{
+        //    IndependentReviewQuizModel currentQuestion = questions[questionNumber - 1];
+
+        //    return currentQuestion.Answer;
+        //}
         public List<string?> SendOptions(IList<IndependentReviewQuizModel> questions)
         {
+            IndependentReviewQuizModel currentQuestion = questions[questionNumber - 1];
+
             List<string?> options = new List<string?>();
-            bool isMultipleChoice = false;
 
-            foreach (IndependentReviewQuizModel question in questions)
-            {
-                
-                options.Add(question.Option1);
-                options.Add(question.Option2);
-                options.Add(question.Option3);
-                options.Add(question.Option4);
-                options.Add(question.Option5);
-                options.Add(question.Option6);
+            options.Add(currentQuestion.Option1);
+            options.Add(currentQuestion.Option2);
+            options.Add(currentQuestion.Option3);
+            options.Add(currentQuestion.Option4);
+            options.Add(currentQuestion.Option5);
+            options.Add(currentQuestion.Option6);
 
-                if (options.Distinct().Count() != -1) 
-                {
-                    isMultipleChoice = true;
-                }
-            }
-            if (isMultipleChoice == true) 
+            if (options.Distinct().Count() != -1) 
             {
                 return options;
             }
             return options;
         }
 
-        //public string CompareAnswers(string answerInput, IList<IndependentReviewQuizModel> question) 
-        //{
-        //    IList<IndependentReviewQuizModel> currentQuestion = question;
+        public string CompareTextAnswers(string answerInput, IList<IndependentReviewQuizModel> question)
+        {
+            IndependentReviewQuizModel currentQuestion = question[questionNumber - 1];
 
-        //    currentQuestion = question.;
+            string correctAnswer = currentQuestion.Answer;
 
-        //    string correctAnswer = currentQuestion.an;
+            //if answer is correct; change isCorrect to true, update points, update answer streak (check if not 0), output points attained to user, calc total points
 
-
-
-        //    //if answer is correct; change isCorrect to true, update points, update answer streak (check if not 0), output points attained to user, calc total points
-
-        //    if (correctAnswer == answerInput)
-        //    {
-
-        //    }
-        //    else 
-        //    {
-
-        //        return correctAnswer;
-        //    }
-        //}
+            if (correctAnswer == answerInput)
+            {
+                return "Correct!";
+            }
+            else
+            {
+                return correctAnswer;
+            }
+        }
         public static List<int> MSort(List<int> points)
         {
             List<int> left, right;
