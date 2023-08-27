@@ -44,7 +44,7 @@
             <TextBox x:Name="answerTxtBox" Height="50" Width="500" Margin="10" 
                      FontSize="20" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"></TextBox>
 
-            <Button x:Name="textAnswerBtn" Content="Submit" FontSize="16" Height="30" Width="100" Margin="10"></Button>
+            <Button x:Name="textAnswerBtn" Content="Submit" FontSize="16" Height="30" Width="100" Margin="10" Click="textAnswerBtn_Click"></Button>
 
             <Label x:Name="correctTextAnswerLbl" Foreground="Green" Content="The correct answer is 2" FontSize="20" 
                    Height="50" Width="500" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"

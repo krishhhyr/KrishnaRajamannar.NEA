@@ -22,15 +22,28 @@ namespace KrishnaRajamannar.NEA.Views
     /// </summary>
     public partial class IndependentReviewQuiz : Window
     {
-        IIndependentReviewQuizService _independentReviewQuizService;
-        IndependentReviewQuizModel _independentReviewQuizModel;
+        IndependentReviewViewModel _independentReviewViewModel;
 
-        IndependentReviewViewModel viewModel = new IndependentReviewViewModel();
-        public IndependentReviewQuiz()
+        public IndependentReviewQuiz(IndependentReviewViewModel independentReviewViewModel)
         {
             InitializeComponent();
 
-            viewModel.GetQuestionsInOrder();
+            _independentReviewViewModel = independentReviewViewModel;
+
+           IList<IndependentReviewQuizModel> _independentReviewQuizModel = _independentReviewViewModel.GetQuestionsInOrder();
+
+            //questionLbl.Content = _independentReviewViewModel.SendQuestion(_independentReviewQuizModel);
+
+            //questionNumberLbl.Content = _independentReviewViewModel.SendQuestionNumber(_independentReviewQuizModel);
+        }
+
+        private void textAnswerBtn_Click(object sender, RoutedEventArgs e)
+        {
+            IList<IndependentReviewQuizModel> _independentReviewQuizModel = _independentReviewViewModel.GetQuestionsInOrder();
+
+            questionLbl.Content = _independentReviewViewModel.SendQuestion(_independentReviewQuizModel);
+
+            questionNumberLbl.Content = _independentReviewViewModel.SendQuestionNumber(_independentReviewQuizModel);
         }
     }
 }

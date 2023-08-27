@@ -84,6 +84,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 _accountLogin.Show();
             }
         }
+
         public void ShowAccountCreation()
         {
             if (_accountCreation != null)
@@ -91,6 +92,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 _accountCreation.Show();
             }
         }
+
         public void ShowMainMenu()
         {
             if (_mainMenu != null)

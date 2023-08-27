@@ -119,13 +119,13 @@ namespace KrishnaRajamannar.NEA.Services
                     }
                 }
 
-                pointsforquestion = data.GetInt32(2);
+                pointsforquestion = data.GetInt32(8);
 
-                score = data.GetInt32(3);   
+                score = data.GetInt32(9);   
 
-                isCorrect = data.GetBoolean(4);
+                isCorrect = data.GetBoolean(10);
 
-                answerStreak = data.GetInt32(5);
+                answerStreak = data.GetInt32(11);
 
                 questionsToReview.Add(new IndependentReviewQuizModel() 
                 {

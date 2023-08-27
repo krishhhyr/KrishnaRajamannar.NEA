@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Automation;
+using System.Windows.Navigation;
 
 namespace KrishnaRajamannar.NEA.ViewModels
 {
@@ -14,7 +15,9 @@ namespace KrishnaRajamannar.NEA.ViewModels
     {
         private readonly IIndependentReviewQuizService _independentReviewQuizService;
         private readonly IndependentReviewQuizModel _independentReviewQuizModel;
-        
+
+        private int questionNumber = 0;
+
 
         public IndependentReviewViewModel(IIndependentReviewQuizService independentReviewQuizService, IndependentReviewQuizModel independentReviewQuizModel)
         {
@@ -24,9 +27,9 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        // get questions
-        // merge sort to sort qs based on points previously awarded
-        // display questions, question number
+        // get questions DONE!
+        // merge sort to sort qs based on points previously awarded DONE!
+        // display questions, question number 
         // check if answer is correct
         // display correct answer + calculate no of points awarded
         // update no of points in database, update label for points
@@ -37,7 +40,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
         public IList<IndependentReviewQuizModel> GetQuestionsInOrder() 
         {
-            IList<IndependentReviewQuizModel> unsortedquestions = _independentReviewQuizService.GetAllQuestions(4);
+            IList<IndependentReviewQuizModel> unsortedquestions = _independentReviewQuizService.GetAllQuestions(36);
 
             List<int> pointsForQuestion = new List<int>();
 
@@ -66,12 +69,13 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
         public string SendQuestion(IList<IndependentReviewQuizModel> questions) 
         {
-            foreach (IndependentReviewQuizModel question in questions) 
-            {
-                return question.Question;   
-            }
-
-            return "No question to return";    
+            IndependentReviewQuizModel currentQuestion = questions[questionNumber];
+            questionNumber++;
+            return currentQuestion.Question;    
+        }
+        public string SendQuestionNumber(IList<IndependentReviewQuizModel> questions)
+        {
+            return $"Question: {questionNumber + 1}/{questions.Count}";
         }
         public string SendAnswer(IList<IndependentReviewQuizModel> questions)
         {

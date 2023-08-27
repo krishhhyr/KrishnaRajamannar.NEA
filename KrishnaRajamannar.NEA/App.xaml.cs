@@ -25,15 +25,19 @@ namespace KrishnaRajamannar.NEA
             //Registering All the services to the DI Container
             services.AddSingleton<ILeaderboardService, LeaderboardService>();
             services.AddSingleton<IUserService, UserService>();
+            services.AddSingleton<IIndependentReviewQuizService, IndependentReviewQuizService>();
             services.AddSingleton(typeof(UserModel));
 
             //Register all UI windows
             services.AddTransient(typeof(AccountLogin));
             services.AddTransient(typeof(AccountCreation));
+            services.AddTransient(typeof(IndependentReviewQuiz));
 
             //Register all ViewModels
             services.AddTransient(typeof(UserViewModel));
             services.AddTransient(typeof(MainMenuViewModel));
+            services.AddTransient(typeof(IndependentReviewViewModel));
+            services.AddTransient(typeof(IndependentReviewQuizModel));
 
 
         }
@@ -45,9 +49,13 @@ namespace KrishnaRajamannar.NEA
             ServiceProvider = services.BuildServiceProvider();
             //Show the login screen 
             //var accountLogin = ServiceProvider.GetService<AccountLogin>();
-            //accountLogin.Show();             
+            //accountLogin.Show();
+            //
+            //Show the independent 
+            var independent = ServiceProvider.GetService<IndependentReviewQuiz>();
+            independent.Show();
         }
 
-       
+
     }
 }
