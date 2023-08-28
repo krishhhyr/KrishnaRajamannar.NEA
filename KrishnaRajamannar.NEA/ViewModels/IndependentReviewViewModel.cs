@@ -132,12 +132,23 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
             if (correctAnswer == answerInput)
             {
+
                 return "Correct!";
             }
             else
             {
                 return correctAnswer;
             }
+        }
+        public int CalculatePoints(IList<IndependentReviewQuizModel> question) 
+        {
+            IndependentReviewQuizModel currentQuestion = question[questionNumber - 1];
+            int points = currentQuestion.Points * (currentQuestion.AnswerStreak + 1);
+            return points;
+        }
+        public void UpdateFeedback() 
+        {
+            
         }
         public static List<int> MSort(List<int> points)
         {

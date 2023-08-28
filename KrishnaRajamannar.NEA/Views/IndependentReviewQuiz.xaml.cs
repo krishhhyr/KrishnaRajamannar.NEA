@@ -42,6 +42,8 @@ namespace KrishnaRajamannar.NEA.Views
             IList<IndependentReviewQuizModel> _independentReviewQuizModel = _independentReviewViewModel.GetQuestionsInOrder();
 
             correctTextAnswerLbl.Content = _independentReviewViewModel.CompareTextAnswers(answerTxtBox.Text, _independentReviewQuizModel);
+
+            pointsAwardedLbl.Content = $"Points awarded: {_independentReviewViewModel.CalculatePoints(_independentReviewQuizModel)}";
         }
 
         private void multipleChoiceAnswerBtn_Click(object sender, RoutedEventArgs e)
@@ -76,15 +78,24 @@ namespace KrishnaRajamannar.NEA.Views
 
             string answer = _independentReviewViewModel.CompareTextAnswers(answerInput, _independentReviewQuizModel);
 
-            foreach (RadioButton button in radioButtons)
+            if (answer != "Correct!")
             {
-                if (Convert.ToString(button.Content) == answer)
+                foreach (RadioButton button in radioButtons)
                 {
-                    button.Foreground = new SolidColorBrush(Colors.Green);
-                    button.FontWeight = FontWeights.Bold;
-                    break;
+                    if (Convert.ToString(button.Content) == answer)
+                    {
+                        button.Foreground = new SolidColorBrush(Colors.Green);
+                        button.FontWeight = FontWeights.Bold;
+                        break;
+                    }
                 }
             }
+            else 
+            {
+                MessageBox.Show(answer);
+            }
+
+            pointsAwardedLbl.Content = $"Points awarded: {_independentReviewViewModel.CalculatePoints(_independentReviewQuizModel)}";
         }
 
         private void nextBtn_Click(object sender, RoutedEventArgs e)
@@ -105,9 +116,7 @@ namespace KrishnaRajamannar.NEA.Views
             foreach (RadioButton button in radioButtons) 
             {
                 button.Foreground = new SolidColorBrush(Colors.Black);
-                //button.isc
             }
-
 
             questionLbl.Content = _independentReviewViewModel.SendQuestion(_independentReviewQuizModel);
 
@@ -131,42 +140,6 @@ namespace KrishnaRajamannar.NEA.Views
                 option5rb.Content = options[4];
                 option6rb.Content = options[5];
             }
-
-            //List<RadioButton> radioButtons = new List<RadioButton>();
-            //radioButtons.Add(option1rb);
-            //radioButtons.Add(option2rb);
-            //radioButtons.Add(option3rb);
-            //radioButtons.Add(option4rb);
-            //radioButtons.Add(option5rb);
-            //radioButtons.Add(option6rb);
-
-            //string? answerInput = "";
-
-            //bool answerInputted = false;
-
-            //foreach (RadioButton button in radioButtons)
-            //{
-            //    if (button.IsChecked == true)
-            //    {
-            //        answerInput = Convert.ToString(button.Content);
-            //        answerInputted = true;
-            //    }
-            //}
-
-            //if (answerInputted == true) 
-            //{
-            //    string answer = _independentReviewViewModel.CompareTextAnswers(answerInput, _independentReviewQuizModel);
-
-            //    foreach (RadioButton button in radioButtons)
-            //    {
-            //        if (Convert.ToString(button.Content) == answer)
-            //        {
-            //            button.Foreground = new SolidColorBrush(Colors.Yellow);
-            //        }
-
-            //    }
-            //}
-            
         }
     }
 }
