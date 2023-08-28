@@ -48,90 +48,13 @@ namespace KrishnaRajamannar.NEA.Views
         {
             IList<IndependentReviewQuizModel> _independentReviewQuizModel = _independentReviewViewModel.GetQuestionsInOrder();
 
-            nextBtn.Visibility = Visibility.Hidden;
+            //nextBtn.Visibility = Visibility.Hidden;
 
-            questionLbl.Content = _independentReviewViewModel.SendQuestion(_independentReviewQuizModel);
+            //questionLbl.Content = _independentReviewViewModel.SendQuestion(_independentReviewQuizModel);
 
-            questionNumberLbl.Content = _independentReviewViewModel.SendQuestionNumber(_independentReviewQuizModel);
-
-            List<string?> options = _independentReviewViewModel.SendOptions(_independentReviewQuizModel);
-
-            if (options.First() == "NULL")
-            {
-                multipleChoiceAnswerStackPanel.Visibility = Visibility.Hidden;
-                textAnswerStackPanel.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                textAnswerStackPanel.Visibility = Visibility.Hidden;
-                multipleChoiceAnswerStackPanel.Visibility = Visibility.Visible;
-                option1rb.Content = options[0];
-                option2rb.Content = options[1];
-                option3rb.Content = options[2];
-                option4rb.Content = options[3];
-                option5rb.Content = options[4];
-                option6rb.Content = options[5];
-
-                List<RadioButton> radioButtons = new List<RadioButton>();
-                radioButtons.Add(option1rb);
-                radioButtons.Add(option2rb);
-                radioButtons.Add(option3rb);
-                radioButtons.Add(option4rb);
-                radioButtons.Add(option5rb);
-                radioButtons.Add(option6rb);
-
-                string? answerInput = "";
-
-                foreach (RadioButton button in radioButtons)
-                {
-                    if (button.IsChecked == true)
-                    {
-                        answerInput = Convert.ToString(button.Content);
-                    }
-                }
-
-                string answer = _independentReviewViewModel.CompareTextAnswers(answerInput, _independentReviewQuizModel);
-
-                foreach (RadioButton button in radioButtons)
-                {
-                    if (Convert.ToString(button.Content) == answer)
-                    {
-                        button.Foreground = new SolidColorBrush(Colors.Yellow);
-                    }
-
-                }
-            }
-        }
-
-        private void nextBtn_Click(object sender, RoutedEventArgs e)
-        {
-            IList<IndependentReviewQuizModel> _independentReviewQuizModel = _independentReviewViewModel.GetQuestionsInOrder();
-
-            answerTxtBox.Text = "";
-            correctTextAnswerLbl.Content = "";
-
-            questionLbl.Content = _independentReviewViewModel.SendQuestion(_independentReviewQuizModel);
-
-            questionNumberLbl.Content = _independentReviewViewModel.SendQuestionNumber(_independentReviewQuizModel);
+            //questionNumberLbl.Content = _independentReviewViewModel.SendQuestionNumber(_independentReviewQuizModel);
 
             List<string?> options = _independentReviewViewModel.SendOptions(_independentReviewQuizModel);
-
-            if (options.First() == "NULL")
-            {
-                textAnswerStackPanel.Visibility = Visibility.Visible;
-                multipleChoiceAnswerStackPanel.Visibility = Visibility.Hidden;
-            }
-            else
-            {
-                textAnswerStackPanel.Visibility = Visibility.Hidden;
-                multipleChoiceAnswerStackPanel.Visibility = Visibility.Visible;
-                option1rb.Content = options[0];
-                option2rb.Content = options[1];
-                option3rb.Content = options[2];
-                option4rb.Content = options[3];
-                option5rb.Content = options[4];
-                option6rb.Content = options[5];
-            }
 
             List<RadioButton> radioButtons = new List<RadioButton>();
             radioButtons.Add(option1rb);
@@ -143,30 +66,106 @@ namespace KrishnaRajamannar.NEA.Views
 
             string? answerInput = "";
 
-            bool answerInputted = false;
-
             foreach (RadioButton button in radioButtons)
             {
                 if (button.IsChecked == true)
                 {
                     answerInput = Convert.ToString(button.Content);
-                    answerInputted = true;
                 }
             }
 
-            if (answerInputted == true) 
+            string answer = _independentReviewViewModel.CompareTextAnswers(answerInput, _independentReviewQuizModel);
+
+            foreach (RadioButton button in radioButtons)
             {
-                string answer = _independentReviewViewModel.CompareTextAnswers(answerInput, _independentReviewQuizModel);
-
-                foreach (RadioButton button in radioButtons)
+                if (Convert.ToString(button.Content) == answer)
                 {
-                    if (Convert.ToString(button.Content) == answer)
-                    {
-                        button.Foreground = new SolidColorBrush(Colors.Yellow);
-                    }
-
+                    button.Foreground = new SolidColorBrush(Colors.Green);
+                    button.FontWeight = FontWeights.Bold;
+                    break;
                 }
             }
+        }
+
+        private void nextBtn_Click(object sender, RoutedEventArgs e)
+        {
+            IList<IndependentReviewQuizModel> _independentReviewQuizModel = _independentReviewViewModel.GetQuestionsInOrder();
+
+            answerTxtBox.Text = "";
+            correctTextAnswerLbl.Content = "";
+
+            List<RadioButton> radioButtons = new List<RadioButton>();
+            radioButtons.Add(option1rb);
+            radioButtons.Add(option2rb);
+            radioButtons.Add(option3rb);
+            radioButtons.Add(option4rb);
+            radioButtons.Add(option5rb);
+            radioButtons.Add(option6rb);
+
+            foreach (RadioButton button in radioButtons) 
+            {
+                button.Foreground = new SolidColorBrush(Colors.Black);
+                //button.isc
+            }
+
+
+            questionLbl.Content = _independentReviewViewModel.SendQuestion(_independentReviewQuizModel);
+
+            questionNumberLbl.Content = _independentReviewViewModel.SendQuestionNumber(_independentReviewQuizModel);
+
+            List<string?> options = _independentReviewViewModel.SendOptions(_independentReviewQuizModel);
+
+            if (options.First() == "NULL")
+            {
+                textAnswerStackPanel.Visibility = Visibility.Visible;
+                multipleChoiceAnswerStackPanel.Visibility = Visibility.Hidden;
+            }
+            else
+            {
+                textAnswerStackPanel.Visibility = Visibility.Hidden;
+                multipleChoiceAnswerStackPanel.Visibility = Visibility.Visible;
+                option1rb.Content = options[0];
+                option2rb.Content = options[1];
+                option3rb.Content = options[2];
+                option4rb.Content = options[3];
+                option5rb.Content = options[4];
+                option6rb.Content = options[5];
+            }
+
+            //List<RadioButton> radioButtons = new List<RadioButton>();
+            //radioButtons.Add(option1rb);
+            //radioButtons.Add(option2rb);
+            //radioButtons.Add(option3rb);
+            //radioButtons.Add(option4rb);
+            //radioButtons.Add(option5rb);
+            //radioButtons.Add(option6rb);
+
+            //string? answerInput = "";
+
+            //bool answerInputted = false;
+
+            //foreach (RadioButton button in radioButtons)
+            //{
+            //    if (button.IsChecked == true)
+            //    {
+            //        answerInput = Convert.ToString(button.Content);
+            //        answerInputted = true;
+            //    }
+            //}
+
+            //if (answerInputted == true) 
+            //{
+            //    string answer = _independentReviewViewModel.CompareTextAnswers(answerInput, _independentReviewQuizModel);
+
+            //    foreach (RadioButton button in radioButtons)
+            //    {
+            //        if (Convert.ToString(button.Content) == answer)
+            //        {
+            //            button.Foreground = new SolidColorBrush(Colors.Yellow);
+            //        }
+
+            //    }
+            //}
             
         }
     }
