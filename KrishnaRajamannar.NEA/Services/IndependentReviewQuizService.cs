@@ -72,20 +72,20 @@ namespace KrishnaRajamannar.NEA.Services
             string question, answer;
             string? option1, option2, option3, option4, option5, option6;
             option1 = option2 = option3 = option4 = option5 = option6 = "";
-            int pointsforquestion, score, answerStreak;
+            int feedbackID, pointsforquestion, score, answerStreak;
             bool isCorrect;
 
             const string sqlQuery =
                 @"
-                    SELECT Question, CorrectAnswer, Option1, Option2, Option3, Option4, Option5, Option6, NumberOfPoints as PointsForQuestion ,Points as Score, IsCorrect, AnswerStreak FROM MultipleChoiceQuestion,QuizFeedback
+                    SELECT FeedbackID, Question, CorrectAnswer, Option1, Option2, Option3, Option4, Option5, Option6, NumberOfPoints as PointsForQuestion ,Points as Score, IsCorrect, AnswerStreak FROM MultipleChoiceQuestion,QuizFeedback
                     WHERE MultipleChoiceQuestion.MCQuestionID = QuizFeedback.MCQuestionID 
-                    And QuizFeedback.QuizID = @QuizID
+                    And QuizFeedback.QuizID = 36
 
                     UNION All
 
-                    SELECT Question, Answer, Null as Option1, null as Option2, null as Option3, null as Option4, null as Option5, null as Option6, NumberOfPoints as PointsForQuestion, Points as Score,  IsCorrect, AnswerStreak  FROM TextQuestion,QuizFeedback
+                    SELECT FeedbackID, Question, Answer, Null as Option1, null as Option2, null as Option3, null as Option4, null as Option5, null as Option6, NumberOfPoints as PointsForQuestion, Points as Score,  IsCorrect, AnswerStreak  FROM TextQuestion,QuizFeedback
                     WHERE TextQuestion.TextQuestionID = QuizFeedback.TextQuestionID
-                    And QuizFeedback.QuizID = @QuizID
+                    And QuizFeedback.QuizID = 36
                 ";
 
             using SqlConnection connection = new SqlConnection(connectionString);
@@ -100,9 +100,11 @@ namespace KrishnaRajamannar.NEA.Services
 
             while (data.Read()) 
             {
-                question = data.GetString(0);
+                feedbackID = data.GetInt32(0);
 
-                answer = data.GetString(1);
+                question = data.GetString(1);
+
+                answer = data.GetString(2);
 
                 string[]? options = { option1, option2, option3, option4, option5, option6 };
                 for (int i = 1; i <= 6; i++)
@@ -119,17 +121,17 @@ namespace KrishnaRajamannar.NEA.Services
                     }
                 }
 
-                pointsforquestion = data.GetInt32(8);
+                pointsforquestion = data.GetInt32(9);
 
-                score = data.GetInt32(9);   
+                score = data.GetInt32(10);   
 
-                isCorrect = data.GetBoolean(10);
+                isCorrect = data.GetBoolean(11);
 
-                answerStreak = data.GetInt32(11);
+                answerStreak = data.GetInt32(12);
 
                 questionsToReview.Add(new IndependentReviewQuizModel() 
                 {
-                    Question = question, Answer = answer,
+                   FeedbackID = feedbackID ,Question = question, Answer = answer,
 
                     Option1 = options[0], Option2 = options[1], Option3 = options[2], 
                     Option4 = options[3], Option5 = options[4], Option6 = options[5],
@@ -141,9 +143,11 @@ namespace KrishnaRajamannar.NEA.Services
             return questionsToReview;
         }
 
+
+        //update answer streak, update isCorrect to 1, update points 
         public void UpdateCorrectAnswer() 
         {
-            const string 
+            //const string 
         }
     }
 }

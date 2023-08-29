@@ -8,6 +8,7 @@ namespace KrishnaRajamannar.NEA.Models
 {
     public class IndependentReviewQuizModel
     {
+        public int FeedbackID { get; set; }
         public string Question { get; set; }
         public string Answer { get; set; }
         public string? Option1 { get; set; }

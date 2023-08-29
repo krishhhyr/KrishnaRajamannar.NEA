@@ -54,14 +54,28 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
             IList<IndependentReviewQuizModel> sortedquestions = new List<IndependentReviewQuizModel>();
 
-            foreach (IndependentReviewQuizModel question in unsortedquestions)
-            {
+            //foreach (IndependentReviewQuizModel question in unsortedquestions)
+            //{
 
-                //prevents duplicate questions
+            //    //prevents duplicate questions
+            //    IndependentReviewQuizModel recentQuestionAdded = new IndependentReviewQuizModel();
+            //    foreach (int point in sortedPoints)
+            //    {
+            //        if ((point == question.Points) && (recentQuestionAdded != question)) 
+            //        {
+            //            sortedquestions.Add(question);
+            //            recentQuestionAdded = question;
+            //        }
+            //    }
+            //}
+
+            foreach (int point in sortedPoints) // 1 3 4 4 5 5
+            {
                 IndependentReviewQuizModel recentQuestionAdded = new IndependentReviewQuizModel();
-                foreach (int point in sortedPoints)
+
+                foreach (IndependentReviewQuizModel question in unsortedquestions) //qs strawberry che 4, nissan 5, chocolate 4, kota 5, 17 3, 21st 1
                 {
-                    if ((point == question.Points) && (recentQuestionAdded != question)) 
+                    if ((point == question.Points) && (IsQuestionAdded(question.Question, sortedquestions) == false))
                     {
                         sortedquestions.Add(question);
                         recentQuestionAdded = question;
@@ -69,7 +83,23 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 }
             }
             return sortedquestions;
+
+            //(recentQuestionAdded.Points != question.Points)
         }
+
+        //checks if the question already exists in the sorted questions - prevents duplicates 
+        public bool IsQuestionAdded(string question, IList<IndependentReviewQuizModel> sortedQuestions) 
+        {
+            foreach (IndependentReviewQuizModel unsortedQuestion in sortedQuestions) 
+            {
+                if (unsortedQuestion.Question == question) 
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
 
         public string SendQuestion(IList<IndependentReviewQuizModel> questions) 
         {
@@ -132,6 +162,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
             if (correctAnswer == answerInput)
             {
+                //is correct = 1, answer streak = as + 1, 
 
                 return "Correct!";
             }
@@ -145,10 +176,6 @@ namespace KrishnaRajamannar.NEA.ViewModels
             IndependentReviewQuizModel currentQuestion = question[questionNumber - 1];
             int points = currentQuestion.Points * (currentQuestion.AnswerStreak + 1);
             return points;
-        }
-        public void UpdateFeedback() 
-        {
-            
         }
         public static List<int> MSort(List<int> points)
         {
