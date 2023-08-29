@@ -130,12 +130,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
             return $"Question: {questionNumber}/{questions.Count}";
         }
-        //public string SendAnswer(IList<IndependentReviewQuizModel> questions)
-        //{
-        //    IndependentReviewQuizModel currentQuestion = questions[questionNumber - 1];
 
-        //    return currentQuestion.Answer;
-        //}
         public List<string?> SendOptions(IList<IndependentReviewQuizModel> questions)
         {
             IndependentReviewQuizModel currentQuestion = questions[questionNumber - 1];
