@@ -14,6 +14,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace KrishnaRajamannar.NEA.Views
 {
@@ -23,18 +24,47 @@ namespace KrishnaRajamannar.NEA.Views
     public partial class IndependentReviewQuiz : Window
     {
         IndependentReviewViewModel _independentReviewViewModel;
+        
+        int timeIncrement = 0;
 
         public IndependentReviewQuiz(IndependentReviewViewModel independentReviewViewModel)
         {
             InitializeComponent();
 
+       
+            DispatcherTimer timer = new DispatcherTimer();
+            timer.Interval = TimeSpan.FromSeconds(1);
+            timer.Tick += new EventHandler(timer_tick);
+            timer.Start();
+
+
             _independentReviewViewModel = independentReviewViewModel;
 
            IList<IndependentReviewQuizModel> _independentReviewQuizModel = _independentReviewViewModel.GetQuestionsInOrder();
 
-            //questionLbl.Content = _independentReviewViewModel.SendQuestion(_independentReviewQuizModel);
+        }
 
-            //questionNumberLbl.Content = _independentReviewViewModel.SendQuestionNumber(_independentReviewQuizModel);
+        private void timer_tick (object sender, EventArgs e) 
+        {
+           timeIncrement++;
+
+           timeTakenLbl.Content = $"Time Taken: {timeIncrement} Seconds";
+
+            //int minutes = 0;
+
+            //if (timeIncrement > 60)
+            //{
+            //    timeIncrement = 0;
+            //    minutes++;
+            //    timeTakenLbl.Content = $"Time Taken: {minutes} Minutes {timeIncrement} Seconds";
+            //}
+            //else 
+            //{
+            //    timeTakenLbl.Content = $"Time Taken: {timeIncrement} Seconds";
+            //}
+
+
+
         }
 
         private void textAnswerBtn_Click(object sender, RoutedEventArgs e)
