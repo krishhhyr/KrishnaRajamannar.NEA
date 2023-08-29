@@ -79,13 +79,13 @@ namespace KrishnaRajamannar.NEA.Services
                 @"
                     SELECT FeedbackID, Question, CorrectAnswer, Option1, Option2, Option3, Option4, Option5, Option6, NumberOfPoints as PointsForQuestion ,Points as Score, IsCorrect, AnswerStreak FROM MultipleChoiceQuestion,QuizFeedback
                     WHERE MultipleChoiceQuestion.MCQuestionID = QuizFeedback.MCQuestionID 
-                    And QuizFeedback.QuizID = 36
+                    And QuizFeedback.QuizID = @QuizID
 
                     UNION All
 
                     SELECT FeedbackID, Question, Answer, Null as Option1, null as Option2, null as Option3, null as Option4, null as Option5, null as Option6, NumberOfPoints as PointsForQuestion, Points as Score,  IsCorrect, AnswerStreak  FROM TextQuestion,QuizFeedback
                     WHERE TextQuestion.TextQuestionID = QuizFeedback.TextQuestionID
-                    And QuizFeedback.QuizID = 36
+                    And QuizFeedback.QuizID = @QuizID
                 ";
 
             using SqlConnection connection = new SqlConnection(connectionString);
@@ -107,17 +107,17 @@ namespace KrishnaRajamannar.NEA.Services
                 answer = data.GetString(2);
 
                 string[]? options = { option1, option2, option3, option4, option5, option6 };
-                for (int i = 1; i <= 6; i++)
+                for (int i = 0; i < 6; i++)
                 {
                     // Checks if the data in the database is null or not for an option.
                     // If it is not, it assigns the value to the respective option in the array.
-                    if (data.IsDBNull(i + 1))
+                    if (data.IsDBNull(i + 3))
                     {
-                        options[i - 1] = "NULL";
+                        options[i] = "NULL";
                     }
                     else
                     {
-                        options[i - 1] = data.GetString(i + 1);
+                        options[i] = data.GetString(i + 3);
                     }
                 }
 

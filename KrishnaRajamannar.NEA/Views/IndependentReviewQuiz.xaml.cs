@@ -43,7 +43,14 @@ namespace KrishnaRajamannar.NEA.Views
 
             correctTextAnswerLbl.Content = _independentReviewViewModel.CompareTextAnswers(answerTxtBox.Text, _independentReviewQuizModel);
 
-            pointsAwardedLbl.Content = $"Points awarded: {_independentReviewViewModel.CalculatePoints(_independentReviewQuizModel)}";
+            if (Convert.ToString(correctTextAnswerLbl.Content) == "Correct!")
+            {
+                pointsAwardedLbl.Content = $"Points awarded: {_independentReviewViewModel.CalculatePoints(_independentReviewQuizModel)}";
+            }
+            else 
+            {
+                pointsAwardedLbl.Content = "Points Awarded: 0";
+            }
         }
 
         private void multipleChoiceAnswerBtn_Click(object sender, RoutedEventArgs e)
@@ -80,12 +87,13 @@ namespace KrishnaRajamannar.NEA.Views
 
             if (answer != "Correct!")
             {
+                pointsAwardedLbl.Content = "Points Awarded: 0";
+
                 foreach (RadioButton button in radioButtons)
                 {
                     if (Convert.ToString(button.Content) == answer)
                     {
                         button.Foreground = new SolidColorBrush(Colors.Green);
-                        button.FontWeight = FontWeights.Bold;
                         break;
                     }
                 }
@@ -93,13 +101,14 @@ namespace KrishnaRajamannar.NEA.Views
             else 
             {
                 MessageBox.Show(answer);
+                pointsAwardedLbl.Content = $"Points Awarded: {_independentReviewViewModel.CalculatePoints(_independentReviewQuizModel)}";
             }
-
-            pointsAwardedLbl.Content = $"Points awarded: {_independentReviewViewModel.CalculatePoints(_independentReviewQuizModel)}";
         }
 
         private void nextBtn_Click(object sender, RoutedEventArgs e)
         {
+            pointsAwardedLbl.Content = "Points Awarded: -";
+
             IList<IndependentReviewQuizModel> _independentReviewQuizModel = _independentReviewViewModel.GetQuestionsInOrder();
 
             answerTxtBox.Text = "";
