@@ -55,17 +55,17 @@
                     VerticalAlignment="Center" Margin="10" HorizontalAlignment="Center"
                     Visibility="Hidden">
             <RadioButton x:Name="option1rb" Content="Option 1" FontSize="20" Height="30" 
-                         Width="400" HorizontalAlignment="Right" VerticalContentAlignment="Center"></RadioButton>
+                         Width="400" HorizontalAlignment="Right" VerticalContentAlignment="Center" IsTabStop="False"></RadioButton>
             <RadioButton x:Name="option2rb" Content="Option 2" FontSize="20" Height="30" 
-                         Width="400" HorizontalAlignment="Left" VerticalContentAlignment="Center"></RadioButton>
+                         Width="400" HorizontalAlignment="Left" VerticalContentAlignment="Center" IsTabStop="False"></RadioButton>
             <RadioButton x:Name="option3rb" Content="Option 3" FontSize="20" Height="30" 
-                         Width="400" HorizontalAlignment="Left"  VerticalContentAlignment="Center"></RadioButton>
+                         Width="400" HorizontalAlignment="Left"  VerticalContentAlignment="Center" IsTabStop="False"></RadioButton>
             <RadioButton x:Name="option4rb" Content="Option 4" FontSize="20" Height="30" 
-                         Width="400" HorizontalAlignment="Left" VerticalContentAlignment="Center"></RadioButton>
+                         Width="400" HorizontalAlignment="Left" VerticalContentAlignment="Center" IsTabStop="False"></RadioButton>
             <RadioButton x:Name="option5rb" Content="Option 5" FontSize="20" Height="30" 
-                         Width="400" HorizontalAlignment="Left"  VerticalContentAlignment="Center"></RadioButton>
+                         Width="400" HorizontalAlignment="Left"  VerticalContentAlignment="Center" IsTabStop="False"></RadioButton>
             <RadioButton x:Name="option6rb" Content="Option 6" FontSize="20" Height="30" 
-                         Width="400" HorizontalAlignment="Left"  VerticalContentAlignment="Center"></RadioButton>
+                         Width="400" HorizontalAlignment="Left"  VerticalContentAlignment="Center" IsTabStop="False"></RadioButton>
 
             <Button x:Name="multipleChoiceAnswerBtn" Content="Submit" FontSize="16" Height="30" Width="100" Margin="10" Click="multipleChoiceAnswerBtn_Click"></Button>
         </StackPanel>

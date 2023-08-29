@@ -26,6 +26,7 @@ namespace KrishnaRajamannar.NEA.Views
         IndependentReviewViewModel _independentReviewViewModel;
         
         int timeIncrement = 0;
+        int totalpoints = 0;
 
         public IndependentReviewQuiz(IndependentReviewViewModel independentReviewViewModel)
         {
@@ -63,9 +64,6 @@ namespace KrishnaRajamannar.NEA.Views
             //{
             //    timeTakenLbl.Content = $"Time Taken: {timeIncrement} Seconds";
             //}
-
-
-
         }
 
         private void textAnswerBtn_Click(object sender, RoutedEventArgs e)
@@ -76,11 +74,12 @@ namespace KrishnaRajamannar.NEA.Views
 
             if (Convert.ToString(correctTextAnswerLbl.Content) == "Correct!")
             {
-                pointsAwardedLbl.Content = $"Points awarded: {_independentReviewViewModel.CalculatePoints(_independentReviewQuizModel)}";
+                totalpoints = totalpoints + _independentReviewViewModel.CalculatePoints(_independentReviewQuizModel);
+                pointsAwardedLbl.Content = $"Points Awarded: {totalpoints}";
             }
             else 
             {
-                pointsAwardedLbl.Content = "Points Awarded: 0";
+                pointsAwardedLbl.Content = $"Points Awarded: {totalpoints} ";
             }
         }
 
@@ -118,7 +117,7 @@ namespace KrishnaRajamannar.NEA.Views
 
             if (answer != "Correct!")
             {
-                pointsAwardedLbl.Content = "Points Awarded: 0";
+                pointsAwardedLbl.Content = $"Points Awarded: {totalpoints}";
 
                 foreach (RadioButton button in radioButtons)
                 {
@@ -132,13 +131,15 @@ namespace KrishnaRajamannar.NEA.Views
             else 
             {
                 MessageBox.Show(answer);
-                pointsAwardedLbl.Content = $"Points Awarded: {_independentReviewViewModel.CalculatePoints(_independentReviewQuizModel)}";
+                totalpoints = totalpoints + _independentReviewViewModel.CalculatePoints(_independentReviewQuizModel);
+                pointsAwardedLbl.Content = $"Points Awarded: {totalpoints}";
+
             }
         }
 
         private void nextBtn_Click(object sender, RoutedEventArgs e)
         {
-            pointsAwardedLbl.Content = "Points Awarded: -";
+            pointsAwardedLbl.Content = $"Points Awarded: {totalpoints}";
 
             IList<IndependentReviewQuizModel> _independentReviewQuizModel = _independentReviewViewModel.GetQuestionsInOrder();
 
