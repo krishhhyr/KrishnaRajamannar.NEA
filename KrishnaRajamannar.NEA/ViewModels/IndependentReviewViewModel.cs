@@ -106,17 +106,18 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
         public string SendQuestion(IList<IndependentReviewQuizModel> questions) 
         {
-            IndependentReviewQuizModel currentQuestion = questions[questionNumber];
-            questionNumber++;
-
-            if (questionNumber > questions.Count) 
+            if (questionNumber >= questions.Count)
             {
                 MessageBox.Show("No more questions");
+                // show quiz feedback
                 return "END";
             }
-
-
-            return currentQuestion.Question;    
+            else 
+            {
+                IndependentReviewQuizModel currentQuestion = questions[questionNumber];
+                questionNumber++;
+                return currentQuestion.Question;
+            }
         }
         public string SendQuestionNumber(IList<IndependentReviewQuizModel> questions)
         {
@@ -161,13 +162,18 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
             string correctAnswer = currentQuestion.Answer;
 
+            if (answerInput == "") 
+            {
+                MessageBox.Show("No answer has been inputted.", "Quiz Review");
+
+                return "";
+            }
+
             //if answer is correct; change isCorrect to true, update points, update answer streak (check if not 0), output points attained to user, calc total points
 
             if (correctAnswer == answerInput)
             {
                 //is correct = 1, answer streak = as + 1, 
-
-
 
                 return "Correct!";
             }
