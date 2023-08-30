@@ -74,7 +74,9 @@ namespace KrishnaRajamannar.NEA.Views
 
             if (Convert.ToString(correctTextAnswerLbl.Content) == "Correct!")
             {
-                totalpoints = totalpoints + _independentReviewViewModel.CalculatePoints(_independentReviewQuizModel);
+                int pointsForQuestion = _independentReviewViewModel.CalculatePoints(_independentReviewQuizModel);
+                MessageBox.Show($"You've gained {pointsForQuestion} points!");
+                totalpoints = totalpoints + pointsForQuestion;
                 pointsAwardedLbl.Content = $"Points Awarded: {totalpoints}";
             }
             else 
@@ -86,12 +88,6 @@ namespace KrishnaRajamannar.NEA.Views
         private void multipleChoiceAnswerBtn_Click(object sender, RoutedEventArgs e)
         {
             IList<IndependentReviewQuizModel> _independentReviewQuizModel = _independentReviewViewModel.GetQuestionsInOrder();
-
-            //nextBtn.Visibility = Visibility.Hidden;
-
-            //questionLbl.Content = _independentReviewViewModel.SendQuestion(_independentReviewQuizModel);
-
-            //questionNumberLbl.Content = _independentReviewViewModel.SendQuestionNumber(_independentReviewQuizModel);
 
             List<string?> options = _independentReviewViewModel.SendOptions(_independentReviewQuizModel);
 
@@ -130,8 +126,9 @@ namespace KrishnaRajamannar.NEA.Views
             }
             else 
             {
-                MessageBox.Show(answer);
-                totalpoints = totalpoints + _independentReviewViewModel.CalculatePoints(_independentReviewQuizModel);
+                int pointsForQuestion = _independentReviewViewModel.CalculatePoints(_independentReviewQuizModel);
+                MessageBox.Show($"You have gained {pointsForQuestion} points!");
+                totalpoints = totalpoints + pointsForQuestion;
                 pointsAwardedLbl.Content = $"Points Awarded: {totalpoints}";
 
             }
@@ -157,6 +154,7 @@ namespace KrishnaRajamannar.NEA.Views
             foreach (RadioButton button in radioButtons) 
             {
                 button.Foreground = new SolidColorBrush(Colors.Black);
+                button.IsChecked = false;
             }
 
             questionLbl.Content = _independentReviewViewModel.SendQuestion(_independentReviewQuizModel);
