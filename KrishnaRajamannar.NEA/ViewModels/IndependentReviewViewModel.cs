@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -136,17 +137,24 @@ namespace KrishnaRajamannar.NEA.ViewModels
             return options;
         }
 
-        public Dictionary<string, int> CompareTextAnswers(string answerInput, IList<IndependentReviewQuizModel> question)
+        public Dictionary<int, string?> CompareTextAnswers(string answerInput, IList<IndependentReviewQuizModel> question)
         {
             IndependentReviewQuizModel currentQuestion = question[questionNumber - 1];
 
+            Dictionary<int , string?> answerAndPoints = new Dictionary<int , string?>();
+
             string correctAnswer = currentQuestion.Answer;
+
+            int pointsForAnswer = CalculatePoints(currentQuestion);
 
             if (answerInput == "") 
             {
                 MessageBox.Show("No answer has been inputted.", "Quiz Review");
 
-                return "";
+                answerAndPoints.Add(0, "");
+                return answerAndPoints;
+
+                //return "";
             }
 
             //if answer is correct; change isCorrect to true, update points, update answer streak (check if not 0), output points attained to user, calc total points
@@ -155,15 +163,31 @@ namespace KrishnaRajamannar.NEA.ViewModels
             {
                 //is correct = 1, answer streak = as + 1, 
 
-                totalPoints = totalPoints + 1;
+                //message box
+
+                MessageBox.Show($"You have gained {pointsForAnswer} points!", "Correct!");
+                totalPoints = totalPoints + pointsForAnswer;
+
+                answerAndPoints.Add(pointsForAnswer, "Correct!");
 
                 return "Correct!";
             }
+            else 
+            {
+                if (totalPoints > 0) 
+                {
+                    MessageBox.Show($"You have lost {pointsForAnswer} points!", "Incorrect!");
+                    totalPoints = totalPoints - pointsForAnswer;
+                }
+
+                MessageBox.Show($"You have lost no points!", "Incorrect!");
+                totalPoints = 0;
+            }
             return correctAnswer;
         }
-        public int CalculatePoints(IList<IndependentReviewQuizModel> question) 
+        public int CalculatePoints(IndependentReviewQuizModel question) 
         {
-            IndependentReviewQuizModel currentQuestion = question[questionNumber - 1];
+            //IndependentReviewQuizModel currentQuestion = question[questionNumber - 1];
             int points = currentQuestion.Points * (currentQuestion.AnswerStreak + 1);
             return points;
         }
