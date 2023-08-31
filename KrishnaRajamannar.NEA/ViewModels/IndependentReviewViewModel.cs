@@ -20,6 +20,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
         private readonly IndependentReviewQuizModel _independentReviewQuizModel;
 
         private int questionNumber = 0;
+        private int totalPoints = 0;
 
 
         public IndependentReviewViewModel(IIndependentReviewQuizService independentReviewQuizService, IndependentReviewQuizModel independentReviewQuizModel)
@@ -54,22 +55,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
             List<int> sortedPoints = MSort(pointsForQuestion);
 
-            IList<IndependentReviewQuizModel> sortedquestions = new List<IndependentReviewQuizModel>();
-
-            //foreach (IndependentReviewQuizModel question in unsortedquestions)
-            //{
-
-            //    //prevents duplicate questions
-            //    IndependentReviewQuizModel recentQuestionAdded = new IndependentReviewQuizModel();
-            //    foreach (int point in sortedPoints)
-            //    {
-            //        if ((point == question.Points) && (recentQuestionAdded != question)) 
-            //        {
-            //            sortedquestions.Add(question);
-            //            recentQuestionAdded = question;
-            //        }
-            //    }
-            //}
+            IList<IndependentReviewQuizModel> sortedquestions = new List<IndependentReviewQuizModel>()
 
             foreach (int point in sortedPoints) // 1 3 4 4 5 5
             {
@@ -108,7 +94,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
         {
             if (questionNumber >= questions.Count)
             {
-                MessageBox.Show("No more questions");
+                MessageBox.Show("There are no more questions left to review", "Quiz Review", );
                 // show quiz feedback
                 return "END";
             }
@@ -124,8 +110,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
             if (questionNumber > questions.Count)
             {
                 MessageBox.Show("You have answered all the questions");
-                return "END";
-                //display quiz feedback
+                //display quiz feedback - new window
             }
 
             return $"Question: {questionNumber}/{questions.Count}";
@@ -151,7 +136,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
             return options;
         }
 
-        public string CompareTextAnswers(string answerInput, IList<IndependentReviewQuizModel> question)
+        public Dictionary<string, int> CompareTextAnswers(string answerInput, IList<IndependentReviewQuizModel> question)
         {
             IndependentReviewQuizModel currentQuestion = question[questionNumber - 1];
 
@@ -170,12 +155,11 @@ namespace KrishnaRajamannar.NEA.ViewModels
             {
                 //is correct = 1, answer streak = as + 1, 
 
+                totalPoints = totalPoints + 1;
+
                 return "Correct!";
             }
-            else
-            {
-                return correctAnswer;
-            }
+            return correctAnswer;
         }
         public int CalculatePoints(IList<IndependentReviewQuizModel> question) 
         {

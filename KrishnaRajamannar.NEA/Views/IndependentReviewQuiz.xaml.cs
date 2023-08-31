@@ -68,25 +68,47 @@ namespace KrishnaRajamannar.NEA.Views
 
         private void textAnswerBtn_Click(object sender, RoutedEventArgs e)
         {
+            nextBtn.Visibility = Visibility.Visible;
+
+            textAnswerBtn.Visibility = Visibility.Hidden;
+
             IList<IndependentReviewQuizModel> _independentReviewQuizModel = _independentReviewViewModel.GetQuestionsInOrder();
 
-            correctTextAnswerLbl.Content = _independentReviewViewModel.CompareTextAnswers(answerTxtBox.Text, _independentReviewQuizModel);
+            string answer = _independentReviewViewModel.CompareTextAnswers(answerTxtBox.Text, _independentReviewQuizModel);
 
-            if (Convert.ToString(correctTextAnswerLbl.Content) == "Correct!")
+            int pointsForAnswer = _independentReviewViewModel.CalculatePoints(_independentReviewQuizModel);
+
+            correctTextAnswerLbl.Content = answer;
+
+            if (answer != "Correct!")
             {
-                int pointsForQuestion = _independentReviewViewModel.CalculatePoints(_independentReviewQuizModel);
-                MessageBox.Show($"You've gained {pointsForQuestion} points!");
-                totalpoints = totalpoints + pointsForQuestion;
-                pointsAwardedLbl.Content = $"Points Awarded: {totalpoints}";
+                if (totalpoints > 0)
+                {
+                    MessageBox.Show($"You have lost {pointsForAnswer} points!", "Incorrect!");
+                    totalpoints = totalpoints - pointsForAnswer;
+                    pointsAwardedLbl.Content = $"Points Awarded: {totalpoints}";
+                }
+                else
+                {
+                    MessageBox.Show($"You have lost no points!", "Incorrect!"); 
+                    totalpoints = 0;
+                    
+                }
             }
             else 
             {
-                pointsAwardedLbl.Content = $"Points Awarded: {totalpoints} ";
+                MessageBox.Show($"You have gained {pointsForAnswer} points!", "Correct!");
+                totalpoints = totalpoints + pointsForAnswer;
+                pointsAwardedLbl.Content = $"Points Awarded: {totalpoints}";
+               
             }
         }
-
         private void multipleChoiceAnswerBtn_Click(object sender, RoutedEventArgs e)
         {
+            nextBtn.Visibility = Visibility.Visible;
+
+            multipleChoiceAnswerBtn.Visibility = Visibility.Hidden;
+
             IList<IndependentReviewQuizModel> _independentReviewQuizModel = _independentReviewViewModel.GetQuestionsInOrder();
 
             List<string?> options = _independentReviewViewModel.SendOptions(_independentReviewQuizModel);
@@ -111,9 +133,22 @@ namespace KrishnaRajamannar.NEA.Views
 
             string answer = _independentReviewViewModel.CompareTextAnswers(answerInput, _independentReviewQuizModel);
 
+            int pointsForAnswer = _independentReviewViewModel.CalculatePoints(_independentReviewQuizModel);
+
             if (answer != "Correct!")
             {
-                pointsAwardedLbl.Content = $"Points Awarded: {totalpoints}";
+                if (totalpoints > 0)
+                {
+                    totalpoints = totalpoints - pointsForAnswer;
+                    MessageBox.Show($"You have lost {pointsForAnswer} points!", "Incorrect!");
+                    pointsAwardedLbl.Content = $"Points Awarded: {totalpoints}";
+
+                }
+                else 
+                {
+                    MessageBox.Show($"You have lost no points!", "Incorrect!");
+                    totalpoints = 0;
+                }
 
                 foreach (RadioButton button in radioButtons)
                 {
@@ -123,19 +158,25 @@ namespace KrishnaRajamannar.NEA.Views
                         break;
                     }
                 }
+
             }
             else 
-            {
-                int pointsForQuestion = _independentReviewViewModel.CalculatePoints(_independentReviewQuizModel);
-                MessageBox.Show($"You have gained {pointsForQuestion} points!");
-                totalpoints = totalpoints + pointsForQuestion;
+            {   
+                MessageBox.Show($"You have gained {pointsForAnswer} points!", "Correct!");
+                totalpoints = totalpoints + pointsForAnswer;
                 pointsAwardedLbl.Content = $"Points Awarded: {totalpoints}";
-
             }
         }
 
         private void nextBtn_Click(object sender, RoutedEventArgs e)
         {
+            nextBtn.Visibility = Visibility.Hidden;
+
+            textAnswerBtn.Visibility = Visibility.Visible;
+
+            multipleChoiceAnswerBtn.Visibility = Visibility.Visible;
+
+
             pointsAwardedLbl.Content = $"Points Awarded: {totalpoints}";
 
             IList<IndependentReviewQuizModel> _independentReviewQuizModel = _independentReviewViewModel.GetQuestionsInOrder();
@@ -172,6 +213,7 @@ namespace KrishnaRajamannar.NEA.Views
             {
                 textAnswerStackPanel.Visibility = Visibility.Hidden;
                 multipleChoiceAnswerStackPanel.Visibility = Visibility.Visible;
+
                 option1rb.Content = options[0];
                 option2rb.Content = options[1];
                 option3rb.Content = options[2];
