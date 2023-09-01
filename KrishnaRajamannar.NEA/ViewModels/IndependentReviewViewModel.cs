@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -56,7 +57,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
             List<int> sortedPoints = MSort(pointsForQuestion);
 
-            IList<IndependentReviewQuizModel> sortedquestions = new List<IndependentReviewQuizModel>()
+            IList<IndependentReviewQuizModel> sortedquestions = new List<IndependentReviewQuizModel>();
 
             foreach (int point in sortedPoints) // 1 3 4 4 5 5
             {
@@ -95,7 +96,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
         {
             if (questionNumber >= questions.Count)
             {
-                MessageBox.Show("There are no more questions left to review", "Quiz Review", );
+                MessageBox.Show("There are no more questions left to review", "Quiz Review", MessageBoxButton.OK);
                 // show quiz feedback
                 return "END";
             }
@@ -137,11 +138,13 @@ namespace KrishnaRajamannar.NEA.ViewModels
             return options;
         }
 
-        public Dictionary<int, string?> CompareTextAnswers(string answerInput, IList<IndependentReviewQuizModel> question)
+        public (string, int) CompareTextAnswers(string answerInput, IList<IndependentReviewQuizModel> question)
         {
             IndependentReviewQuizModel currentQuestion = question[questionNumber - 1];
 
-            Dictionary<int , string?> answerAndPoints = new Dictionary<int , string?>();
+            //Dictionary<int , string?> answerAndPoints = new Dictionary<int , string?>();
+
+            //Tuple<string?, int> answerAndPoints;
 
             string correctAnswer = currentQuestion.Answer;
 
@@ -151,8 +154,11 @@ namespace KrishnaRajamannar.NEA.ViewModels
             {
                 MessageBox.Show("No answer has been inputted.", "Quiz Review");
 
-                answerAndPoints.Add(0, "");
-                return answerAndPoints;
+                //answerAndPoints.Add(0, "");
+
+                //answerAndPoints = ("", 0)
+                
+                return ("", 0);
 
                 //return "";
             }
@@ -168,9 +174,11 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 MessageBox.Show($"You have gained {pointsForAnswer} points!", "Correct!");
                 totalPoints = totalPoints + pointsForAnswer;
 
-                answerAndPoints.Add(pointsForAnswer, "Correct!");
+                //answerAndPoints.Add(totalPoints, "Correct!");
 
-                return "Correct!";
+                return ("Correct!", totalPoints);
+
+                //return "Correct!";
             }
             else 
             {
@@ -178,16 +186,22 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 {
                     MessageBox.Show($"You have lost {pointsForAnswer} points!", "Incorrect!");
                     totalPoints = totalPoints - pointsForAnswer;
+
+                    //answerAndPoints.Add(totalPoints, correctAnswer);
+
+                    return (correctAnswer, totalPoints);
                 }
 
                 MessageBox.Show($"You have lost no points!", "Incorrect!");
                 totalPoints = 0;
             }
-            return correctAnswer;
+            //answerAndPoints.Add(totalPoints, correctAnswer);
+            return (correctAnswer, totalPoints);
         }
         public int CalculatePoints(IndependentReviewQuizModel question) 
         {
             //IndependentReviewQuizModel currentQuestion = question[questionNumber - 1];
+            IndependentReviewQuizModel currentQuestion = question;
             int points = currentQuestion.Points * (currentQuestion.AnswerStreak + 1);
             return points;
         }
