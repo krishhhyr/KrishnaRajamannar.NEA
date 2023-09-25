@@ -23,24 +23,24 @@
         <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="0">
 
             <Border BorderBrush="Gainsboro" BorderThickness="2" Margin="10">
-                <Label x:Name="questionNumberLbl" Content="Question: 4/5" FontSize="16" VerticalAlignment="Center"></Label>
+                <Label x:Name="questionNumberLbl" Content="Question: -" FontSize="16" VerticalAlignment="Center"></Label>
             </Border>
 
             <Border BorderBrush="Gainsboro" BorderThickness="2" Margin="10">
-                <Label x:Name="pointsAwardedLbl" Content="Points Awarded: 17" FontSize="16" VerticalAlignment="Center"></Label>
+                <Label x:Name="pointsAwardedLbl" Content="Points Awarded: -" FontSize="16" VerticalAlignment="Center"></Label>
             </Border>
 
             <Border BorderBrush="Gainsboro" BorderThickness="2" Margin="10">
-                <Label x:Name="timeTakenLbl" Content="Time Taken: 2 Minutes" FontSize="16" VerticalAlignment="Center"></Label>
+                <Label x:Name="timeTakenLbl" Content="Time Taken: -" FontSize="16" VerticalAlignment="Center"></Label>
             </Border>
         </StackPanel>
 
-        <Label x:Name="questionLbl" Content="What is 1+1?" Grid.Column="1" Grid.Row="1" 
+        <Label x:Name="questionLbl" Content="" Grid.Column="1" Grid.Row="1" 
                Height="50" Width="550" HorizontalAlignment="Center" HorizontalContentAlignment="Center" 
                VerticalAlignment="Top" FontSize="30" Margin="10"></Label>
 
         <StackPanel x:Name="textAnswerStackPanel" Grid.Column="1" Grid.Row="1" Height="230" 
-                    VerticalAlignment="Center" Margin="10" Visibility="Visible">
+                    VerticalAlignment="Center" Margin="10" Visibility="Hidden">
             <TextBox x:Name="answerTxtBox" Height="50" Width="500" Margin="10" 
                      FontSize="20" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"></TextBox>
 
@@ -72,6 +72,13 @@
 
         <Button x:Name="nextBtn" Content="Next" Grid.Column="1" Grid.Row="1"
                 FontSize="16" Height="30" Width="100" Margin="40"
-                VerticalAlignment="Bottom" Click="nextBtn_Click"></Button>
+                VerticalAlignment="Bottom" Click="nextBtn_Click" Visibility="Hidden">
+            
+        </Button>
+
+        <Button x:Name="startBtn" Content="Start" Grid.Column="1" Grid.Row="1" 
+                FontSize="30" Height="50" Width="130" VerticalAlignment="Center"
+                Click="startBtn_Click"></Button>
+        
     </Grid>
 </Window>

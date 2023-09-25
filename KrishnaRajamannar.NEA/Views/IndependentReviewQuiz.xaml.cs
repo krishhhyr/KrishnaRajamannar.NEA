@@ -32,14 +32,6 @@ namespace KrishnaRajamannar.NEA.Views
         {
             InitializeComponent();
 
-            //source: https://www.google.com/search?q=adding+a+timer+in+wpf&safe=active&sca_esv=561023782&source=lnms&sa=X&ved=2ahUKEwjD_NaJoIKBAxVOSkEAHTF0DqIQ0pQJegQIAxAC&biw=2133&bih=1032&dpr=0.9#fpstate=ive&vld=cid:44eabde8,vid:QkT8fgoFz3g
-
-            DispatcherTimer timer = new DispatcherTimer();
-            timer.Interval = TimeSpan.FromSeconds(1);
-            timer.Tick += new EventHandler(timer_tick);
-            timer.Start();
-
-
             _independentReviewViewModel = independentReviewViewModel;
 
            IList<IndependentReviewQuizModel> _independentReviewQuizModel = _independentReviewViewModel.GetQuestionsInOrder();
@@ -51,27 +43,10 @@ namespace KrishnaRajamannar.NEA.Views
            timeIncrement++;
 
            timeTakenLbl.Content = $"Time Taken: {timeIncrement} Seconds";
-
-            //int minutes = 0;
-
-            //if (timeIncrement > 60)
-            //{
-            //    timeIncrement = 0;
-            //    minutes++;
-            //    timeTakenLbl.Content = $"Time Taken: {minutes} Minutes {timeIncrement} Seconds";
-            //}
-            //else 
-            //{
-            //    timeTakenLbl.Content = $"Time Taken: {timeIncrement} Seconds";
-            //}
         }
 
         private void textAnswerBtn_Click(object sender, RoutedEventArgs e)
         {
-            nextBtn.Visibility = Visibility.Visible;
-
-            textAnswerBtn.Visibility = Visibility.Hidden;
-
             IList<IndependentReviewQuizModel> _independentReviewQuizModel = _independentReviewViewModel.GetQuestionsInOrder();
 
             //string answer = _independentReviewViewModel.CompareTextAnswers(answerTxtBox.Text, _independentReviewQuizModel);
@@ -80,44 +55,20 @@ namespace KrishnaRajamannar.NEA.Views
 
             correctTextAnswerLbl.Content = answerAndPoints.Item1;
 
-            totalPoints = totalPoints + answerAndPoints.Item2;
+            //totalPoints = totalPoints + answerAndPoints.Item2;
+
+            totalPoints = answerAndPoints.Item2;
 
             pointsAwardedLbl.Content = $"Points Awarded: {totalPoints}";
 
-
-
-            //int pointsForAnswer = _independentReviewViewModel.CalculatePoints(_independentReviewQuizModel);
-
-            //correctTextAnswerLbl.Content = answer;
-
-            //if (answer != "Correct!")
-            //{
-            //    if (totalpoints > 0)
-            //    {
-            //        MessageBox.Show($"You have lost {pointsForAnswer} points!", "Incorrect!");
-            //        totalpoints = totalpoints - pointsForAnswer;
-            //        pointsAwardedLbl.Content = $"Points Awarded: {totalpoints}";
-            //    }
-            //    else
-            //    {
-            //        MessageBox.Show($"You have lost no points!", "Incorrect!"); 
-            //        totalpoints = 0;
-                    
-            //    }
-            //}
-            //else 
-            //{
-            //    MessageBox.Show($"You have gained {pointsForAnswer} points!", "Correct!");
-            //    totalpoints = totalpoints + pointsForAnswer;
-            //    pointsAwardedLbl.Content = $"Points Awarded: {totalpoints}";
-               
-            //}
+            if (answerAndPoints.Item1 != "")
+            {
+                nextBtn.Visibility = Visibility.Visible;
+                textAnswerBtn.Visibility = Visibility.Hidden;
+            }
         }
         private void multipleChoiceAnswerBtn_Click(object sender, RoutedEventArgs e)
         {
-            nextBtn.Visibility = Visibility.Visible;
-
-            multipleChoiceAnswerBtn.Visibility = Visibility.Hidden;
 
             IList<IndependentReviewQuizModel> _independentReviewQuizModel = _independentReviewViewModel.GetQuestionsInOrder();
 
@@ -141,41 +92,42 @@ namespace KrishnaRajamannar.NEA.Views
                 }
             }
 
-            //string answer = _independentReviewViewModel.CompareTextAnswers(answerInput, _independentReviewQuizModel);
+            var answerAndPoints = _independentReviewViewModel.CompareTextAnswers(answerInput, _independentReviewQuizModel);
 
-            //int pointsForAnswer = _independentReviewViewModel.CalculatePoints(_independentReviewQuizModel);
+            if (answerAndPoints.Item1 == "Correct!")
+            {
+                foreach (RadioButton button in radioButtons)
+                {
+                    if (Convert.ToString(button.Content) == answerInput)
+                    {
+                        button.Foreground = new SolidColorBrush(Colors.Green);
+                        break;
+                    }
+                }
+            }
+            else 
+            {
+                foreach (RadioButton button in radioButtons)
+                {
+                    if (Convert.ToString(button.Content) == answerAndPoints.Item1)
+                    {
+                        button.Foreground = new SolidColorBrush(Colors.Green);
+                        break;
+                    }
+                }
+            }
 
-        //    if (answer != "Correct!")
-        //    {
-        //        if (totalpoints > 0)
-        //        {
-        //            totalpoints = totalpoints - pointsForAnswer;
-        //            MessageBox.Show($"You have lost {pointsForAnswer} points!", "Incorrect!");
-        //            pointsAwardedLbl.Content = $"Points Awarded: {totalpoints}";
+            
 
-        //        }
-        //        else 
-        //        {
-        //            MessageBox.Show($"You have lost no points!", "Incorrect!");
-        //            totalpoints = 0;
-        //        }
+            totalPoints = answerAndPoints.Item2;
 
-        //        foreach (RadioButton button in radioButtons)
-        //        {
-        //            if (Convert.ToString(button.Content) == answer)
-        //            {
-        //                button.Foreground = new SolidColorBrush(Colors.Green);
-        //                break;
-        //            }
-        //        }
+            pointsAwardedLbl.Content = $"Points Awarded: {totalPoints}";
 
-        //    }
-        //    else 
-        //    {   
-        //        MessageBox.Show($"You have gained {pointsForAnswer} points!", "Correct!");
-        //        totalpoints = totalpoints + pointsForAnswer;
-        //        pointsAwardedLbl.Content = $"Points Awarded: {totalpoints}";
-        //    }
+            if (answerAndPoints.Item1 != "")
+            {
+                nextBtn.Visibility = Visibility.Visible;
+                multipleChoiceAnswerBtn.Visibility = Visibility.Hidden;
+            }
         }
 
         private void nextBtn_Click(object sender, RoutedEventArgs e)
@@ -231,6 +183,27 @@ namespace KrishnaRajamannar.NEA.Views
                 option5rb.Content = options[4];
                 option6rb.Content = options[5];
             }
+        }
+
+        // This event is used to load the first question to users.
+        // It also starts the timer which increments every second. 
+        private void startBtn_Click(object sender, RoutedEventArgs e)
+        {
+            //source: https://www.google.com/search?q=adding+a+timer+in+wpf&safe=active&sca_esv=561023782&source=lnms&sa=X&ved=2ahUKEwjD_NaJoIKBAxVOSkEAHTF0DqIQ0pQJegQIAxAC&biw=2133&bih=1032&dpr=0.9#fpstate=ive&vld=cid:44eabde8,vid:QkT8fgoFz3g
+
+            // This creates a new timer.
+            DispatcherTimer timer = new DispatcherTimer();
+            // Specifies how the timer should be incremented.
+            timer.Interval = TimeSpan.FromSeconds(1);
+            // Calls an event which is used to increment the timer itself.
+            timer.Tick += new EventHandler(timer_tick);
+            timer.Start();
+
+            // Ensures that the start button is hidden once pressed.
+            startBtn.Visibility = Visibility.Hidden;
+            // Event which loads questions to users.
+            // In this case, it will load the first question to users.
+            nextBtn_Click(sender, e);
         }
     }
 }

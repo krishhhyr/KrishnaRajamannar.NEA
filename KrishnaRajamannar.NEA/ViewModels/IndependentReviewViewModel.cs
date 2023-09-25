@@ -50,9 +50,11 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
             List<int> pointsForQuestion = new List<int>();
 
+            // change points for question into points gained
+
             foreach (IndependentReviewQuizModel question in unsortedquestions) 
             {
-                pointsForQuestion.Add(question.Points);
+                pointsForQuestion.Add(question.PointsForQuestion);
             }
 
             List<int> sortedPoints = MSort(pointsForQuestion);
@@ -65,7 +67,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
                 foreach (IndependentReviewQuizModel question in unsortedquestions) //qs strawberry che 4, nissan 5, chocolate 4, kota 5, 17 3, 21st 1
                 {
-                    if ((point == question.Points) && (IsQuestionAdded(question.Question, sortedquestions) == false))
+                    if ((point == question.PointsForQuestion) && (IsQuestionAdded(question.Question, sortedquestions) == false))
                     {
                         sortedquestions.Add(question);
                         recentQuestionAdded = question;
@@ -182,27 +184,29 @@ namespace KrishnaRajamannar.NEA.ViewModels
             }
             else 
             {
-                if (totalPoints > 0) 
+                totalPoints = totalPoints - pointsForAnswer;
+
+                if (totalPoints > 0)
                 {
                     MessageBox.Show($"You have lost {pointsForAnswer} points!", "Incorrect!");
-                    totalPoints = totalPoints - pointsForAnswer;
-
                     //answerAndPoints.Add(totalPoints, correctAnswer);
-
                     return (correctAnswer, totalPoints);
                 }
 
-                MessageBox.Show($"You have lost no points!", "Incorrect!");
-                totalPoints = 0;
+                else 
+                {
+                    totalPoints = 0;
+                    MessageBox.Show($"You have lost all of your points!", "Incorrect!");
+                    //answerAndPoints.Add(totalPoints, correctAnswer)
+                    return (correctAnswer, totalPoints);
+                }
             }
-            //answerAndPoints.Add(totalPoints, correctAnswer);
-            return (correctAnswer, totalPoints);
         }
         public int CalculatePoints(IndependentReviewQuizModel question) 
         {
             //IndependentReviewQuizModel currentQuestion = question[questionNumber - 1];
             IndependentReviewQuizModel currentQuestion = question;
-            int points = currentQuestion.Points * (currentQuestion.AnswerStreak + 1);
+            int points = currentQuestion.PointsForQuestion * (currentQuestion.AnswerStreak + 1);
             return points;
         }
         public static List<int> MSort(List<int> points)

@@ -18,7 +18,7 @@ namespace KrishnaRajamannar.NEA.Models
         public string? Option5 { get; set; }
         public string? Option6 { get; set; }
         public int PointsForQuestion { get; set; }
-        public int Points { get; set; }
+        public int PointsGained { get; set; }
         public bool IsCorrect { get; set; }
         public int AnswerStreak { get; set; }
     }

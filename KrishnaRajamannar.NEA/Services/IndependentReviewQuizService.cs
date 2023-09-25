@@ -72,20 +72,22 @@ namespace KrishnaRajamannar.NEA.Services
             string question, answer;
             string? option1, option2, option3, option4, option5, option6;
             option1 = option2 = option3 = option4 = option5 = option6 = "";
-            int feedbackID, pointsforquestion, score, answerStreak;
+            int feedbackID, pointsForQuestion, pointsGained, answerStreak;
             bool isCorrect;
 
             const string sqlQuery =
                 @"
-                    SELECT FeedbackID, Question, CorrectAnswer, Option1, Option2, Option3, Option4, Option5, Option6, NumberOfPoints as PointsForQuestion ,Points as Score, IsCorrect, AnswerStreak FROM MultipleChoiceQuestion,QuizFeedback
+                    SELECT FeedbackID, Question, CorrectAnswer, Option1, Option2, Option3, Option4, Option5, Option6, NumberOfPoints as PointsForQuestion , PointsGained, IsCorrect, AnswerStreak 
+                    FROM MultipleChoiceQuestion,QuizFeedback
                     WHERE MultipleChoiceQuestion.MCQuestionID = QuizFeedback.MCQuestionID 
                     And QuizFeedback.QuizID = @QuizID
 
                     UNION All
 
-                    SELECT FeedbackID, Question, Answer, Null as Option1, null as Option2, null as Option3, null as Option4, null as Option5, null as Option6, NumberOfPoints as PointsForQuestion, Points as Score,  IsCorrect, AnswerStreak  FROM TextQuestion,QuizFeedback
+                    SELECT FeedbackID, Question, Answer, Null as Option1, null as Option2, null as Option3, null as Option4, null as Option5, null as Option6, NumberOfPoints as PointsForQuestion, PointsGained,  IsCorrect, AnswerStreak  
+                    FROM TextQuestion,QuizFeedback
                     WHERE TextQuestion.TextQuestionID = QuizFeedback.TextQuestionID
-                    And QuizFeedback.QuizID = @QuizID
+                    And QuizFeedback.QuizID = 36
                 ";
 
             using SqlConnection connection = new SqlConnection(connectionString);
@@ -121,10 +123,17 @@ namespace KrishnaRajamannar.NEA.Services
                     }
                 }
 
-                pointsforquestion = data.GetInt32(9);
+                pointsForQuestion = data.GetInt32(9);
 
-                score = data.GetInt32(10);   
-
+                if (data.IsDBNull(10))
+                {
+                    pointsGained = 0;
+                }
+                else 
+                {
+                    pointsGained = data.GetInt32(10);
+                }
+ 
                 isCorrect = data.GetBoolean(11);
 
                 answerStreak = data.GetInt32(12);
@@ -136,7 +145,7 @@ namespace KrishnaRajamannar.NEA.Services
                     Option1 = options[0], Option2 = options[1], Option3 = options[2], 
                     Option4 = options[3], Option5 = options[4], Option6 = options[5],
 
-                    PointsForQuestion = pointsforquestion, Points = score, IsCorrect = isCorrect, AnswerStreak = answerStreak,
+                    PointsForQuestion = pointsForQuestion, PointsGained = pointsGained, IsCorrect = isCorrect, AnswerStreak = answerStreak,
                 });
             }
 
@@ -145,9 +154,12 @@ namespace KrishnaRajamannar.NEA.Services
 
 
         //update answer streak, update isCorrect to 1, update points 
-        public void UpdateCorrectAnswer() 
+        public void UpdateCorrectAnswer(int questionID, int answerStreak, int Correct, int PointsGained) 
         {
-            //const string 
+            const string SQlquery =
+                @"
+                    
+                ";
         }
     }
 }
