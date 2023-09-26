@@ -10,5 +10,7 @@ namespace KrishnaRajamannar.NEA.Services
         void InsertMultipleChoiceQuestionQuizFeedback(int MCquestionID, int points, int quizID);
 
         public IList<IndependentReviewQuizModel> GetAllQuestions(int quizID);
+
+        void UpdateFeedback(int feedbackID, int answerStreak, int IsCorrect, int pointsGained);
     }
 }

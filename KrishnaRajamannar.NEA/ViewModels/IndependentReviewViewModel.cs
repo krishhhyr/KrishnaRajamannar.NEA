@@ -178,6 +178,8 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
                 //answerAndPoints.Add(totalPoints, "Correct!");
 
+
+
                 return ("Correct!", totalPoints);
 
                 //return "Correct!";

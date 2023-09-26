@@ -18,12 +18,12 @@ namespace KrishnaRajamannar.NEA.Services
         }
 
         //inital insert
-        public void InsertTextQuestionQuizFeedback(int textQuestionID, int points, int quizID)
+        public void InsertTextQuestionQuizFeedback(int textQuestionID, int pointsForQuestion, int quizID)
         {
             const string sqlQuery =
                 @"
-                    INSERT INTO QuizFeedback(TextQuestionID, MCQuestionID, Points, TimeTaken, IsCorrect, AnswerStreak, QuizID)
-                    VALUES (@TextQuestionID, null, @Points, 0, 0, 0, @QuizID)
+                    INSERT INTO QuizFeedback(TextQuestionID, MCQuestionID, PointsForQuestion, PointsGained, TimeTaken, IsCorrect, AnswerStreak, QuizID)
+                    VALUES (@TextQuestionID, null, @PointsForQuestion, 0, 0, 0, 0, @QuizID)
                 ";
 
             using SqlConnection connection = new SqlConnection(connectionString);
@@ -33,7 +33,7 @@ namespace KrishnaRajamannar.NEA.Services
             command.CommandText = sqlQuery;
 
             command.Parameters.AddWithValue("@TextQuestionID", textQuestionID);
-            command.Parameters.AddWithValue("@Points", points);
+            command.Parameters.AddWithValue("@PointsForQuestion", pointsForQuestion);
             command.Parameters.AddWithValue("@QuizID", quizID);
 
             command.ExecuteNonQuery();
@@ -42,12 +42,12 @@ namespace KrishnaRajamannar.NEA.Services
         }
 
         //inital insert
-        public void InsertMultipleChoiceQuestionQuizFeedback(int MCquestionID, int points, int quizID)
+        public void InsertMultipleChoiceQuestionQuizFeedback(int MCquestionID, int pointsForQuestion, int quizID)
         {
             const string sqlQuery =
                 @"
-                    INSERT INTO QuizFeedback(TextQuestionID, MCQuestionID, Points, TimeTaken, IsCorrect, AnswerStreak, QuizID)
-                    VALUES (null, @MCQuestionID, @Points, 0, 0, 0, @QuizID)
+                    INSERT INTO QuizFeedback(TextQuestionID, MCQuestionID, PointsForQuestion, PointsGained, TimeTaken, IsCorrect, AnswerStreak, QuizID)
+                    VALUES (null, @MCQuestionID, @PointsForQuestion, 0, 0, 0, 0, @QuizID)
                 ";
 
             using SqlConnection connection = new SqlConnection(connectionString);
@@ -57,7 +57,7 @@ namespace KrishnaRajamannar.NEA.Services
             command.CommandText = sqlQuery;
 
             command.Parameters.AddWithValue("@MCQuestionID", MCquestionID);
-            command.Parameters.AddWithValue("@Points", points);
+            command.Parameters.AddWithValue("@PointsForQuestion", pointsForQuestion);
             command.Parameters.AddWithValue("@QuizID", quizID);
 
             command.ExecuteNonQuery();
@@ -87,7 +87,7 @@ namespace KrishnaRajamannar.NEA.Services
                     SELECT FeedbackID, Question, Answer, Null as Option1, null as Option2, null as Option3, null as Option4, null as Option5, null as Option6, NumberOfPoints as PointsForQuestion, PointsGained,  IsCorrect, AnswerStreak  
                     FROM TextQuestion,QuizFeedback
                     WHERE TextQuestion.TextQuestionID = QuizFeedback.TextQuestionID
-                    And QuizFeedback.QuizID = 36
+                    And QuizFeedback.QuizID = @QuizID
                 ";
 
             using SqlConnection connection = new SqlConnection(connectionString);
@@ -154,12 +154,40 @@ namespace KrishnaRajamannar.NEA.Services
 
 
         //update answer streak, update isCorrect to 1, update points 
-        public void UpdateCorrectAnswer(int questionID, int answerStreak, int Correct, int PointsGained) 
+        public void UpdateFeedback(int feedbackID, int answerStreak, int IsCorrect, int pointsGained) 
         {
-            const string SQlquery =
+            const string sqlQuery =
                 @"
-                    
+                    BEGIN TRANSACTION
+                    UPDATE QuizFeedback
+                    SET PointsGained = @PointsGained
+                    WHERE FeedbackID = @FeedbackID
+
+                    UPDATE QuizFeedback
+                    SET AnswerStreak = @AnswerStreak
+                    WHERE FeedbackID = @FeedbackID
+
+                    UPDATE QuizFeedback
+                    SET IsCorrect = @IsCorrect
+                    WHERE FeedbackID = @FeedbackID
+                    COMMIT;
                 ";
+
+
+            using SqlConnection connection = new SqlConnection(connectionString);
+            connection.Open();
+
+            var command = connection.CreateCommand();
+            command.CommandText = sqlQuery;
+
+            command.Parameters.AddWithValue("@PointsGained", pointsGained);
+            command.Parameters.AddWithValue("@AnswerStreak", answerStreak);
+            command.Parameters.AddWithValue("@IsCorrect", IsCorrect);
+            command.Parameters.AddWithValue("@FeedbackID", feedbackID);
+
+            command.ExecuteNonQuery();
+
+            connection.Close();
         }
     }
 }
