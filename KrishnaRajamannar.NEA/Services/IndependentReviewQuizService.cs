@@ -152,7 +152,6 @@ namespace KrishnaRajamannar.NEA.Services
             return questionsToReview;
         }
 
-
         //update answer streak, update isCorrect to 1, update points 
         public void UpdateFeedback(int feedbackID, int answerStreak, int IsCorrect, int pointsGained) 
         {

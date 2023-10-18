@@ -9,9 +9,7 @@ using Microsoft.Data.SqlClient;
 
 namespace KrishnaRajamannar.NEA.Services
 {
-    // A class which groups the subroutines relating to user and the database.
-    // Represents actions like inserting the data into the database about a user
-    // or retrieving data about a user.
+
     public class UserService : IUserService
     {
         const string connectionString = $"Data Source=KRISHNASXPS\\SQLEXPRESS;Initial Catalog=quizApp;Persist Security Info=True;User ID=sa;Password=passw0rd;TrustServerCertificate=True";
@@ -21,18 +19,16 @@ namespace KrishnaRajamannar.NEA.Services
 
         }
 
+        // This region deals with recieving data from the database to valid an account login.
         #region AccountLogin
-        //check if username is in database
-
-        // Function checks if the username inputted exists in the database.
-
-        //source: https://learn.microsoft.com/en-us/dotnet/standard/data/sqlite/?tabs=netcore-cli
+        // This subroutine checks if a username that a user has inputted when creating an account exists.
+        // It does this by searching the database for the username that has been inputted.
+        // If no username already exists, the function returns false. 
         public bool IsUserExists(string username)
         {
             string foundUsername;
 
-            //string dbPath = GetDatabasePath();
-            using (SqlConnection connection = new SqlConnection($"Data Source=KRISHNASXPS\\SQLEXPRESS;Initial Catalog=quizApp;Persist Security Info=True;User ID=sa;Password=passw0rd;TrustServerCertificate=True"))
+            using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
 
@@ -44,12 +40,14 @@ namespace KrishnaRajamannar.NEA.Services
                     WHERE Username = @username
                 ";
 
+                // The username entered by the user is passed as a parameter.
                 command.Parameters.AddWithValue("@username", username);
 
                 var data = command.ExecuteReader();
                 while (data.Read())
                 {
                     foundUsername = data.GetString(1);
+                    // Checks if the username found is equal to the username entered by the user. 
                     if (foundUsername == username)
                     {
                         return true;
@@ -60,11 +58,11 @@ namespace KrishnaRajamannar.NEA.Services
             return false;
 
         }
+        // Function which gets the hashed password for a username.
+        // Searches the database with the username inputted by the user. 
         public string GetPassword(string username)
         {
-
-            //string dbPath = GetDatabasePath();
-            using (SqlConnection connection = new SqlConnection($"Data Source=KRISHNASXPS\\SQLEXPRESS;Initial Catalog=quizApp;Persist Security Info=True;User ID=sa;Password=passw0rd;TrustServerCertificate=True"))
+            using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
                 var command = connection.CreateCommand();
@@ -84,43 +82,40 @@ namespace KrishnaRajamannar.NEA.Services
                     return password;
                 }
             }
+            // If no password has been found with the given username, the function returns null. 
             return null;
         }
-        //check if hashed password inputted = hashed password from DB
         #endregion
 
+        // This region deals with the creation of account by sending account information to the database to create an account. 
         #region AccountCreation
-        //check if username does not exist in database
-        //store data in database
-        //hash password and store that in DB
+        // This subroutine uses an INSERT to create a new account based on the username and password that the user has provided. 
         public void CreateUser(string username, string password)
         {
-            SqlConnection connection = new SqlConnection($"Data Source=KRISHNASXPS\\SQLEXPRESS;Initial Catalog=quizApp;Persist Security Info=True;" +
-                $"User ID=sa;Password=passw0rd;TrustServerCertificate=True");
-
-            int userID = 3;
+            SqlConnection connection = new SqlConnection(connectionString);
 
             connection.Open();
 
             var command = connection.CreateCommand();
             command.CommandText =
                 @"
-                    INSERT INTO UserDetails(username, password, numberOfPoints) VALUES (@username, @password, @numberofpoints)
+                    INSERT INTO UserDetails(username, password, numberOfPoints) 
+                    VALUES (@username, @password, @numberofpoints)
                 ";
 
-
-            //command.Parameters.AddWithValue("@userID", userID);
             command.Parameters.AddWithValue("@username", username);
+            // This parameter calls the HashPassword to hash the password before it's inserted into the database. 
             command.Parameters.AddWithValue("@password", HashPassword(password));
             command.Parameters.AddWithValue("@numberofpoints", 0);
             command.ExecuteNonQuery();
 
             connection.Close();
         }
+
+        // I don't think I need this subroutine...?
         public int GetNumberOfRows()
         {
-            SqlConnection connection = new SqlConnection($"Data Source=KRISHNASXPS\\SQLEXPRESS;Initial Catalog=quizApp;Persist Security Info=True;" +
-                $"User ID=sa;Password=passw0rd;TrustServerCertificate=True");
+            SqlConnection connection = new SqlConnection(connectionString);
 
             connection.Open();
 
@@ -136,18 +131,22 @@ namespace KrishnaRajamannar.NEA.Services
             {
                 return -1;
             }
-            return 1;
+            return Convert.ToInt32(result);
 
         }
+        // This function uses a SHA256 encryption algorithm to hash passwords before they are inserted into the database. 
+        // Created with reference to: https://www.c-sharpcorner.com/article/compute-sha256-hash-in-c-sharp
         public string HashPassword(string password)
         {
             string hashedPassword;
 
+            // This is used to append each byte to one string. 
             StringBuilder stringBuilder = new StringBuilder();
 
             SHA256 sha256 = SHA256.Create();
             byte[] byteArray = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
 
+            // Used to convert the byte array into a singular string. 
             for (int i = 0; i < byteArray.Length; i++)
             {
                 stringBuilder.Append(byteArray[i].ToString("x2"));
@@ -157,12 +156,18 @@ namespace KrishnaRajamannar.NEA.Services
         }
         #endregion
 
+        // This region focuses on functions which don't directly relate to creating an account 
+        // or logging into an account. 
         #region AccountServices
+        // Function uses SQL gets the user ID for a username which is passed as a parameter. 
         public int GetUserID(string username)
         {
-            if (username == null) return -1;
+            if (username == null)
+            {
+                return -1;
+            } 
 
-            using (SqlConnection connection = new SqlConnection($"Data Source=KRISHNASXPS\\SQLEXPRESS;Initial Catalog=quizApp;Persist Security Info=True;User ID=sa;Password=passw0rd;TrustServerCertificate=True"))
+            using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
                 var command = connection.CreateCommand();
@@ -185,7 +190,7 @@ namespace KrishnaRajamannar.NEA.Services
             return -1;
         }
 
-        // This function gets the number of points that a particular user has. 
+        // Function gets the number of points that a user has gained. 
         public int GetPoints(string username)
         {
             int numberOfPoints = 0;

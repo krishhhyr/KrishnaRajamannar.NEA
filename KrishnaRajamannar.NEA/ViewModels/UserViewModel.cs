@@ -12,8 +12,14 @@ using System.Windows.Input;
 
 namespace KrishnaRajamannar.NEA.ViewModels
 {
+
+    // INotifyPropertyChanged is used to indicate the changes being made to the textboxes that users input data into. 
+    // It's used to update the changed data in the local variables in this class from the UI code.
+    // This whole process is used for data binding. 
     public class UserViewModel : INotifyPropertyChanged
     {
+
+        // This instantiates all the classes and interfaces which are used in this class
         private readonly IUserService _userService;
         private readonly AccountCreation _accountCreation;
         private readonly AccountLogin _accountLogin;
@@ -38,15 +44,22 @@ namespace KrishnaRajamannar.NEA.ViewModels
             }
         }
 
+        // This region represents the variables which will be affected by data binding.
+        // It retrieves the data from the UI elements that have data binding enabled.
+        // It then assigns that data to a local variable. 
         #region Variables
 
         private string _username;
         public string Username
         {
-            get { return _username; }
+            get 
+            {
+                return _username; 
+            }
             set
             {
                 _username = value;
+                // This is used to link the data retrieved from the username textbox in the account registration to the UserViewModel class
                 RaisePropertyChange("Username");
             }
         }
@@ -75,6 +88,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
         #endregion 
 
+        // This region is used to display the windows to users if they aren't already being displayed. 
         #region Windows 
 
         public void ShowAccountLogin()
@@ -105,13 +119,15 @@ namespace KrishnaRajamannar.NEA.ViewModels
         #endregion
 
         // A region which gets the users details from the database like the User ID or the number of points they have.
-
         #region User Details 
 
         // A function which gets the total number of points awarded to a user based on their username.
         public int GetPoints()
         {
-            if (Username == null) return 0;
+            if (Username == null)
+            {
+                return 0;
+            } 
             return _userService.GetPoints(Username);
         }
 

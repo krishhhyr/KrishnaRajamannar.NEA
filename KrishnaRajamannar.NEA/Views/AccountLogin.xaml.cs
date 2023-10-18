@@ -21,27 +21,42 @@ namespace KrishnaRajamannar.NEA.Views
     /// </summary>
     public partial class AccountLogin : Window
     {
+        // Used to link with the UserViewModel class
+
         private readonly UserViewModel _userViewModel;
          
 
         public AccountLogin(UserViewModel userViewModel)
         {
             InitializeComponent();
-            _userViewModel = userViewModel;           
+            _userViewModel = userViewModel;
+            
+            // Used to retrieve the data that the user inputs into the UserViewModel class
+            // i.e; the username and password
+
             this.DataContext = _userViewModel;
 
         }
 
+        //Used when the user clicks the login button. 
         private void loginBtn_Click(object sender, RoutedEventArgs e)
         {
-            //Ugly way of doing due security reasons
+
             _userViewModel.Password = passwordInputTxt.Password;
 
-            if (_userViewModel.Login() == true) { this.Close(); }
+            // Calls the Login function from the UserViewModel class. 
+            // Used to verify if the login details provided are valid or not. 
+            // If it is valid, the accountlogin window is hidden. 
+            if (_userViewModel.Login() == true) 
+            {
+                this.Close(); 
+            }
         }
 
         private void registerBtn_Click(object sender, RoutedEventArgs e)
-        {           
+        {    
+            // Calls the ShowAccountCreation subroutine which displays the window
+            // where users can create an account
             _userViewModel.ShowAccountCreation();
             this.Close();
         }
