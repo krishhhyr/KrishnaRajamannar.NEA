@@ -33,7 +33,6 @@ namespace KrishnaRajamannar.NEA.Views
             
             // Used to retrieve the data that the user inputs into the UserViewModel class
             // i.e; the username and password
-
             this.DataContext = _userViewModel;
 
         }

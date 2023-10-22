@@ -189,7 +189,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
             {
                 //call services to create the account 
                 _userService.CreateUser(Username, Password);
-
+                
                 MessageBox.Show("Successful Account Creation.");
 
                 return true;
