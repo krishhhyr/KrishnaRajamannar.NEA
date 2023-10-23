@@ -12,6 +12,7 @@ namespace KrishnaRajamannar.NEA.Services
     // A class which represents all the functions/procedures that the Quiz table has in the database
     public class QuizService : IQuizService
     {
+        // The connection string used to connect to the SQL Server database. 
         const string connectionString = $"Data Source=KRISHNASXPS\\SQLEXPRESS;Initial Catalog=quizApp;Persist Security Info=True;User ID=sa;Password=passw0rd;TrustServerCertificate=True";
 
         public QuizService()
@@ -19,10 +20,14 @@ namespace KrishnaRajamannar.NEA.Services
             
         }
 
-        // Function which returns a list of quizzes for a particular user
+        // Function which returns a list of quizzes for a particular user by passing the userID as a parameter. 
         public IList<QuizModel> GetQuiz(int _userID)
         {
+            // Used to represent a list of objects taken from the QuizModel
+            // Each element in this list would have the quiz ID, quiz title and number of questions of a quiz that the user has created.  
             IList<QuizModel> quizzes = new List<QuizModel>();
+
+            // Set of local variables used to assign the data from the database to. 
 
             int quizID;
             string quizTitle;
@@ -44,14 +49,17 @@ namespace KrishnaRajamannar.NEA.Services
 
             command.Parameters.AddWithValue("@UserID", _userID);
 
+            // Used to read the data with the SQL query provided. 
             var data = command.ExecuteReader();
             while (data.Read())
             {
+                // QuizID is the first column retrieved from the SQL query and so to read the data, the number 0 is used. 
                 quizID = data.GetInt32(0);
                 quizTitle = data.GetString(1);
                 numberOfQuestions = data.GetInt32(2);
                 userID = data.GetInt32(3);
 
+                // This is used to combine the variables in which data was retrieved as one element in the list using the QuizModel. 
                 quizzes.Add(new QuizModel() { QuizID = quizID, QuizTitle = quizTitle, NumberOfQuestions = numberOfQuestions, UserID = userID });
             }
         
@@ -137,6 +145,7 @@ namespace KrishnaRajamannar.NEA.Services
             {
                 quizTitleDB = data.GetString(0);
 
+                // Checks if the title of the quiz retrieved from the database matches a quiz title entered by a user. 
                 if (quizTitleDB == quizTitleInput)
                 {
                     return true;
@@ -183,6 +192,8 @@ namespace KrishnaRajamannar.NEA.Services
 
             return null;
         }
+
+        // This procedure is used to update the number of questions that have in created within a quiz.
         public void UpdateNumberOfQuestions(int numberOfQuestions, int quizID) 
         {
             const string sqlQuery =

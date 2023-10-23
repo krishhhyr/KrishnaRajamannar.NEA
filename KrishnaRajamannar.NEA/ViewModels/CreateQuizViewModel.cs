@@ -11,6 +11,8 @@ namespace KrishnaRajamannar.NEA.ViewModels
 {
     public class CreateQuizViewModel:INotifyPropertyChanged
     {
+
+        // This instantiates the class which handles the data being sent and recieved from the database for the Quiz table.
         public QuizService _quizService = new QuizService();
 
         public CreateQuizViewModel()
@@ -28,6 +30,8 @@ namespace KrishnaRajamannar.NEA.ViewModels
             }
         }
 
+        // This code is used for data binding with the UI. 
+
         private string _quizTitle;
         public string QuizTitle 
         {
@@ -39,6 +43,9 @@ namespace KrishnaRajamannar.NEA.ViewModels
             }
         }
 
+        // This function takes in the userID as a parameter. 
+        // When creating a quiz, if no title has been inputted, an error message is displayed.
+        // Otherwise, the method in QuizService is called which takes in the userID and QuizTitle to insert the quiz in the database. 
         public void CreateQuiz(int userID) 
         {
             if (QuizTitle != null)
