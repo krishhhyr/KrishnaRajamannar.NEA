@@ -144,7 +144,9 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
             string correctAnswer = currentQuestion.Answer;
 
-            int pointsForAnswer = CalculatePoints(currentQuestion);
+            bool isCorrect = true;
+
+            
 
             if (answerInput == "") 
             {
@@ -161,15 +163,20 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
                 //message box
 
-                MessageBox.Show($"Correct! You have been awarded {pointsForAnswer} points.", "Correct!");
-                totalPoints = totalPoints + pointsForAnswer;
+                int pointsForCorrectAnswer = CalculatePoints(currentQuestion, isCorrect);
+
+                MessageBox.Show($"Correct! You have been awarded {pointsForCorrectAnswer} points.", "Correct!");
+                totalPoints = totalPoints + pointsForCorrectAnswer;
 
                 return ("Correct!", totalPoints);
             }
             // If the answer provided by the user is not correct. 
             else 
             {
-                totalPoints = totalPoints - pointsForAnswer;
+                isCorrect = false;
+                int pointsForIncorrectAnswer = CalculatePoints(currentQuestion, isCorrect);
+
+                totalPoints = totalPoints - pointsForIncorrectAnswer;
 
                 // If the total number of points is less than 0, -1... (not possible to have -ve score)
                 if (totalPoints <= 0) 
@@ -181,33 +188,36 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
                 if (totalPoints > 0)
                 {
-                    MessageBox.Show($"Incorrect answer! You have lost {pointsForAnswer} points.", "Incorrect!");
+                    MessageBox.Show($"Incorrect answer! You have lost {pointsForIncorrectAnswer} points.", "Incorrect!");
                     return (correctAnswer, totalPoints);
                 }
 
                 return (correctAnswer, totalPoints);
             }
         }
-        public int CalculatePoints(IndependentReviewQuizModel question) 
+        public int CalculatePoints(IndependentReviewQuizModel question, bool isCorrect) 
         {
-            bool isCorrect = false;
-
             //IndependentReviewQuizModel currentQuestion = question[questionNumber - 1];
             IndependentReviewQuizModel currentQuestion = question;
 
-            if (isCorrect != question.IsCorrect) 
+            if (isCorrect != question.IsCorrect)
             {
-                // Answer Streak is now 1
-                // Points awarded is 0
+                return 0;
+            }
+            else 
+            {
+                // Used so that the number of points increases based on how many times a question has been answered correctly. 
+                int points = currentQuestion.PointsForQuestion * (currentQuestion.AnswerStreak + 1);
+                return points;
             }
 
 
 
             // Used so that the number of points increases based on how many times a question has been answered correctly. 
-            int points = currentQuestion.PointsForQuestion * (currentQuestion.AnswerStreak + 1);
-            return points;
+            //int points = currentQuestion.PointsForQuestion * (currentQuestion.AnswerStreak + 1);
+            //return points;
         }
-
+        public 
         #region MergeSort
         public static List<int> MSort(List<int> points)
         {
