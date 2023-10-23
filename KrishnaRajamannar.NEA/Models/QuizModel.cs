@@ -12,6 +12,7 @@ namespace KrishnaRajamannar.NEA.Models
         public int QuizID { get; set; }
         public string QuizTitle { get; set; }
         public int NumberOfQuestions { get; set; }
+        // Used to link the user who has created the quiz.
         public int UserID { get; set; }
     }
 }
