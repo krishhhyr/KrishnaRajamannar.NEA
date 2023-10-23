@@ -92,8 +92,6 @@ namespace KrishnaRajamannar.NEA.ViewModels
             return false;
         }
 
-
-
         public string SendQuestion(IList<IndependentReviewQuizModel> questions) 
         {
             if (questionNumber >= questions.Count)
@@ -144,25 +142,15 @@ namespace KrishnaRajamannar.NEA.ViewModels
         {
             IndependentReviewQuizModel currentQuestion = question[questionNumber - 1];
 
-            //Dictionary<int , string?> answerAndPoints = new Dictionary<int , string?>();
-
-            //Tuple<string?, int> answerAndPoints;
-
             string correctAnswer = currentQuestion.Answer;
 
             int pointsForAnswer = CalculatePoints(currentQuestion);
 
             if (answerInput == "") 
             {
-                MessageBox.Show("No answer has been inputted.", "Quiz Review");
-
-                //answerAndPoints.Add(0, "");
-
-                //answerAndPoints = ("", 0)
+                MessageBox.Show("No answer has been inputted.", "No Answer");
                 
                 return ("", 0);
-
-                //return "";
             }
 
             //if answer is correct; change isCorrect to true, update points, update answer streak (check if not 0), output points attained to user, calc total points
@@ -173,44 +161,54 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
                 //message box
 
-                MessageBox.Show($"You have gained {pointsForAnswer} points!", "Correct!");
+                MessageBox.Show($"Correct! You have been awarded {pointsForAnswer} points.", "Correct!");
                 totalPoints = totalPoints + pointsForAnswer;
 
-                //answerAndPoints.Add(totalPoints, "Correct!");
-
-
-
                 return ("Correct!", totalPoints);
-
-                //return "Correct!";
             }
+            // If the answer provided by the user is not correct. 
             else 
             {
                 totalPoints = totalPoints - pointsForAnswer;
 
-                if (totalPoints > 0)
+                // If the total number of points is less than 0, -1... (not possible to have -ve score)
+                if (totalPoints <= 0) 
                 {
-                    MessageBox.Show($"You have lost {pointsForAnswer} points!", "Incorrect!");
-                    //answerAndPoints.Add(totalPoints, correctAnswer);
+                    totalPoints = 0; 
+                    MessageBox.Show($"Incorrect answer! You have zero points.", "Incorrect!");
                     return (correctAnswer, totalPoints);
                 }
 
-                else 
+                if (totalPoints > 0)
                 {
-                    totalPoints = 0;
-                    MessageBox.Show($"You have lost all of your points!", "Incorrect!");
-                    //answerAndPoints.Add(totalPoints, correctAnswer)
+                    MessageBox.Show($"Incorrect answer! You have lost {pointsForAnswer} points.", "Incorrect!");
                     return (correctAnswer, totalPoints);
                 }
+
+                return (correctAnswer, totalPoints);
             }
         }
         public int CalculatePoints(IndependentReviewQuizModel question) 
         {
+            bool isCorrect = false;
+
             //IndependentReviewQuizModel currentQuestion = question[questionNumber - 1];
             IndependentReviewQuizModel currentQuestion = question;
+
+            if (isCorrect != question.IsCorrect) 
+            {
+                // Answer Streak is now 1
+                // Points awarded is 0
+            }
+
+
+
+            // Used so that the number of points increases based on how many times a question has been answered correctly. 
             int points = currentQuestion.PointsForQuestion * (currentQuestion.AnswerStreak + 1);
             return points;
         }
+
+        #region MergeSort
         public static List<int> MSort(List<int> points)
         {
             List<int> left, right;
@@ -287,6 +285,6 @@ namespace KrishnaRajamannar.NEA.ViewModels
             }
             return result;
         }
-
+        #endregion
     }
 }

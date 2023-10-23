@@ -10,7 +10,7 @@ namespace KrishnaRajamannar.NEA.Services
 {
     public class IndependentReviewQuizService : IIndependentReviewQuizService 
     {
-        private string connectionString = $"Data Source=KRISHNASXPS\\SQLEXPRESS;Initial Catalog=quizApp;Persist Security Info=True;User ID=sa;Password=passw0rd;TrustServerCertificate=True";
+        private const string connectionString = $"Data Source=KRISHNASXPS\\SQLEXPRESS;Initial Catalog=quizApp;Persist Security Info=True;User ID=sa;Password=passw0rd;TrustServerCertificate=True";
 
         public IndependentReviewQuizService()
         {
@@ -153,7 +153,7 @@ namespace KrishnaRajamannar.NEA.Services
         }
 
         //update answer streak, update isCorrect to 1, update points 
-        public void UpdateFeedback(int feedbackID, int answerStreak, int IsCorrect, int pointsGained) 
+        public void UpdateFeedback(int feedbackID, int answerStreak, int isCorrect, int pointsGained) 
         {
             const string sqlQuery =
                 @"
@@ -172,7 +172,6 @@ namespace KrishnaRajamannar.NEA.Services
                     COMMIT;
                 ";
 
-
             using SqlConnection connection = new SqlConnection(connectionString);
             connection.Open();
 
@@ -181,7 +180,7 @@ namespace KrishnaRajamannar.NEA.Services
 
             command.Parameters.AddWithValue("@PointsGained", pointsGained);
             command.Parameters.AddWithValue("@AnswerStreak", answerStreak);
-            command.Parameters.AddWithValue("@IsCorrect", IsCorrect);
+            command.Parameters.AddWithValue("@IsCorrect", isCorrect);
             command.Parameters.AddWithValue("@FeedbackID", feedbackID);
 
             command.ExecuteNonQuery();
