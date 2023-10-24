@@ -183,6 +183,8 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 {
                     totalPoints = 0; 
                     MessageBox.Show($"Incorrect answer! You have zero points.", "Incorrect!");
+
+                    _independentReviewQuizService.UpdateFeedback();
                     return (correctAnswer, totalPoints);
                 }
 
@@ -217,7 +219,6 @@ namespace KrishnaRajamannar.NEA.ViewModels
             //int points = currentQuestion.PointsForQuestion * (currentQuestion.AnswerStreak + 1);
             //return points;
         }
-        public 
         #region MergeSort
         public static List<int> MSort(List<int> points)
         {
