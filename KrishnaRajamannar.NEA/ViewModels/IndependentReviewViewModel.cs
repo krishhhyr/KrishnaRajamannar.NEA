@@ -79,146 +79,6 @@ namespace KrishnaRajamannar.NEA.ViewModels
             //(recentQuestionAdded.Points != question.Points)
         }
 
-        //checks if the question already exists in the sorted questions - prevents duplicates 
-        public bool IsQuestionAdded(string question, IList<IndependentReviewQuizModel> sortedQuestions) 
-        {
-            foreach (IndependentReviewQuizModel unsortedQuestion in sortedQuestions) 
-            {
-                if (unsortedQuestion.Question == question) 
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        public string SendQuestion(IList<IndependentReviewQuizModel> questions) 
-        {
-            if (questionNumber >= questions.Count)
-            {
-                MessageBox.Show("There are no more questions left to review", "Quiz Review", MessageBoxButton.OK);
-                // show quiz feedback
-                return "END";
-            }
-            else 
-            {
-                IndependentReviewQuizModel currentQuestion = questions[questionNumber];
-                questionNumber++;
-                return currentQuestion.Question;
-            }
-        }
-        public string SendQuestionNumber(IList<IndependentReviewQuizModel> questions)
-        {
-            if (questionNumber > questions.Count)
-            {
-                MessageBox.Show("You have answered all the questions");
-                //display quiz feedback - new window
-            }
-
-            return $"Question: {questionNumber}/{questions.Count}";
-        }
-
-        public List<string?> SendOptions(IList<IndependentReviewQuizModel> questions)
-        {
-            IndependentReviewQuizModel currentQuestion = questions[questionNumber - 1];
-
-            List<string?> options = new List<string?>();
-
-            options.Add(currentQuestion.Option1);
-            options.Add(currentQuestion.Option2);
-            options.Add(currentQuestion.Option3);
-            options.Add(currentQuestion.Option4);
-            options.Add(currentQuestion.Option5);
-            options.Add(currentQuestion.Option6);
-
-            if (options.Distinct().Count() != -1) 
-            {
-                return options;
-            }
-            return options;
-        }
-
-        public (string, int) CompareTextAnswers(string answerInput, IList<IndependentReviewQuizModel> question)
-        {
-            IndependentReviewQuizModel currentQuestion = question[questionNumber - 1];
-
-            string correctAnswer = currentQuestion.Answer;
-
-            bool isCorrect = true;
-
-            
-
-            if (answerInput == "") 
-            {
-                MessageBox.Show("No answer has been inputted.", "No Answer");
-                
-                return ("", 0);
-            }
-
-            //if answer is correct; change isCorrect to true, update points, update answer streak (check if not 0), output points attained to user, calc total points
-
-            if (correctAnswer == answerInput)
-            {
-                //is correct = 1, answer streak = as + 1, 
-
-                //message box
-
-                int pointsForCorrectAnswer = CalculatePoints(currentQuestion, isCorrect);
-
-                MessageBox.Show($"Correct! You have been awarded {pointsForCorrectAnswer} points.", "Correct!");
-                totalPoints = totalPoints + pointsForCorrectAnswer;
-
-                return ("Correct!", totalPoints);
-            }
-            // If the answer provided by the user is not correct. 
-            else 
-            {
-                isCorrect = false;
-                int pointsForIncorrectAnswer = CalculatePoints(currentQuestion, isCorrect);
-
-                totalPoints = totalPoints - pointsForIncorrectAnswer;
-
-                // If the total number of points is less than 0, -1... (not possible to have -ve score)
-                if (totalPoints <= 0) 
-                {
-                    totalPoints = 0; 
-                    MessageBox.Show($"Incorrect answer! You have zero points.", "Incorrect!");
-
-                    _independentReviewQuizService.UpdateFeedback();
-                    return (correctAnswer, totalPoints);
-                }
-
-                if (totalPoints > 0)
-                {
-                    MessageBox.Show($"Incorrect answer! You have lost {pointsForIncorrectAnswer} points.", "Incorrect!");
-                    return (correctAnswer, totalPoints);
-                }
-
-                return (correctAnswer, totalPoints);
-            }
-        }
-        public int CalculatePoints(IndependentReviewQuizModel question, bool isCorrect) 
-        {
-            //IndependentReviewQuizModel currentQuestion = question[questionNumber - 1];
-            IndependentReviewQuizModel currentQuestion = question;
-
-            if (isCorrect != question.IsCorrect)
-            {
-                return 0;
-            }
-            else 
-            {
-                // Used so that the number of points increases based on how many times a question has been answered correctly. 
-                int points = currentQuestion.PointsForQuestion * (currentQuestion.AnswerStreak + 1);
-                return points;
-            }
-
-
-
-            // Used so that the number of points increases based on how many times a question has been answered correctly. 
-            //int points = currentQuestion.PointsForQuestion * (currentQuestion.AnswerStreak + 1);
-            //return points;
-        }
         #region MergeSort
         public static List<int> MSort(List<int> points)
         {
@@ -297,5 +157,170 @@ namespace KrishnaRajamannar.NEA.ViewModels
             return result;
         }
         #endregion
+
+        //checks if the question already exists in the sorted questions - prevents duplicates 
+        public bool IsQuestionAdded(string question, IList<IndependentReviewQuizModel> sortedQuestions) 
+        {
+            foreach (IndependentReviewQuizModel unsortedQuestion in sortedQuestions) 
+            {
+                if (unsortedQuestion.Question == question) 
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public string SendQuestion(IList<IndependentReviewQuizModel> questions) 
+        {
+            if (questionNumber >= questions.Count)
+            {
+                MessageBox.Show("There are no more questions left to review", "Quiz Review", MessageBoxButton.OK);
+                // show quiz feedback
+                return "END";
+            }
+            else 
+            {
+                IndependentReviewQuizModel currentQuestion = questions[questionNumber];
+                questionNumber++;
+                return currentQuestion.Question;
+            }
+        }
+        public string SendQuestionNumber(IList<IndependentReviewQuizModel> questions)
+        {
+            if (questionNumber > questions.Count)
+            {
+                MessageBox.Show("You have answered all the questions");
+                //display quiz feedback - new window
+            }
+
+            return $"Question: {questionNumber}/{questions.Count}";
+        }
+
+        public List<string?> SendOptions(IList<IndependentReviewQuizModel> questions)
+        {
+            IndependentReviewQuizModel currentQuestion = questions[questionNumber - 1];
+
+            List<string?> options = new List<string?>();
+
+            options.Add(currentQuestion.Option1);
+            options.Add(currentQuestion.Option2);
+            options.Add(currentQuestion.Option3);
+            options.Add(currentQuestion.Option4);
+            options.Add(currentQuestion.Option5);
+            options.Add(currentQuestion.Option6);
+
+            if (options.Distinct().Count() != -1) 
+            {
+                return options;
+            }
+            return options;
+        }
+
+        public (string, int) CompareTextAnswers(string answerInput, IList<IndependentReviewQuizModel> question)
+        {
+            IndependentReviewQuizModel currentQuestion = question[questionNumber - 1];
+
+            string correctAnswer = currentQuestion.Answer;
+
+            bool isCorrect = true;
+
+            if (answerInput == "") 
+            {
+                MessageBox.Show("No answer has been inputted.", "No Answer");
+                
+                return ("", 0);
+            }
+
+            //if answer is correct; change isCorrect to true, update points, update answer streak (check if not 0), output points attained to user, calc total points
+
+            if (correctAnswer == answerInput)
+            {
+                //is correct = 1, answer streak = as + 1, 
+
+                //message box
+
+                int pointsForCorrectAnswer = CalculatePoints(currentQuestion, isCorrect);
+
+                MessageBox.Show($"Correct! You have been awarded {pointsForCorrectAnswer} points.", "Correct!");
+                totalPoints = totalPoints + pointsForCorrectAnswer;
+
+                return ("Correct!", totalPoints);
+            }
+            // If the answer provided by the user is not correct. 
+            else 
+            {
+                isCorrect = false;
+                int pointsForIncorrectAnswer = CalculatePoints(currentQuestion, isCorrect);
+
+                totalPoints = totalPoints - pointsForIncorrectAnswer;
+
+                // If the total number of points is less than 0, -1... (not possible to have -ve score)
+                if (totalPoints <= 0) 
+                {
+                    totalPoints = 0; 
+                    MessageBox.Show($"Incorrect answer! You have zero points.", "Incorrect!");
+
+                    _independentReviewQuizService.UpdateFeedback(currentQuestion.FeedbackID, currentQuestion.AnswerStreak, isCorrect, );
+                    return (correctAnswer, totalPoints);
+                }
+
+                if (totalPoints > 0)
+                {
+                    MessageBox.Show($"Incorrect answer! You have lost {pointsForIncorrectAnswer} points.", "Incorrect!");
+                    return (correctAnswer, totalPoints);
+                }
+
+                return (correctAnswer, totalPoints);
+            }
+        }
+        public int CalculatePoints(IndependentReviewQuizModel question, bool isCorrect) 
+        {
+            //IndependentReviewQuizModel currentQuestion = question[questionNumber - 1];
+            IndependentReviewQuizModel currentQuestion = question;
+
+
+
+            if (isCorrect != question.IsCorrect)
+            {
+                // answer streak is now resetted to 0. 
+                return 0;
+            }
+            else 
+            {
+                // Used so that the number of points increases based on how many times a question has been answered correctly. 
+
+
+                //note: should be currentQuestion.PointsGained 
+                //should just be currentquestion.answerstreak, no + 1, although if its a new question it will be + 1. 
+                //because the answer streak is currently 0. 
+                int points = currentQuestion.PointsForQuestion * (currentQuestion.AnswerStreak + 1);
+                return points;
+            }
+
+
+
+            // Used so that the number of points increases based on how many times a question has been answered correctly. 
+            //int points = currentQuestion.PointsForQuestion * (currentQuestion.AnswerStreak + 1);
+            //return points;
+        }
+        public int CalculateAnswerStreak(IndependentReviewQuizModel question, bool isCorrect) 
+        {
+            IndependentReviewQuizModel currentQuestion = question;
+
+            // If a question has not been answered before. 
+            if (currentQuestion.AnswerStreak == 0)
+            {
+                return currentQuestion.AnswerStreak + 1;
+            }
+            else if (isCorrect != question.IsCorrect)
+            {
+                return 1;
+            }
+            else 
+            {
+                return currentQuestion.AnswerStreak + 1;
+            }
+        }
     }
 }
