@@ -227,7 +227,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
             if (answerInput == "") 
             {
-                MessageBox.Show("No answer has been inputted.", "No Answer");
+                MessageBox.Show("No answer has been inputted.", "Independent Quiz Review");
                 
                 return ("", 0);
             }
@@ -242,9 +242,10 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
                 int pointsForCorrectAnswer = CalculatePoints(currentQuestion, isCorrect);
 
-                MessageBox.Show($"Correct! You have been awarded {pointsForCorrectAnswer} points.", "Correct!");
+                MessageBox.Show($"Correct! You have been awarded {pointsForCorrectAnswer} points.", "Independent Quiz Review");
                 totalPoints = totalPoints + pointsForCorrectAnswer;
 
+                _independentReviewQuizService.UpdateFeedback(currentQuestion.FeedbackID, CalculateAnswerStreak(currentQuestion, isCorrect), isCorrect, pointsForCorrectAnswer);
                 return ("Correct!", totalPoints);
             }
             // If the answer provided by the user is not correct. 
@@ -255,19 +256,20 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
                 totalPoints = totalPoints - pointsForIncorrectAnswer;
 
+                _independentReviewQuizService.UpdateFeedback(currentQuestion.FeedbackID, CalculateAnswerStreak(currentQuestion, isCorrect), isCorrect, -pointsForIncorrectAnswer);
+
                 // If the total number of points is less than 0, -1... (not possible to have -ve score)
                 if (totalPoints <= 0) 
                 {
                     totalPoints = 0; 
-                    MessageBox.Show($"Incorrect answer! You have zero points.", "Incorrect!");
+                    MessageBox.Show($"Incorrect answer! You have zero points.", "Independent Quiz Review");
 
-                    _independentReviewQuizService.UpdateFeedback(currentQuestion.FeedbackID, currentQuestion.AnswerStreak, isCorrect, );
                     return (correctAnswer, totalPoints);
                 }
 
                 if (totalPoints > 0)
                 {
-                    MessageBox.Show($"Incorrect answer! You have lost {pointsForIncorrectAnswer} points.", "Incorrect!");
+                    MessageBox.Show($"Incorrect answer! You have lost {pointsForIncorrectAnswer} points.", "Independent Quiz Review");
                     return (correctAnswer, totalPoints);
                 }
 
@@ -280,13 +282,19 @@ namespace KrishnaRajamannar.NEA.ViewModels
             IndependentReviewQuizModel currentQuestion = question;
 
 
+            // If a question was consecutively answered incorrectly but is now correct. 
+            if ((isCorrect == true) && (question.IsCorrect == false)) 
+            {
+                return currentQuestion.PointsForQuestion;
+            }
 
-            if (isCorrect != question.IsCorrect)
+            // If a question was consecutively answered correctly but is now incorrect.
+            if ((isCorrect == false) && (question.IsCorrect == true))
             {
                 // answer streak is now resetted to 0. 
                 return 0;
             }
-            else 
+            if ((currentQuestion.AnswerStreak == 0) || (currentQuestion.PointsGained == 0))
             {
                 // Used so that the number of points increases based on how many times a question has been answered correctly. 
 
@@ -294,8 +302,13 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 //note: should be currentQuestion.PointsGained 
                 //should just be currentquestion.answerstreak, no + 1, although if its a new question it will be + 1. 
                 //because the answer streak is currently 0. 
-                int points = currentQuestion.PointsForQuestion * (currentQuestion.AnswerStreak + 1);
-                return points;
+                //int points = currentQuestion.PointsForQuestion * (currentQuestion.AnswerStreak + 1);
+
+                return currentQuestion.PointsForQuestion;
+            }
+            else 
+            {
+                return currentQuestion.PointsGained * (currentQuestion.AnswerStreak + 1);
             }
 
 
@@ -313,6 +326,9 @@ namespace KrishnaRajamannar.NEA.ViewModels
             {
                 return currentQuestion.AnswerStreak + 1;
             }
+            // If the answer does not match the previous response
+            // If it was correct, but now is not correct
+            // Reset AS to 1
             else if (isCorrect != question.IsCorrect)
             {
                 return 1;

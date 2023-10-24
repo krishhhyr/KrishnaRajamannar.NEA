@@ -117,8 +117,6 @@ namespace KrishnaRajamannar.NEA.Views
                 }
             }
 
-            
-
             totalPoints = answerAndPoints.Item2;
 
             pointsAwardedLbl.Content = $"Points Awarded: {totalPoints}";

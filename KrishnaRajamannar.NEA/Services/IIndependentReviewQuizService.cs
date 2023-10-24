@@ -11,6 +11,6 @@ namespace KrishnaRajamannar.NEA.Services
 
         public IList<IndependentReviewQuizModel> GetAllQuestions(int quizID);
 
-        void UpdateFeedback(int feedbackID, int answerStreak, int IsCorrect, int pointsGained);
+        void UpdateFeedback(int feedbackID, int answerStreak, bool IsCorrect, int pointsGained);
     }
 }
