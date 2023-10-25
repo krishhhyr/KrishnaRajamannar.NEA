@@ -42,6 +42,7 @@ namespace KrishnaRajamannar.NEA.Services
 
             var data = command.ExecuteReader();
 
+            // can use a do while loop
             while (data.Read())
             {
                 if (rank > 10)

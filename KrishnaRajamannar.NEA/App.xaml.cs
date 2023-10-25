@@ -32,6 +32,7 @@ namespace KrishnaRajamannar.NEA
             services.AddTransient(typeof(AccountLogin));
             services.AddTransient(typeof(AccountCreation));
             services.AddTransient(typeof(IndependentReviewQuiz));
+            services.AddTransient(typeof(IndependentReviewFeedback));
 
             //Register all ViewModels
             services.AddTransient(typeof(UserViewModel));
@@ -52,8 +53,11 @@ namespace KrishnaRajamannar.NEA
             //accountLogin.Show();
             //
             //Show the independent 
-            var independent = ServiceProvider.GetService<IndependentReviewQuiz>();
-            independent.Show();
+            //var independent = ServiceProvider.GetService<IndependentReviewQuiz>();
+            //independent.Show();
+
+            var test = ServiceProvider.GetService<IndependentReviewFeedback>();
+            test.Show();
         }
 
 

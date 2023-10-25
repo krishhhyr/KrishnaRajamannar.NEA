@@ -33,7 +33,7 @@
         <StackPanel x:Name="quizConditionStackPanel"  Orientation="Vertical" Grid.Column="1" Grid.Row="1" Height="350" VerticalAlignment="Top">
 
             <StackPanel Orientation="Vertical">
-                <TextBlock x:Name="numberOfParticipantsTxtBlock" Text="No Particpants have joined the Session" FontSize="20" HorizontalAlignment="Center"></TextBlock>
+                <TextBlock x:Name="numberOfParticipantsTxtBlock" Text="No Participants have joined the Session" FontSize="20" HorizontalAlignment="Center"></TextBlock>
 
                 <ListBox x:Name="usernamesOfParticpants" Height="150" Margin="10"></ListBox>
             </StackPanel>

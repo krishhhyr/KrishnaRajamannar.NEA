@@ -152,6 +152,51 @@ namespace KrishnaRajamannar.NEA.Services
             return questionsToReview;
         }
 
+        public IList<IndependentReviewQuizFeedbackModel> GetQuizFeedback(int quizID) 
+        {
+            IList<IndependentReviewQuizFeedbackModel> quizFeedback = new List<IndependentReviewQuizFeedbackModel>();
+
+            int questionNumber = 1;
+            string question;
+            bool isCorrect;
+
+            const string sqlQuery =
+                @"
+                    SELECT Question, IsCorrect
+                    FROM MultipleChoiceQuestion,QuizFeedback
+                    WHERE MultipleChoiceQuestion.MCQuestionID = QuizFeedback.MCQuestionID 
+                    AND QuizFeedback.QuizID = @QuizID
+
+                    UNION All
+
+                    SELECT Question, IsCorrect  
+                    FROM TextQuestion,QuizFeedback
+                    WHERE TextQuestion.TextQuestionID = QuizFeedback.TextQuestionID
+                    AND QuizFeedback.QuizID = @QuizID
+                ";
+
+            using SqlConnection connection = new SqlConnection(connectionString);
+            connection.Open();
+
+            var command = connection.CreateCommand();
+            command.CommandText = sqlQuery;
+
+            command.Parameters.AddWithValue("@QuizID", quizID);
+
+            var data = command.ExecuteReader();
+
+            while (data.Read())
+            {
+                question = data.GetString(0);
+                isCorrect = data.GetBoolean(1);
+
+                quizFeedback.Add(new IndependentReviewQuizFeedbackModel() { QuestionNumber = questionNumber, Question = question, AnsweredCorrectly = isCorrect});
+                questionNumber++;
+            }
+            return quizFeedback;
+        }
+
+
         //update answer streak, update isCorrect to 1, update points 
         public void UpdateFeedback(int feedbackID, int answerStreak, bool isCorrect, int pointsGained) 
         {
