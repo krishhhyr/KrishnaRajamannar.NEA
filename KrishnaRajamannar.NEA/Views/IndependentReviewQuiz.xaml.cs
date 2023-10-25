@@ -38,6 +38,7 @@ namespace KrishnaRajamannar.NEA.Views
 
         }
 
+        // This is used to increment the timer.
         private void timer_tick (object sender, EventArgs e) 
         {
            timeIncrement++;
@@ -45,28 +46,33 @@ namespace KrishnaRajamannar.NEA.Views
            timeTakenLbl.Content = $"Time Taken: {timeIncrement} Seconds";
         }
 
+        // This is used if the user submits a text-based answer.
         private void textAnswerBtn_Click(object sender, RoutedEventArgs e)
         {
             IList<IndependentReviewQuizModel> _independentReviewQuizModel = _independentReviewViewModel.GetQuestionsInOrder();
+            
+            // Used to validate the answer that was given by the user.
+            var answerAndPoints = _independentReviewViewModel.ValidateAnswer(answerTxtBox.Text, _independentReviewQuizModel);
 
-            //string answer = _independentReviewViewModel.CompareTextAnswers(answerTxtBox.Text, _independentReviewQuizModel);
-
-           var answerAndPoints = _independentReviewViewModel.CompareTextAnswers(answerTxtBox.Text, _independentReviewQuizModel);
-
+            // Given that the function ValidateAnswer returns a dictionary,
+            // We specify that the first element in the dictionary represents the correct answer for the question.
             correctTextAnswerLbl.Content = answerAndPoints.Item1;
 
-            //totalPoints = totalPoints + answerAndPoints.Item2;
-
+            // The second element in the dictionary represents the number of points that the user has gained over the review session.
             totalPoints = answerAndPoints.Item2;
 
             pointsAwardedLbl.Content = $"Points Awarded: {totalPoints}";
 
+            // If the answer input is not empty, the next button is displaying
+            // Allowing the users to view the next question.
             if (answerAndPoints.Item1 != "")
             {
                 nextBtn.Visibility = Visibility.Visible;
                 textAnswerBtn.Visibility = Visibility.Hidden;
             }
         }
+
+        // This is used if the user submits a multiple-choice based answer.
         private void multipleChoiceAnswerBtn_Click(object sender, RoutedEventArgs e)
         {
 
@@ -84,6 +90,8 @@ namespace KrishnaRajamannar.NEA.Views
 
             string? answerInput = "";
 
+            // This is used to check which radio button that the user pressed.
+            // This represents the user's answer to the multiple-choice question.
             foreach (RadioButton button in radioButtons)
             {
                 if (button.IsChecked == true)
@@ -92,28 +100,16 @@ namespace KrishnaRajamannar.NEA.Views
                 }
             }
 
-            var answerAndPoints = _independentReviewViewModel.CompareTextAnswers(answerInput, _independentReviewQuizModel);
+            // This checks the user's input against the correct answer.
+            var answerAndPoints = _independentReviewViewModel.ValidateAnswer(answerInput, _independentReviewQuizModel);
 
-            if (answerAndPoints.Item1 == "Correct!")
+            // This displays the correct answer with a green foreground for the radio buttons.
+            foreach (RadioButton button in radioButtons)
             {
-                foreach (RadioButton button in radioButtons)
+                if (Convert.ToString(button.Content) == answerAndPoints.Item1)
                 {
-                    if (Convert.ToString(button.Content) == answerInput)
-                    {
-                        button.Foreground = new SolidColorBrush(Colors.Green);
-                        break;
-                    }
-                }
-            }
-            else 
-            {
-                foreach (RadioButton button in radioButtons)
-                {
-                    if (Convert.ToString(button.Content) == answerAndPoints.Item1)
-                    {
-                        button.Foreground = new SolidColorBrush(Colors.Green);
-                        break;
-                    }
+                    button.Foreground = new SolidColorBrush(Colors.Green);
+                    break;
                 }
             }
 
@@ -121,6 +117,8 @@ namespace KrishnaRajamannar.NEA.Views
 
             pointsAwardedLbl.Content = $"Points Awarded: {totalPoints}";
 
+            // If the answer input is not empty, the next button is displaying
+            // Allowing the users to view the next question.
             if (answerAndPoints.Item1 != "")
             {
                 nextBtn.Visibility = Visibility.Visible;
@@ -130,13 +128,14 @@ namespace KrishnaRajamannar.NEA.Views
 
         private void nextBtn_Click(object sender, RoutedEventArgs e)
         {
+            // This hides the next button so that users have to submit an answer before moving onto the next question.
             nextBtn.Visibility = Visibility.Hidden;
 
             textAnswerBtn.Visibility = Visibility.Visible;
 
             multipleChoiceAnswerBtn.Visibility = Visibility.Visible;
 
-
+            // This displays how many points were now awarded, having answered a question.
             pointsAwardedLbl.Content = $"Points Awarded: {totalPoints}";
 
             IList<IndependentReviewQuizModel> _independentReviewQuizModel = _independentReviewViewModel.GetQuestionsInOrder();
@@ -152,6 +151,8 @@ namespace KrishnaRajamannar.NEA.Views
             radioButtons.Add(option5rb);
             radioButtons.Add(option6rb);
 
+            // Used to reset the foreground colour of the radio buttons if any radio button had a green foreground colour
+            // When displaying the correct answer. 
             foreach (RadioButton button in radioButtons) 
             {
                 button.Foreground = new SolidColorBrush(Colors.Black);
@@ -164,11 +165,18 @@ namespace KrishnaRajamannar.NEA.Views
 
             List<string?> options = _independentReviewViewModel.SendOptions(_independentReviewQuizModel);
 
+            // If the first option is null, then the question must be a text-based question.
+            // This is because the first option cannot be null for a multiple-choice based question 
+            // As options 1 and 2 are required during the creation of a multiple-choice based question.
             if (options.First() == "NULL")
             {
+                // This code displays the stack panel representing text-based questions
+                // And hides the panel for a multiple-choice based question.
                 textAnswerStackPanel.Visibility = Visibility.Visible;
                 multipleChoiceAnswerStackPanel.Visibility = Visibility.Hidden;
             }
+            // This is for a multiple-choice based question.
+            // It assigns the options to the radio buttons in the UI so that users can press an option. 
             else
             {
                 textAnswerStackPanel.Visibility = Visibility.Hidden;
@@ -191,8 +199,10 @@ namespace KrishnaRajamannar.NEA.Views
 
             // This creates a new timer.
             DispatcherTimer timer = new DispatcherTimer();
+
             // Specifies how the timer should be incremented.
             timer.Interval = TimeSpan.FromSeconds(1);
+
             // Calls an event which is used to increment the timer itself.
             timer.Tick += new EventHandler(timer_tick);
             timer.Start();

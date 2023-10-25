@@ -43,30 +43,39 @@ namespace KrishnaRajamannar.NEA.ViewModels
         // provide user feedback when quiz has ended - data grid?
 
 
-
+        #region SortingQuestions
         public IList<IndependentReviewQuizModel> GetQuestionsInOrder() 
         {
+            // Calls a function which returns all the questions for a particular quiz from the database.
+            // These questions have not been sorted in order based on the number of points gained when reviewed by users. 
             IList<IndependentReviewQuizModel> unsortedquestions = _independentReviewQuizService.GetAllQuestions(36);
 
+            // A list for the number of points which can be initally gained by users when first reviewing a quiz.
+            // This values were specified by users during the creation of questions.
             List<int> pointsForQuestion = new List<int>();
 
-            // change points for question into points gained
-
+            // A loop which adds the number of points which could be gained from the questions retrieved into a list. 
             foreach (IndependentReviewQuizModel question in unsortedquestions) 
             {
+                // I believe this should be points gained not points for question.
                 pointsForQuestion.Add(question.PointsForQuestion);
             }
 
+            // A merge sort algorithm which only sorts number of points gained from smallest to largest.
             List<int> sortedPoints = MSort(pointsForQuestion);
 
+            // A list which is used to find the question associated with the number of points gained. 
             IList<IndependentReviewQuizModel> sortedquestions = new List<IndependentReviewQuizModel>();
 
-            foreach (int point in sortedPoints) // 1 3 4 4 5 5
+            foreach (int point in sortedPoints) 
             {
+                // Used to identify if a question has already been added to the list of sorted questions.
                 IndependentReviewQuizModel recentQuestionAdded = new IndependentReviewQuizModel();
 
                 foreach (IndependentReviewQuizModel question in unsortedquestions) //qs strawberry che 4, nissan 5, chocolate 4, kota 5, 17 3, 21st 1
                 {
+                    // If the point from the list of sortedPoints matches the number of points from the list of unsorted questions
+                    // And the question has not already been added, add the question to the list of sorted questions. 
                     if ((point == question.PointsForQuestion) && (IsQuestionAdded(question.Question, sortedquestions) == false))
                     {
                         sortedquestions.Add(question);
@@ -80,6 +89,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
         }
 
         #region MergeSort
+        // Breaks down each element in the points list into individual elements. 
         public static List<int> MSort(List<int> points)
         {
             List<int> left, right;
@@ -115,6 +125,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
         }
 
+        // This merges the left-hand side of the list and the right-hand side of the list. 
         public static List<int> Merge(List<int> left, List<int> right)
         {
             int length = left.Count + right.Count;
@@ -158,7 +169,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
         }
         #endregion
 
-        //checks if the question already exists in the sorted questions - prevents duplicates 
+        // Function which checks if a question has already been added to the list of sorted questions. 
         public bool IsQuestionAdded(string question, IList<IndependentReviewQuizModel> sortedQuestions) 
         {
             foreach (IndependentReviewQuizModel unsortedQuestion in sortedQuestions) 
@@ -170,22 +181,29 @@ namespace KrishnaRajamannar.NEA.ViewModels
             }
             return false;
         }
+        #endregion
 
+        #region SendDataToUI
+        // Used to send the current question being answered to the user interface.
+        // If all the questions have been answered, the review session ends. 
         public string SendQuestion(IList<IndependentReviewQuizModel> questions) 
         {
+            // Checks if the question number is greater than the number of questions in the quiz. 
             if (questionNumber >= questions.Count)
             {
-                MessageBox.Show("There are no more questions left to review", "Quiz Review", MessageBoxButton.OK);
+                MessageBox.Show("No more questions left to review.", "Quiz Review", MessageBoxButton.OK);
                 // show quiz feedback
-                return "END";
+                return "";
             }
             else 
             {
+                // Increments the questionNumber everytime that the function is called. 
                 IndependentReviewQuizModel currentQuestion = questions[questionNumber];
                 questionNumber++;
                 return currentQuestion.Question;
             }
         }
+        // Used to send what question the user is currently answering out of how many questions are in the quiz.
         public string SendQuestionNumber(IList<IndependentReviewQuizModel> questions)
         {
             if (questionNumber > questions.Count)
@@ -197,6 +215,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
             return $"Question: {questionNumber}/{questions.Count}";
         }
 
+        // For a multiple-choice based question, this function sends the possible options to the user.
         public List<string?> SendOptions(IList<IndependentReviewQuizModel> questions)
         {
             IndependentReviewQuizModel currentQuestion = questions[questionNumber - 1];
@@ -210,14 +229,15 @@ namespace KrishnaRajamannar.NEA.ViewModels
             options.Add(currentQuestion.Option5);
             options.Add(currentQuestion.Option6);
 
-            if (options.Distinct().Count() != -1) 
-            {
-                return options;
-            }
             return options;
         }
+        #endregion
 
-        public (string, int) CompareTextAnswers(string answerInput, IList<IndependentReviewQuizModel> question)
+        #region ValidationAndUpdatingFeedback
+        // This function checks whether the user has inputted an answer to a question.
+        // Also checks if the answer is correct or not.
+        // Also calculates the total number of points gained for the review session. 
+        public (string, int) ValidateAnswer(string answerInput, IList<IndependentReviewQuizModel> question)
         {
             IndependentReviewQuizModel currentQuestion = question[questionNumber - 1];
 
@@ -225,6 +245,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
             bool isCorrect = true;
 
+            // Checks if a user has not inputted an answer.
             if (answerInput == "") 
             {
                 MessageBox.Show("No answer has been inputted.", "Independent Quiz Review");
@@ -232,19 +253,17 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 return ("", 0);
             }
 
-            //if answer is correct; change isCorrect to true, update points, update answer streak (check if not 0), output points attained to user, calc total points
-
+            // Checks if the answer inputted by the user matches the correct answer. 
             if (correctAnswer == answerInput)
             {
-                //is correct = 1, answer streak = as + 1, 
-
-                //message box
-
+                // Calls a function which calculates the number of points gained for the correct answer.
                 int pointsForCorrectAnswer = CalculatePoints(currentQuestion, isCorrect);
 
                 MessageBox.Show($"Correct! You have been awarded {pointsForCorrectAnswer} points.", "Independent Quiz Review");
                 totalPoints = totalPoints + pointsForCorrectAnswer;
 
+                // Calls the IndependentReviewQuizService which uses an UPDATE command to update whether a question is correct 
+                // And how many points were gained.
                 _independentReviewQuizService.UpdateFeedback(currentQuestion.FeedbackID, CalculateAnswerStreak(currentQuestion, isCorrect), isCorrect, pointsForCorrectAnswer);
                 return ("Correct!", totalPoints);
             }
@@ -254,14 +273,16 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 isCorrect = false;
                 int pointsForIncorrectAnswer = CalculatePoints(currentQuestion, isCorrect);
 
+                // Subtracts the number of points for the question from the total number of points gained. 
                 totalPoints = totalPoints - pointsForIncorrectAnswer;
 
                 _independentReviewQuizService.UpdateFeedback(currentQuestion.FeedbackID, CalculateAnswerStreak(currentQuestion, isCorrect), isCorrect, -pointsForIncorrectAnswer);
 
-                // If the total number of points is less than 0, -1... (not possible to have -ve score)
+                // Used as the total number of points cannot be negative. 
                 if (totalPoints <= 0) 
                 {
                     totalPoints = 0; 
+                    // Displays a message to the user indicating that the answer was wrong. 
                     MessageBox.Show($"Incorrect answer! You have zero points.", "Independent Quiz Review");
 
                     return (correctAnswer, totalPoints);
@@ -276,11 +297,10 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 return (correctAnswer, totalPoints);
             }
         }
+        // Used to calculate the number of points which should be awarded to users. 
         public int CalculatePoints(IndependentReviewQuizModel question, bool isCorrect) 
         {
-            //IndependentReviewQuizModel currentQuestion = question[questionNumber - 1];
             IndependentReviewQuizModel currentQuestion = question;
-
 
             // If a question was consecutively answered incorrectly but is now correct. 
             if ((isCorrect == true) && (question.IsCorrect == false)) 
@@ -291,9 +311,10 @@ namespace KrishnaRajamannar.NEA.ViewModels
             // If a question was consecutively answered correctly but is now incorrect.
             if ((isCorrect == false) && (question.IsCorrect == true))
             {
-                // answer streak is now resetted to 0. 
                 return 0;
             }
+            // If the question has not been answered beforehand (i.e if its a new question)
+            // Then return the number of points specified by users when creating the question. 
             if ((currentQuestion.AnswerStreak == 0) || (currentQuestion.PointsGained == 0))
             {
                 // Used so that the number of points increases based on how many times a question has been answered correctly. 
@@ -306,17 +327,20 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
                 return currentQuestion.PointsForQuestion;
             }
+            // If the question has been answered beforehand and matches the answer when answered previously,
+            // i.e if the question was first answered correctly and now is again answered correctly, 
+            // return the multiplication of the answer streak and the number of points which were specified by the user during creation of the question.
+            // This represents how if a question is answered consecutively, the number of points gained increases.
             else 
-            {
-                return currentQuestion.PointsGained * (currentQuestion.AnswerStreak + 1);
+            { 
+                return currentQuestion.PointsForQuestion * (currentQuestion.AnswerStreak + 1);
             }
-
-
 
             // Used so that the number of points increases based on how many times a question has been answered correctly. 
             //int points = currentQuestion.PointsForQuestion * (currentQuestion.AnswerStreak + 1);
             //return points;
         }
+        // This is used to calculate the answer streak to a question.
         public int CalculateAnswerStreak(IndependentReviewQuizModel question, bool isCorrect) 
         {
             IndependentReviewQuizModel currentQuestion = question;
@@ -327,8 +351,9 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 return currentQuestion.AnswerStreak + 1;
             }
             // If the answer does not match the previous response
-            // If it was correct, but now is not correct
-            // Reset AS to 1
+            // If the answer was correct, but now is not correct
+            // Reset the answer streak to 1.
+            // This represents if the user has broken an answer streak to a question.
             else if (isCorrect != question.IsCorrect)
             {
                 return 1;
@@ -338,5 +363,6 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 return currentQuestion.AnswerStreak + 1;
             }
         }
+        #endregion
     }
 }
