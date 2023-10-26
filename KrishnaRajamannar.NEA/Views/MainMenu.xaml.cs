@@ -25,6 +25,10 @@ namespace KrishnaRajamannar.NEA.Views
         UserViewModel _userViewModel;
         MainMenuViewModel _mainMenuViewModel;
 
+        //private int userID;
+        //private string username;
+        //private string totalPoints;
+
         public MainMenu(UserViewModel userViewModel, MainMenuViewModel mainMenuViewModel)
         {
             InitializeComponent();
@@ -37,7 +41,7 @@ namespace KrishnaRajamannar.NEA.Views
         {
             _mainMenuViewModel.Logout();
 
-            this.Close();
+            //this.Close();
         }
 
         public void LoadData()
@@ -62,21 +66,21 @@ namespace KrishnaRajamannar.NEA.Views
 
         private void leaderboardBtn_Click(object sender, RoutedEventArgs e)
         {   
-            _mainMenuViewModel.LeaderboardWindow();
+            _mainMenuViewModel.ShowLeaderboard();
 
             this.Close();
         }
 
         private void hostSessionBtn_Click(object sender, RoutedEventArgs e)
         {
-            _mainMenuViewModel.HostSessionWindow();
+            _mainMenuViewModel.ShowHostSession();
 
             this.Close();
         }
 
         private void joinSessionBtn_Click(object sender, RoutedEventArgs e)
         {
-            _mainMenuViewModel.JoinSessionWindow();
+            _mainMenuViewModel.ShowJoinSession();
 
             this.Close();
         }

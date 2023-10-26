@@ -12,16 +12,24 @@ namespace KrishnaRajamannar.NEA.ViewModels
     public class MainMenuViewModel
     {
         private readonly AccountLogin _accountLogin;
+
+        private readonly MainMenu _mainMenu;
+
         private ViewQuizzes _viewQuizzes;
         private readonly ViewLeaderboard _viewLeaderboard;
         private readonly HostSession _hostSession;
         private readonly JoinSession _joinSession;
-        private  UserModel _userModel;
 
-        readonly string Username; 
+        private  UserModel _userModel;
+        private UserViewModel _userViewModel;
+
+        private string Username; 
 
         public MainMenuViewModel()
         {
+            _accountLogin = new AccountLogin(_userViewModel);
+
+            _mainMenu = new MainMenu(_userViewModel, this);
                        
 
         }
@@ -30,13 +38,15 @@ namespace KrishnaRajamannar.NEA.ViewModels
         {
             if (MessageBox.Show("Do you want to log out of this account?", "Account Logout", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
-                AccountLoginWindow();
+                ShowAccountLogin();
             }
         }
 
-        public void AccountLoginWindow() 
+        public void ShowAccountLogin() 
         {
-            if (_accountLogin != null) { _accountLogin.Show();}
+            _mainMenu.Visibility = Visibility.Hidden;
+
+            _accountLogin.Visibility = Visibility.Visible;
         }
         public void ViewQuizzes(int userID) 
         {
@@ -45,19 +55,28 @@ namespace KrishnaRajamannar.NEA.ViewModels
             _viewQuizzes = new ViewQuizzes(_userModel.UserID);
             _viewQuizzes.Show(); 
         }
-        public void LeaderboardWindow() 
+        public void ShowLeaderboard() 
         {
-            if (_viewLeaderboard != null) { _viewLeaderboard.Show();}
+            if (_viewLeaderboard != null) 
+            { 
+                _viewLeaderboard.Show();
+            }
         }
 
-        public void HostSessionWindow() 
+        public void ShowHostSession() 
         {
-            if (_hostSession != null) { _hostSession.Show();}
+            if (_hostSession != null) 
+            { 
+                _hostSession.Show();
+            }
         }
 
-        public void JoinSessionWindow()
+        public void ShowJoinSession()
         {
-            if (_joinSession != null) { _joinSession.Show();}
+            if (_joinSession != null) 
+            { 
+                _joinSession.Show();
+            }
         }
     }
 }

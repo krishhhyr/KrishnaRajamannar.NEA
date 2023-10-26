@@ -51,12 +51,6 @@ namespace KrishnaRajamannar.NEA
             //Show the login screen 
             var accountLogin = ServiceProvider.GetService<AccountLogin>();
             accountLogin.Show();
-            //
-
-
-
-
-
 
             //Show the independent 
             //var independent = ServiceProvider.GetService<IndependentReviewQuiz>();
