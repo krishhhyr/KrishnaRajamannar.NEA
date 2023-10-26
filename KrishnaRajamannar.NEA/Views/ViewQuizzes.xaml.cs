@@ -21,13 +21,13 @@ namespace KrishnaRajamannar.NEA.Views
     public partial class ViewQuizzes : Window
     {
 
-        int userID;
+        int? userID;
 
         // Used to access the methods within the view model
         QuizQuestionViewModel _quizQuestionViewModel = new QuizQuestionViewModel();
 
 
-        public ViewQuizzes(int _userID)
+        public ViewQuizzes(int? _userID)
         {
             
             userID = _userID;

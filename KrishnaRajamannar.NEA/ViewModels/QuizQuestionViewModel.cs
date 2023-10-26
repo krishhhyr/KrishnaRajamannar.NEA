@@ -74,13 +74,13 @@ namespace KrishnaRajamannar.NEA.ViewModels
             }
             return SelectedQuiz.QuizID;
         }
-        public IList<QuizModel> LoadQuiz(int userID)
+        public IList<QuizModel> LoadQuiz(int? userID)
         {
             return _quizService.GetQuiz(userID);
         }
 
         // check if null
-        public IList<QuizModel> DeleteQuiz(int _userID)
+        public IList<QuizModel> DeleteQuiz(int? _userID)
         {
             if (SelectedQuiz == null)
             {

@@ -46,7 +46,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
         // This function takes in the userID as a parameter. 
         // When creating a quiz, if no title has been inputted, an error message is displayed.
         // Otherwise, the method in QuizService is called which takes in the userID and QuizTitle to insert the quiz in the database. 
-        public void CreateQuiz(int userID) 
+        public void CreateQuiz(int? userID) 
         {
             if (QuizTitle != null)
             {

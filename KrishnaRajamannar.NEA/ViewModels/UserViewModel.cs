@@ -54,6 +54,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
         // This region represents the variables which will be affected by data binding.
         // It retrieves the data from the UI elements that have data binding enabled.
         // It then assigns that data to a local variable. 
+
         #region Variables
 
         private string _username;
@@ -95,7 +96,6 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
         #endregion 
 
-        // This region is used to display the windows to users if they aren't already being displayed. 
         #region Windows 
 
         public void ShowAccountLogin()
@@ -132,7 +132,6 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
         #endregion
 
-        // A region which gets the users details from the database like the User ID or the number of points they have.
         #region User Details 
 
         // A function which gets the total number of points awarded to a user based on their username.
@@ -154,70 +153,93 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
         #endregion
 
-        // This region represents the logic behind the AccountLogin XAML window.
-        // It represents how users can log into the application.
+        #region AccountLogin
 
-        #region AccountLoginXAML
+        public void GetUserDetails(string username)
+        {
+            IList<UserModel> userDetails = new List<UserModel>();
+
+            userDetails = _userService.GetUserDetails(username);
+
+            _userModel.UserID = userDetails.Last().UserID;
+            _userModel.Username = userDetails.Last().Username;
+            _userModel.HashedPassword = userDetails.Last().HashedPassword;
+            _userModel.TotalPoints = userDetails.Last().TotalPoints;
+        }
 
         // This function validates username and password entered by the user.
         // It returns true if the details entered are valid (i.e they exist in the database).
         // It returns false if the details are not valid.
         public bool Login()
         {
-            if ((ValidateUserName(Username) == true) && (ValidatePasswordLogin(Username,Password) == true))
+            if ((Username != null) || (Password != null))
             {
-                _userModel.Username = Username;
-                _userModel.UserID = _userService.GetUserID(Username);
-                MessageBox.Show("Successful Account Login.");
+                GetUserDetails(Username);
 
-                ShowMainMenu();
+                if ((ValidateUserNameLogin(Username) == true) && (ValidatePasswordLogin(Username, Password) == true))
+                {
+                    _userModel.Username = Username;
+                    _userModel.UserID = _userService.GetUserID(Username);
 
-                return true;
+                    MessageBox.Show("Successful Account Login.");
+
+                    ShowMainMenu();
+
+                    return true;
+                }
+                else 
+                {
+                    MessageBox.Show("Username and password do not match. Try again.");
+                    return false;
+                }
             }
-            MessageBox.Show("Username or password do not match. Try again.");
-            return false;
+            else 
+            {
+                MessageBox.Show("No details entered");
+                return false;
+            }
         }
-
 
         // This function checks whether the password entered matches the password in the database.
         // It hashes the inputted password and checks against the hashed password in the database.
         public bool ValidatePasswordLogin(string username, string password) 
         {
-            if (_userService.HashPassword(password) == _userService.GetPassword(username)) 
+            if (_userService.HashPassword(password) == _userModel.HashedPassword) 
             {
                 return true;
             }
             return false;
         }
-
-        public void GetUserDetails(string username) 
+        public bool ValidateUserNameLogin(string username) 
         {
-            IList<UserModel> user = new List<UserModel>();
-
-            user = _userService.GetUserDetails(username);
-
+            if (_userModel.Username != null) 
+            {
+                return true;
+            }
+            MessageBox.Show("This username does not exist.");
+            return false;
         }
 
 
         #endregion
 
-        // This region represents the logic behind the AccountCreation XAML window.
-        // It represents how users can create an account.
-
-        #region AccountCreationXAML
+        #region AccountCreation
 
         // This function calls other functions to help validate the username and password before the details are 
         // inserted into the database.
         public bool Creation() 
         {
-            if ((ValidateUserName(Username) == true) && (ValidatePasswordCreation(Password, RetypedPassword) == true))
+            if ((Username != null) || (Password != null) || (RetypedPassword != null))
             {
-                //call services to create the account 
-                _userService.CreateUser(Username, Password);
-                
-                MessageBox.Show("Successful Account Creation.");
+                if ((ValidateUsernameCreation(Username) == true) && (ValidatePasswordCreation(Password, RetypedPassword) == true))
+                {
+                    //call services to create the account 
+                    _userService.CreateUser(Username, Password);
 
-                return true;
+                    MessageBox.Show("Successful Account Creation.");
+
+                    return true;
+                }
             }
             return false; 
         }
@@ -225,7 +247,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
         // This function validates the username by checking the username meets the length requirements
         // and it also checks whether the username exists already in the database.
-        public bool ValidateUserName(string username) 
+        public bool ValidateUsernameCreation(string username) 
         {
             if (username == null) return false;
 
@@ -237,7 +259,6 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
             return false;
         }
-
 
         // This function validates the password that has been entered by the username for an account creation.
         // It calls other functions to check whether the password has a number and if the passwords entered match.
@@ -279,7 +300,6 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
             return false;
         }
-
 
         // A function which checks if the original password entered matches the retyped password entered.
         private static bool IsPasswordsMatch(string initialPassword, string retypedPassword) 

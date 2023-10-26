@@ -21,7 +21,7 @@ namespace KrishnaRajamannar.NEA.Services
         }
 
         // Function which returns a list of quizzes for a particular user by passing the userID as a parameter. 
-        public IList<QuizModel> GetQuiz(int _userID)
+        public IList<QuizModel> GetQuiz(int? _userID)
         {
             // Used to represent a list of objects taken from the QuizModel
             // Each element in this list would have the quiz ID, quiz title and number of questions of a quiz that the user has created.  
@@ -66,7 +66,7 @@ namespace KrishnaRajamannar.NEA.Services
             return quizzes;
         }
         //Procedure which creates a quiz for a user based on a quiz title which has been inputted.
-        public void CreateQuiz(int userID, string quizTitle) 
+        public void CreateQuiz(int? userID, string quizTitle) 
         {
             const string sqlQuery =
                 @"

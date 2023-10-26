@@ -223,9 +223,58 @@ namespace KrishnaRajamannar.NEA.Services
         }
         #endregion
 
-        public IList<UserModel> GetUserDetails() 
+        public IList<UserModel> GetUserDetails(string _username) 
         {
             IList<UserModel> userDetails = new List<UserModel>();
+
+            //int userID;
+            //string username; 
+            //string hashedPassword;
+            //int totalPoints;
+
+            const string sqlQuery =
+                @"
+                    SELECT * 
+                    FROM UserDetails
+                    WHERE username = @Username
+                ";
+
+            using SqlConnection connection = new SqlConnection(connectionString);
+
+            connection.Open();
+
+            var command = connection.CreateCommand();
+            command.CommandText = sqlQuery;
+
+            command.Parameters.AddWithValue("@Username", _username);
+
+            var data = command.ExecuteReader();
+
+            while (data.Read()) 
+            {
+                if (data.GetString(1) != _username)
+                {
+                    userDetails.Add(new UserModel() 
+                    { 
+                        UserID = null, 
+                        Username = null, 
+                        HashedPassword = null, 
+                        TotalPoints = null 
+                    });
+                }
+                else 
+                {
+                    userDetails.Add(new UserModel()
+                    {
+                        UserID = data.GetInt32(0),
+                        Username = data.GetString(1),
+                        HashedPassword = data.GetString(2),
+                        TotalPoints = data.GetInt32(3)
+                    });
+                }
+            }
+            return userDetails; 
+
         }
 
     }
