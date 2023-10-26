@@ -42,9 +42,15 @@ namespace KrishnaRajamannar.NEA.Views
 
         public void LoadData()
         {
-            pointsTxtBlock.Text = "Points: " + _userViewModel.GetPoints();
-            userIDTxtBlock.Text = "User ID: " + _userViewModel.GetUserID();
+            userIDTxtBlock.Text = "User ID: " + _userViewModel.UserID;
             usernameTxtBlock.Text = "Username: " + _userViewModel.Username;
+            pointsTxtBlock.Text = "Total Points: " + _userViewModel.TotalPoints;
+
+
+
+            //pointsTxtBlock.Text = "Points: " + _userViewModel.GetPoints();
+            //userIDTxtBlock.Text = "User ID: " + _userViewModel.GetUserID();
+            //usernameTxtBlock.Text = "Username: " + _userViewModel.Username;
         }
 
         private void viewQuizzesBtn_Click(object sender, RoutedEventArgs e)

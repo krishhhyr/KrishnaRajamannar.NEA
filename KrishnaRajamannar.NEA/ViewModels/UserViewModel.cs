@@ -55,7 +55,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
         // It retrieves the data from the UI elements that have data binding enabled.
         // It then assigns that data to a local variable. 
 
-        #region Variables
+        #region DataBindingVariables
 
         private string _username;
         public string Username
@@ -95,6 +95,9 @@ namespace KrishnaRajamannar.NEA.ViewModels
         }
 
         #endregion 
+
+        public int? UserID;
+        public int? TotalPoints;
 
         #region Windows 
 
@@ -178,8 +181,9 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
                 if ((ValidateUserNameLogin(Username) == true) && (ValidatePasswordLogin(Username, Password) == true))
                 {
-                    _userModel.Username = Username;
-                    _userModel.UserID = _userService.GetUserID(Username);
+                    UserID = _userModel.UserID;
+                    Username = _userModel.Username;
+                    TotalPoints = _userModel.TotalPoints;
 
                     MessageBox.Show("Successful Account Login.");
 
