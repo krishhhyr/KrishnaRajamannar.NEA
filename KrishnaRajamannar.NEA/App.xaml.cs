@@ -49,12 +49,18 @@ namespace KrishnaRajamannar.NEA
             ConfigureServices(services);
             ServiceProvider = services.BuildServiceProvider();
             //Show the login screen 
-            //var accountLogin = ServiceProvider.GetService<AccountLogin>();
-            //accountLogin.Show();
+            var accountLogin = ServiceProvider.GetService<AccountLogin>();
+            accountLogin.Show();
             //
+
+
+
+
+
+
             //Show the independent 
-            var independent = ServiceProvider.GetService<IndependentReviewQuiz>();
-            independent.Show();
+            //var independent = ServiceProvider.GetService<IndependentReviewQuiz>();
+            //independent.Show();
 
             //var test = ServiceProvider.GetService<IndependentReviewFeedback>();
             //test.Show();

@@ -2,6 +2,7 @@
 using KrishnaRajamannar.NEA.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,13 +25,13 @@ namespace KrishnaRajamannar.NEA.Views
         // Used to link with the UserViewModel class
 
         private readonly UserViewModel _userViewModel;
-         
+
 
         public AccountLogin(UserViewModel userViewModel)
         {
             InitializeComponent();
             _userViewModel = userViewModel;
-            
+
             // Used to retrieve the data that the user inputs into the UserViewModel class
             // i.e; the username and password
             this.DataContext = _userViewModel;
@@ -46,18 +47,17 @@ namespace KrishnaRajamannar.NEA.Views
             // Calls the Login function from the UserViewModel class. 
             // Used to verify if the login details provided are valid or not. 
             // If it is valid, the accountlogin window is hidden. 
-            if (_userViewModel.Login() == true) 
+            if (_userViewModel.Login() == true)
             {
-                this.Close(); 
+                this.Close();
             }
         }
 
         private void registerBtn_Click(object sender, RoutedEventArgs e)
-        {    
+        {
             // Calls the ShowAccountCreation subroutine which displays the window
             // where users can create an account
             _userViewModel.ShowAccountCreation();
-            this.Close();
         }
     }
 }

@@ -20,11 +20,14 @@ namespace KrishnaRajamannar.NEA.Views
     /// </summary>
     public partial class IndependentReviewFeedback : Window
     {
-        public IndependentReviewQuizFeedbackViewModel _independentReviewQuizFeedbackViewModel = new IndependentReviewQuizFeedbackViewModel();
+        private readonly IndependentReviewQuizFeedbackViewModel _independentReviewQuizFeedbackViewModel;
 
-        public IndependentReviewFeedback()
+        public IndependentReviewFeedback(IndependentReviewQuizFeedbackViewModel independentReviewQuizFeedbackViewModel)
         {
             InitializeComponent();
+
+            _independentReviewQuizFeedbackViewModel = independentReviewQuizFeedbackViewModel;
+
             quizFeedbackDataGrid.ItemsSource = _independentReviewQuizFeedbackViewModel.GetQuizzes();
         }
     }

@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Security.Cryptography;
 using Microsoft.Data.SqlClient;
+using KrishnaRajamannar.NEA.Models;
 
 namespace KrishnaRajamannar.NEA.Services
 {
@@ -221,5 +222,11 @@ namespace KrishnaRajamannar.NEA.Services
             return numberOfPoints;
         }
         #endregion
+
+        public IList<UserModel> GetUserDetails() 
+        {
+            IList<UserModel> userDetails = new List<UserModel>();
+        }
+
     }
 }

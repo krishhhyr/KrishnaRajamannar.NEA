@@ -1,4 +1,7 @@
-﻿namespace KrishnaRajamannar.NEA.Services
+﻿using KrishnaRajamannar.NEA.Models;
+using System.Collections.Generic;
+
+namespace KrishnaRajamannar.NEA.Services
 {
     public interface IUserService
     {
@@ -9,5 +12,6 @@
         int GetUserID(string username);
         string HashPassword(string password);
         bool IsUserExists(string username);
+        public IList<UserModel> GetUserDetails(string _username);
     }
 }

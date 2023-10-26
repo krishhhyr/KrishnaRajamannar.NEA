@@ -20,18 +20,25 @@ namespace KrishnaRajamannar.NEA.ViewModels
     {
 
         // This instantiates all the classes and interfaces which are used in this class
+
         private readonly IUserService _userService;
+
+        private readonly UserModel _userModel;
+
         private readonly AccountCreation _accountCreation;
         private readonly AccountLogin _accountLogin;
+
         private readonly MainMenu _mainMenu;
-        private readonly UserModel _userModel;
+
          
         public UserViewModel(IUserService userService, MainMenuViewModel mainMenuViewModel, UserModel userModel)
         {
             _userService = userService;
+            _userModel = userModel;
+
             _accountCreation = new AccountCreation(this);
             _accountLogin = new AccountLogin(this); 
-            _userModel = userModel;
+
             _mainMenu = new MainMenu(this, mainMenuViewModel);
         }
 
@@ -95,7 +102,9 @@ namespace KrishnaRajamannar.NEA.ViewModels
         {
             if (_accountLogin != null)
             {
-                _accountLogin.Show();
+                _accountLogin.Visibility = Visibility.Visible;
+
+                _accountCreation.Visibility = Visibility.Collapsed;
             }
         }
 
@@ -103,7 +112,9 @@ namespace KrishnaRajamannar.NEA.ViewModels
         {
             if (_accountCreation != null)
             {
-                _accountCreation.Show();
+                _accountCreation.Visibility = Visibility.Visible;
+
+                _accountLogin.Visibility = Visibility.Hidden;
             }
         }
 
@@ -112,7 +123,10 @@ namespace KrishnaRajamannar.NEA.ViewModels
             if (_mainMenu != null)
             {
                 _mainMenu.LoadData();
-                _mainMenu.Show();
+
+                _mainMenu.Visibility = Visibility.Visible;
+
+                _accountLogin.Visibility= Visibility.Hidden;
             }
         }
 
@@ -155,6 +169,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 _userModel.Username = Username;
                 _userModel.UserID = _userService.GetUserID(Username);
                 MessageBox.Show("Successful Account Login.");
+
                 ShowMainMenu();
 
                 return true;
@@ -174,6 +189,16 @@ namespace KrishnaRajamannar.NEA.ViewModels
             }
             return false;
         }
+
+        public void GetUserDetails(string username) 
+        {
+            IList<UserModel> user = new List<UserModel>();
+
+            user = _userService.GetUserDetails(username);
+
+        }
+
+
         #endregion
 
         // This region represents the logic behind the AccountCreation XAML window.

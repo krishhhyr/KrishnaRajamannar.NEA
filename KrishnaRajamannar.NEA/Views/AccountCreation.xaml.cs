@@ -52,7 +52,8 @@ namespace KrishnaRajamannar.NEA.Views
             // Calls a subroutine which displays the Account Login window 
             _userViewModel.ShowAccountLogin();
             // This hides the current window
-            this.Close();
+            
+            //this.Close();
         }
     }
 }

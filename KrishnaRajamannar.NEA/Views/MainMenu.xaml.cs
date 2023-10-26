@@ -36,6 +36,7 @@ namespace KrishnaRajamannar.NEA.Views
         private void logOutBtn_Click(object sender, RoutedEventArgs e)
         {
             _mainMenuViewModel.Logout();
+
             this.Close();
         }
 
@@ -49,24 +50,28 @@ namespace KrishnaRajamannar.NEA.Views
         private void viewQuizzesBtn_Click(object sender, RoutedEventArgs e)
         {
             _mainMenuViewModel.ViewQuizzes(_userViewModel.GetUserID());
+
             this.Close();
         }
 
         private void leaderboardBtn_Click(object sender, RoutedEventArgs e)
         {   
             _mainMenuViewModel.LeaderboardWindow();
+
             this.Close();
         }
 
         private void hostSessionBtn_Click(object sender, RoutedEventArgs e)
         {
             _mainMenuViewModel.HostSessionWindow();
+
             this.Close();
         }
 
         private void joinSessionBtn_Click(object sender, RoutedEventArgs e)
         {
             _mainMenuViewModel.JoinSessionWindow();
+
             this.Close();
         }
     }
