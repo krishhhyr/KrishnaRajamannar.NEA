@@ -198,7 +198,7 @@ namespace KrishnaRajamannar.NEA.Services
 
 
         //update answer streak, update isCorrect to 1, update points 
-        public void UpdateFeedback(int feedbackID, int answerStreak, bool isCorrect, int pointsGained) 
+        public void UpdateQuizFeedback(int feedbackID, int answerStreak, bool isCorrect, int pointsGained) 
         {
             const string sqlQuery =
                 @"

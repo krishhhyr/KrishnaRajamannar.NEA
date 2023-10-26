@@ -1,4 +1,5 @@
-﻿using KrishnaRajamannar.NEA.Services;
+﻿using KrishnaRajamannar.NEA.Models;
+using KrishnaRajamannar.NEA.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,13 +8,20 @@ using System.Threading.Tasks;
 
 namespace KrishnaRajamannar.NEA.ViewModels
 {
-    public class IndependentReviewQuizFeebackViewModel
+    public class IndependentReviewQuizFeedbackViewModel
     {
-        public IndependentReviewQuizService IndependentReviewQuizService { get; set; }
+        private readonly IIndependentReviewQuizService _independentReviewQuizService;
 
-        public void GetData() 
+        public IndependentReviewQuizFeedbackViewModel(IIndependentReviewQuizService independentReviewQuizService)
         {
-            IndependentReviewQuizService.GetQuizFeedback(36);
+            _independentReviewQuizService = independentReviewQuizService;
+        }
+
+        public IList<IndependentReviewQuizFeedbackModel> GetQuizzes() 
+        {
+            IList<IndependentReviewQuizFeedbackModel> feedback = _independentReviewQuizService.GetQuizFeedback(36);
+
+            return feedback;
         }
     }
 }

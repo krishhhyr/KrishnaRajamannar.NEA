@@ -264,7 +264,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
                 // Calls the IndependentReviewQuizService which uses an UPDATE command to update whether a question is correct 
                 // And how many points were gained.
-                _independentReviewQuizService.UpdateFeedback(currentQuestion.FeedbackID, CalculateAnswerStreak(currentQuestion, isCorrect), isCorrect, pointsForCorrectAnswer);
+                _independentReviewQuizService.UpdateQuizFeedback(currentQuestion.FeedbackID, CalculateAnswerStreak(currentQuestion, isCorrect), isCorrect, pointsForCorrectAnswer);
                 return ("Correct!", totalPoints);
             }
             // If the answer provided by the user is not correct. 
@@ -276,7 +276,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 // Subtracts the number of points for the question from the total number of points gained. 
                 totalPoints = totalPoints - pointsForIncorrectAnswer;
 
-                _independentReviewQuizService.UpdateFeedback(currentQuestion.FeedbackID, CalculateAnswerStreak(currentQuestion, isCorrect), isCorrect, -pointsForIncorrectAnswer);
+                _independentReviewQuizService.UpdateQuizFeedback(currentQuestion.FeedbackID, CalculateAnswerStreak(currentQuestion, isCorrect), isCorrect, -pointsForIncorrectAnswer);
 
                 // Used as the total number of points cannot be negative. 
                 if (totalPoints <= 0) 

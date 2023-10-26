@@ -25,7 +25,7 @@ namespace KrishnaRajamannar.NEA.Views
         public IndependentReviewFeedback()
         {
             InitializeComponent();
-            quizFeedbackDataGrid.ItemsSource = _independentReviewQuizFeedbackViewModel.GetData();
+            quizFeedbackDataGrid.ItemsSource = _independentReviewQuizFeedbackViewModel.GetQuizzes();
         }
     }
 }

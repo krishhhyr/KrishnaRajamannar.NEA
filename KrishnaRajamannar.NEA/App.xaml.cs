@@ -53,11 +53,11 @@ namespace KrishnaRajamannar.NEA
             //accountLogin.Show();
             //
             //Show the independent 
-            //var independent = ServiceProvider.GetService<IndependentReviewQuiz>();
-            //independent.Show();
+            var independent = ServiceProvider.GetService<IndependentReviewQuiz>();
+            independent.Show();
 
-            var test = ServiceProvider.GetService<IndependentReviewFeedback>();
-            test.Show();
+            //var test = ServiceProvider.GetService<IndependentReviewFeedback>();
+            //test.Show();
         }
 
 

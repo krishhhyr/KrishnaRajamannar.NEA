@@ -28,12 +28,7 @@
         <Button x:Name="backBtn" Content="Back" Height="30" Width="75" Margin="10" FontSize="16"></Button>
 
         <DataGrid x:Name="quizFeedbackDataGrid" Grid.Column="1" Grid.Row="1" SelectionMode="Single"
-                  CanUserAddRows="False" FontFamily="Segoe UI Light" ColumnWidth="Auto" FontSize="16">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="No." Width="*"></DataGridTextColumn>
-                <DataGridTextColumn Header="Question" Width="*"></DataGridTextColumn>
-                <DataGridCheckBoxColumn Header="Answer" Width="*"></DataGridCheckBoxColumn>
-            </DataGrid.Columns>
+                  CanUserAddRows="False" FontFamily="Segoe UI Light" ColumnWidth="*" FontSize="16">
         </DataGrid>
     </Grid>
 </Window>
