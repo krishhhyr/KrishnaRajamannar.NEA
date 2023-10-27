@@ -41,9 +41,10 @@ namespace KrishnaRajamannar.NEA.Views
 
             // Calls a subroutine which validates the inputs that the user provides for an account creation
             // If the inputs are valid, the account creation window is hidden and the main menu is displayed
+            
             if (_userViewModel.Creation() == true) 
-            { 
-                this.Close(); 
+            {
+                _userViewModel.ShowAccountLogin();
             }
         }
 

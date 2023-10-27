@@ -1,4 +1,5 @@
-﻿using KrishnaRajamannar.NEA.Models;
+﻿using KrishnaRajamannar.NEA.Events;
+using KrishnaRajamannar.NEA.Models;
 using KrishnaRajamannar.NEA.Services;
 using KrishnaRajamannar.NEA.Views;
 using System;
@@ -30,16 +31,20 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
         private readonly MainMenu _mainMenu;
 
-         
+        // Used to show messages to UI.
+        public event ShowMessageEventHandler ShowMessage;
+
+
         public UserViewModel(IUserService userService, MainMenuViewModel mainMenuViewModel, UserModel userModel)
         {
             _userService = userService;
             _userModel = userModel;
 
+            // Not allowed!
             _accountCreation = new AccountCreation(this);
-            _accountLogin = new AccountLogin(this); 
+            //_accountLogin = new AccountLogin(this); 
 
-            _mainMenu = new MainMenu(this, mainMenuViewModel);
+            _mainMenu = new MainMenu(this ,mainMenuViewModel);
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -96,8 +101,8 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
         #endregion 
 
-        public int? UserID;
-        public int? TotalPoints;
+        public int UserID;
+        public int TotalPoints;
 
         #region Windows 
 
@@ -135,27 +140,6 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
         #endregion
 
-        #region User Details 
-
-        // A function which gets the total number of points awarded to a user based on their username.
-        public int GetPoints()
-        {
-            if (Username == null)
-            {
-                return 0;
-            } 
-            return _userService.GetPoints(Username);
-        }
-
-
-        // A function which gets the user ID of a particular user based on their username.
-        public int GetUserID() 
-        {
-            return _userService.GetUserID(Username);
-        }
-
-        #endregion
-
         #region AccountLogin
 
         public void GetUserDetails(string username)
@@ -181,11 +165,15 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
                 if ((ValidateUserNameLogin(Username) == true) && (ValidatePasswordLogin(Username, Password) == true))
                 {
-                    UserID = _userModel.UserID;
+                    UserID = (int)_userModel.UserID;
                     Username = _userModel.Username;
-                    TotalPoints = _userModel.TotalPoints;
+                    TotalPoints = (int)_userModel.TotalPoints;
 
-                    MessageBox.Show("Successful Account Login.");
+                    //MessageBox.Show("Successful Account Login.");
+
+                    ShowMessageEventArgs args = new ShowMessageEventArgs();
+                    args.Message = "Successful Account Login.";
+                    OnShowMessage(args);
 
                     ShowMainMenu();
 
@@ -193,14 +181,27 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 }
                 else 
                 {
-                    MessageBox.Show("Username and password do not match. Try again.");
+                    //MessageBox.Show("Username and password do not match. Try again.");
+                    ShowMessageEventArgs args = new ShowMessageEventArgs();
+                    args.Message = "Username and password do not match. Try again.";
+                    OnShowMessage(args);
                     return false;
                 }
             }
             else 
             {
-                MessageBox.Show("No details entered");
+
+                ShowMessageDialog("No details entered");
                 return false;
+            }
+        }
+
+        protected virtual void OnShowMessage(ShowMessageEventArgs e)
+        {
+            ShowMessageEventHandler handler = ShowMessage;
+            if (handler != null)
+            {
+                handler(this, e);
             }
         }
 
@@ -319,6 +320,14 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 return false;
             }
         }
+
+        private void ShowMessageDialog(string message)
+        {
+            ShowMessageEventArgs args = new ShowMessageEventArgs();
+            args.Message = message;
+            OnShowMessage(args);
+        }
+
         #endregion
     }
 }

@@ -29,19 +29,23 @@ namespace KrishnaRajamannar.NEA.Views
         //private string username;
         //private string totalPoints;
 
-        public MainMenu(UserViewModel userViewModel, MainMenuViewModel mainMenuViewModel)
+        public MainMenu(UserViewModel userViewModel,  MainMenuViewModel mainMenuViewModel)
         {
             InitializeComponent();
 
             _userViewModel = userViewModel;
             _mainMenuViewModel = mainMenuViewModel;
+            _mainMenuViewModel.HideMainMenuWindow += _mainMenuViewModel_HideWindow;
+        }
+
+        private void _mainMenuViewModel_HideWindow(object sender, HideWindowEventArgs e)
+        {
+            this.Visibility = Visibility.Hidden;
         }
 
         private void logOutBtn_Click(object sender, RoutedEventArgs e)
         {
             _mainMenuViewModel.Logout();
-
-            //this.Close();
         }
 
         public void LoadData()
@@ -49,40 +53,26 @@ namespace KrishnaRajamannar.NEA.Views
             userIDTxtBlock.Text = "User ID: " + _userViewModel.UserID;
             usernameTxtBlock.Text = "Username: " + _userViewModel.Username;
             pointsTxtBlock.Text = "Total Points: " + _userViewModel.TotalPoints;
-
-
-
-            //pointsTxtBlock.Text = "Points: " + _userViewModel.GetPoints();
-            //userIDTxtBlock.Text = "User ID: " + _userViewModel.GetUserID();
-            //usernameTxtBlock.Text = "Username: " + _userViewModel.Username;
         }
 
         private void viewQuizzesBtn_Click(object sender, RoutedEventArgs e)
         {
-            _mainMenuViewModel.ViewQuizzes(_userViewModel.GetUserID());
-
-            this.Close();
+            _mainMenuViewModel.ViewQuizzes();
         }
 
         private void leaderboardBtn_Click(object sender, RoutedEventArgs e)
         {   
             _mainMenuViewModel.ShowLeaderboard();
-
-            this.Close();
         }
 
         private void hostSessionBtn_Click(object sender, RoutedEventArgs e)
         {
             _mainMenuViewModel.ShowHostSession();
-
-            this.Close();
         }
 
         private void joinSessionBtn_Click(object sender, RoutedEventArgs e)
         {
             _mainMenuViewModel.ShowJoinSession();
-
-            this.Close();
         }
     }
 }

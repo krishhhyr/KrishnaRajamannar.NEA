@@ -9,11 +9,28 @@ using System.Windows;
 
 namespace KrishnaRajamannar.NEA.ViewModels
 {
+    //public class HideWindowEventArgs : EventArgs
+    //{
+    //  public bool IsHidden { get; set; }
+    //}
+
+    //public delegate void HideWindowEventHandler(Object sender, HideWindowEventArgs e);
+
+    //public class ShowWindowEventArgs : EventArgs
+    //{
+    //    public bool IsShow { get; set; }
+    //}
+
+    //public delegate void ShowWindowEventHandler(Object sender, ShowWindowEventArgs e);
+
     public class MainMenuViewModel
     {
         private readonly AccountLogin _accountLogin;
 
         private readonly MainMenu _mainMenu;
+
+        public event HideWindowEventHandler HideMainMenuWindow;
+        public event ShowWindowEventHandler ShowAccountLoginWindow;
 
         private ViewQuizzes _viewQuizzes;
         private readonly ViewLeaderboard _viewLeaderboard;
@@ -27,9 +44,12 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
         public MainMenuViewModel()
         {
-            _accountLogin = new AccountLogin(_userViewModel);
+            //_mainMenu = new MainMenu(_userViewModel, this);
 
-            _mainMenu = new MainMenu(_userViewModel, this);
+            //_accountLogin = new AccountLogin(_userViewModel);
+            _viewLeaderboard = new ViewLeaderboard();
+            _hostSession = new HostSession();
+            _joinSession = new JoinSession();
                        
 
         }
@@ -44,38 +64,54 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
         public void ShowAccountLogin() 
         {
-            _mainMenu.Visibility = Visibility.Hidden;
+            //_mainMenu.Visibility = Visibility.Hidden;
+            //_accountLogin.Visibility = Visibility.Visible;
 
-            _accountLogin.Visibility = Visibility.Visible;
+            HideWindowEventArgs args = new HideWindowEventArgs();
+            args.IsHidden = true;
+            OnHideMainMenuWindows(args);
+
         }
-        public void ViewQuizzes(int userID) 
+        public void ViewQuizzes() 
         {
-            if (App.ServiceProvider == null) return;           
+            if (App.ServiceProvider == null)
+            {
+                return;
+            }
+            
             _userModel = App.ServiceProvider.GetService(typeof(UserModel)) as UserModel;
+
             _viewQuizzes = new ViewQuizzes(_userModel.UserID);
-            _viewQuizzes.Show(); 
+
+            //_viewQuizzes.Show();
+
+            _mainMenu.Visibility = Visibility.Hidden;
+            _viewQuizzes.Visibility = Visibility.Visible;
         }
         public void ShowLeaderboard() 
         {
-            if (_viewLeaderboard != null) 
-            { 
-                _viewLeaderboard.Show();
-            }
+            _mainMenu.Visibility = Visibility.Hidden;
+            _viewLeaderboard.Visibility = Visibility.Visible;
         }
 
         public void ShowHostSession() 
         {
-            if (_hostSession != null) 
-            { 
-                _hostSession.Show();
-            }
+            _mainMenu.Visibility = Visibility.Hidden;
+            _hostSession.Visibility = Visibility.Visible;
         }
 
         public void ShowJoinSession()
         {
-            if (_joinSession != null) 
-            { 
-                _joinSession.Show();
+            _mainMenu.Visibility = Visibility.Hidden;
+            _joinSession.Visibility= Visibility.Visible;
+        }
+
+        protected virtual void OnHideMainMenuWindows(HideWindowEventArgs e)
+        {
+            HideWindowEventHandler handler = HideMainMenuWindow;
+            if (handler != null)
+            {
+                handler(this, e);
             }
         }
     }

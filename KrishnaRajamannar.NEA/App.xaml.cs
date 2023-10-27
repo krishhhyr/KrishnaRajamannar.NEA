@@ -35,6 +35,7 @@ namespace KrishnaRajamannar.NEA
             services.AddTransient(typeof(IndependentReviewFeedback));
 
             //Register all ViewModels
+            services.AddTransient(typeof(AccountLoginViewModel));
             services.AddTransient(typeof(UserViewModel));
             services.AddTransient(typeof(MainMenuViewModel));
             services.AddTransient(typeof(IndependentReviewViewModel));
