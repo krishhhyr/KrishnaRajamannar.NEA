@@ -17,6 +17,12 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
         public event ShowMessageEventHandler ShowMessage;
 
+        public event ShowWindowEventHandler ShowMainMenuWindow;
+
+        public event ShowWindowEventHandler ShowAccountCreationWindow;
+
+        public event HideWindowEventHandler HideAccountLoginWindow;
+
         private readonly IUserService _userService;
 
         private readonly UserModel _userModel;
@@ -30,13 +36,13 @@ namespace KrishnaRajamannar.NEA.ViewModels
             _userModel = userModel;
         }
 
-        
-        private string _username; 
-        public string Username 
+
+        private string _username;
+        public string Username
         {
             get { return _username; }
-            set 
-            { 
+            set
+            {
                 _username = value;
                 RaisePropertyChange("Username");
             }
@@ -64,10 +70,54 @@ namespace KrishnaRajamannar.NEA.ViewModels
             args.Message = message;
             OnShowMessage(args);
         }
+        private void HideAccountLogin() 
+        {
+            HideWindowEventArgs args = new HideWindowEventArgs();
+            args.IsHidden = true;
+            OnHideAccountLoginWindow(args);
+        }
+        private void ShowMainMenu() 
+        {
+            ShowWindowEventArgs args = new ShowWindowEventArgs();
+            args.IsShown = true;
+            OnShowMainMenuWindow(args);
+            
+        }
+        private void ShowAccountCreation() 
+        {
+            ShowWindowEventArgs args = new ShowWindowEventArgs();
+            args.IsShown = true;
+            OnShowAccountCreationWindow(args);
+        }
+        // Raises an event
         protected virtual void OnShowMessage(ShowMessageEventArgs e)
         {
             ShowMessageEventHandler handler = ShowMessage;
             if (handler != null)
+            {
+                handler(this, e);
+            }
+        }
+        protected virtual void OnHideAccountLoginWindow(HideWindowEventArgs e) 
+        {
+            HideWindowEventHandler handler = HideAccountLoginWindow;
+            if (handler != null) 
+            {
+                handler(this, e);
+            }
+        }
+        protected virtual void OnShowMainMenuWindow(ShowWindowEventArgs e) 
+        {
+            ShowWindowEventHandler handler = ShowMainMenuWindow;
+            if (handler != null) 
+            {
+                handler(this, e);   
+            }
+        }
+        protected virtual void OnShowAccountCreationWindow(ShowWindowEventArgs e) 
+        {
+            ShowWindowEventHandler handler = ShowAccountCreationWindow;
+            if (handler != null) 
             {
                 handler(this, e);
             }
@@ -84,7 +134,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
             _userModel.TotalPoints = userDetails.Last().TotalPoints;
         }
 
-        public bool Login()
+        public void Login()
         {
             if ((Username != null) || (Password != null))
             {
@@ -97,19 +147,19 @@ namespace KrishnaRajamannar.NEA.ViewModels
                     TotalPoints = (int)_userModel.TotalPoints;
 
                     ShowMessageDialog("Account Login successful");
-                    return true;
+                    ShowMainMenu();
+                    HideAccountLogin();
+
                 }
                 else
                 {
                     ShowMessageDialog("Username and password do no match. Try again.");
-                    return false;
                 }
             }
             else
             {
 
                 ShowMessageDialog("No details entered");
-                return false;
             }
         }
         public bool ValidateUserNameLogin(string username)

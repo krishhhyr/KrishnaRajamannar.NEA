@@ -11,7 +11,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
 {
     //public class HideWindowEventArgs : EventArgs
     //{
-    //  public bool IsHidden { get; set; }
+    //    public bool IsHidden { get; set; }
     //}
 
     //public delegate void HideWindowEventHandler(Object sender, HideWindowEventArgs e);
@@ -29,8 +29,8 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
         private readonly MainMenu _mainMenu;
 
-        public event HideWindowEventHandler HideMainMenuWindow;
-        public event ShowWindowEventHandler ShowAccountLoginWindow;
+        //public event HideWindowEventHandler HideMainMenuWindow;
+        //public event ShowWindowEventHandler ShowAccountLoginWindow;
 
         private ViewQuizzes _viewQuizzes;
         private readonly ViewLeaderboard _viewLeaderboard;
@@ -67,9 +67,9 @@ namespace KrishnaRajamannar.NEA.ViewModels
             //_mainMenu.Visibility = Visibility.Hidden;
             //_accountLogin.Visibility = Visibility.Visible;
 
-            HideWindowEventArgs args = new HideWindowEventArgs();
-            args.IsHidden = true;
-            OnHideMainMenuWindows(args);
+            //HideWindowEventArgs args = new HideWindowEventArgs();
+            //args.IsHidden = true;
+            //OnHideMainMenuWindows(args);
 
         }
         public void ViewQuizzes() 
@@ -106,13 +106,13 @@ namespace KrishnaRajamannar.NEA.ViewModels
             _joinSession.Visibility= Visibility.Visible;
         }
 
-        protected virtual void OnHideMainMenuWindows(HideWindowEventArgs e)
-        {
-            HideWindowEventHandler handler = HideMainMenuWindow;
-            if (handler != null)
-            {
-                handler(this, e);
-            }
-        }
+        //protected virtual void OnHideMainMenuWindows(HideWindowEventArgs e)
+        //{
+        //    HideWindowEventHandler handler = HideMainMenuWindow;
+        //    if (handler != null)
+        //    {
+        //        handler(this, e);
+        //    }
+        //}
     }
 }

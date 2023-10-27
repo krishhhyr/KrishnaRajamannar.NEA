@@ -35,13 +35,13 @@ namespace KrishnaRajamannar.NEA.Views
 
             _userViewModel = userViewModel;
             _mainMenuViewModel = mainMenuViewModel;
-            _mainMenuViewModel.HideMainMenuWindow += _mainMenuViewModel_HideWindow;
+            //_mainMenuViewModel.HideMainMenuWindow += _mainMenuViewModel_HideWindow;
         }
 
-        private void _mainMenuViewModel_HideWindow(object sender, HideWindowEventArgs e)
-        {
-            this.Visibility = Visibility.Hidden;
-        }
+        //private void _mainMenuViewModel_HideWindow(object sender, HideWindowEventArgs e)
+        //{
+        //    this.Visibility = Visibility.Hidden;
+        //}
 
         private void logOutBtn_Click(object sender, RoutedEventArgs e)
         {

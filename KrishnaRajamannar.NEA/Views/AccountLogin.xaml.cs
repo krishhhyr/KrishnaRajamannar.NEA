@@ -36,8 +36,6 @@ namespace KrishnaRajamannar.NEA.Views
 
             this.DataContext = _accountLoginViewModel;
 
-
-
             //_userViewModel = userViewModel;
             //_userViewModel.ShowMessage += _userViewModel_ShowMessage;
 
@@ -45,6 +43,7 @@ namespace KrishnaRajamannar.NEA.Views
             // i.e; the username and password
             //this.DataContext = _userViewModel;
             _accountLoginViewModel.ShowMessage += _accountLoginViewModel_ShowMessage;
+            //_accountLoginViewModel.ShowAccountCreationWindow += _accountLoginViewModel_ShowAccountCreationWindow;
             loginBtn.Click += LoginBtn_Click;
 
         }
