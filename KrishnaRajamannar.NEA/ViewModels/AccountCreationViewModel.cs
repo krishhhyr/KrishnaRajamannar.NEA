@@ -92,9 +92,25 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 handler(this, e);
             }
         }
-        public bool Creation()
+        public void Creation()
         {
-            if ((Username != null) || (Password != null) || (RetypedPassword != null))
+            //if ((Username != null) || (Password != null) || (RetypedPassword != null))
+            //{
+            //    if ((ValidateUsernameCreation(Username) == true) && (ValidatePasswordCreation(Password, RetypedPassword) == true))
+            //    {
+            //        //call services to create the account 
+            //        _userService.CreateUser(Username, Password);
+
+            //        ShowMessageDialog("Account Creation Successful");
+            //        HideAccountCreation();
+            //    }
+            //}
+
+            if (!(Username != null) && (Password != null) && (RetypedPassword != null))
+            {
+                ShowMessageDialog("Enter valid input.");
+            }
+            else 
             {
                 if ((ValidateUsernameCreation(Username) == true) && (ValidatePasswordCreation(Password, RetypedPassword) == true))
                 {
@@ -102,11 +118,12 @@ namespace KrishnaRajamannar.NEA.ViewModels
                     _userService.CreateUser(Username, Password);
 
                     ShowMessageDialog("Account Creation Successful");
+
                     HideAccountCreation();
-                    return true;
                 }
             }
-            return false;
+
+
         }
         public void ShowLoginWindow() 
         {

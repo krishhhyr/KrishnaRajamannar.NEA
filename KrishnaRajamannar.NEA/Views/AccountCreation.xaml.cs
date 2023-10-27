@@ -68,7 +68,7 @@ namespace KrishnaRajamannar.NEA.Views
             //_userViewModel.ShowAccountLogin();
             // This hides the current window
 
-            _accountCreationViewModel.ShowLoginWindow();
+            _accountCreationViewModel.CloseAccountCreationWindow();
             
             //this.Close();
         }

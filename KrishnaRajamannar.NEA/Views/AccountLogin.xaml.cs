@@ -48,7 +48,7 @@ namespace KrishnaRajamannar.NEA.Views
 
             loginBtn.Click += LoginBtn_Click;
 
-            this.accountCreation = accountCreation;
+            //this.accountCreation = accountCreation;
 
             _accountCreationViewModel = accountCreationViewModel;
         }
@@ -85,7 +85,7 @@ namespace KrishnaRajamannar.NEA.Views
             // where users can create an account
             //_userViewModel.ShowAccountCreation();
 
-            _accountLoginViewModel.Register();
+            _accountLoginViewModel.DisplayAccountCreationWindow();
         }
     }
 }

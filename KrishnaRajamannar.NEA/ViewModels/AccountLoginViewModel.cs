@@ -136,31 +136,6 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
         public void Login()
         {
-            //if ((Username != null) || (Password != null))
-            //{
-            //    GetUserDetails(Username);
-
-            //    if ((ValidateUserNameLogin(Username) == true) && (ValidatePasswordLogin(Username, Password) == true))
-            //    {
-            //        UserID = (int)_userModel.UserID;
-            //        Username = _userModel.Username;
-            //        TotalPoints = (int)_userModel.TotalPoints;
-
-            //        ShowMessageDialog("Account Login successful");
-            //        ShowMainMenu();
-            //        HideAccountLogin();
-            //    }
-            //    else
-            //    {
-            //        ShowMessageDialog("Username and password do no match. Try again.");
-            //    }
-            //}
-            //else
-            //{
-
-            //    ShowMessageDialog("No details entered");
-            //}
-
             if (!(Username != null) && (Password != null)) 
             {
                 ShowMessageDialog("Enter valid input.");
