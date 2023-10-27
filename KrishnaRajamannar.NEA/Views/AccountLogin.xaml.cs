@@ -26,26 +26,41 @@ namespace KrishnaRajamannar.NEA.Views
 
         //private readonly UserViewModel _userViewModel;
 
+        private readonly AccountCreation accountCreation;
+        private readonly AccountCreationViewModel _accountCreationViewModel;
         private readonly AccountLoginViewModel _accountLoginViewModel;
 
-        public AccountLogin(AccountLoginViewModel accountLoginViewModel)
+        public AccountLogin(AccountLoginViewModel accountLoginViewModel, AccountCreationViewModel accountCreationViewModel)
         {
             InitializeComponent();
 
             _accountLoginViewModel = accountLoginViewModel;
+            _accountCreationViewModel = accountCreationViewModel;
 
             this.DataContext = _accountLoginViewModel;
 
-            //_userViewModel = userViewModel;
-            //_userViewModel.ShowMessage += _userViewModel_ShowMessage;
+            accountCreation = new AccountCreation(accountCreationViewModel);
 
-            // Used to retrieve the data that the user inputs into the UserViewModel class
-            // i.e; the username and password
-            //this.DataContext = _userViewModel;
             _accountLoginViewModel.ShowMessage += _accountLoginViewModel_ShowMessage;
-            //_accountLoginViewModel.ShowAccountCreationWindow += _accountLoginViewModel_ShowAccountCreationWindow;
+
+            accountLoginViewModel.ShowAccountCreationWindow += AccountLoginViewModel_ShowAccountCreationWindow;
+            accountLoginViewModel.ShowMainMenuWindow += AccountLoginViewModel_ShowMainMenuWindow;
+
             loginBtn.Click += LoginBtn_Click;
 
+            this.accountCreation = accountCreation;
+
+            _accountCreationViewModel = accountCreationViewModel;
+        }
+
+        private void AccountLoginViewModel_ShowMainMenuWindow(object sender, Events.ShowWindowEventArgs e)
+        {
+            
+        }
+
+        private void AccountLoginViewModel_ShowAccountCreationWindow(object sender, Events.ShowWindowEventArgs e)
+        {
+           accountCreation.ShowDialog();
         }
 
         private void _accountLoginViewModel_ShowMessage(object sender, Events.ShowMessageEventArgs e)
@@ -69,6 +84,8 @@ namespace KrishnaRajamannar.NEA.Views
             // Calls the ShowAccountCreation subroutine which displays the window
             // where users can create an account
             //_userViewModel.ShowAccountCreation();
+
+            _accountLoginViewModel.Register();
         }
     }
 }

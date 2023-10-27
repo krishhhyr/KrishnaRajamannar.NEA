@@ -22,37 +22,53 @@ namespace KrishnaRajamannar.NEA.Views
     {
         // Used to link to the UserViewModel class
 
-        private readonly UserViewModel _userViewModel;
+        //private readonly UserViewModel _userViewModel;
 
-        public AccountCreation(UserViewModel userViewModel)
+        private readonly AccountCreationViewModel _accountCreationViewModel;
+
+        public AccountCreation(AccountCreationViewModel accountCreationViewModel)
         {
             InitializeComponent();
-            _userViewModel = userViewModel;
+            
+            _accountCreationViewModel = accountCreationViewModel;
          
-            this.DataContext = _userViewModel;
+            this.DataContext = _accountCreationViewModel;
+
+            _accountCreationViewModel.ShowMessage += _accountCreationViewModel_ShowMessage;
+            accountCreationViewModel.HideAccountCreationWindow += AccountCreationViewModel_HideAccountCreationWindow;
+        }
+
+        private void AccountCreationViewModel_HideAccountCreationWindow(object sender, Events.HideWindowEventArgs e)
+        {
+            this.Hide();   
+        }
+
+        private void _accountCreationViewModel_ShowMessage(object sender, Events.ShowMessageEventArgs e)
+        {
+            MessageBox.Show(e.Message);
         }
 
         private void createAccBtn_Click(object sender, RoutedEventArgs e)
         {
             // Assigns the local variables from the UserViewModel class to the password inputs
             // Given that data binding is not supported with passwordboxes
-            _userViewModel.Password = initialPasswordInputTxt.Password;
-            _userViewModel.RetypedPassword = secondPasswordInputTxt.Password;
+
+            _accountCreationViewModel.Password = initialPasswordInputTxt.Password;
+            _accountCreationViewModel.RetypedPassword = secondPasswordInputTxt.Password;
 
             // Calls a subroutine which validates the inputs that the user provides for an account creation
             // If the inputs are valid, the account creation window is hidden and the main menu is displayed
-            
-            if (_userViewModel.Creation() == true) 
-            {
-                _userViewModel.ShowAccountLogin();
-            }
+
+            _accountCreationViewModel.Creation();
         }
 
         private void backBtn_Click(object sender, RoutedEventArgs e)
         {
             // Calls a subroutine which displays the Account Login window 
-            _userViewModel.ShowAccountLogin();
+            //_userViewModel.ShowAccountLogin();
             // This hides the current window
+
+            _accountCreationViewModel.ShowLoginWindow();
             
             //this.Close();
         }

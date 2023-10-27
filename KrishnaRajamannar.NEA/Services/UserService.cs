@@ -250,31 +250,27 @@ namespace KrishnaRajamannar.NEA.Services
 
             var data = command.ExecuteReader();
 
-            while (data.Read()) 
+            if (data.Read() == false)
             {
-                if (data.GetString(1) != _username)
+                userDetails.Add(new UserModel()
                 {
-                    userDetails.Add(new UserModel() 
-                    { 
-                        UserID = null, 
-                        Username = null, 
-                        HashedPassword = null, 
-                        TotalPoints = null 
-                    });
-                }
-                else 
+                    UserID = null,
+                    Username = null,
+                    HashedPassword = null,
+                    TotalPoints = null
+                });
+            }
+            else 
+            {
+                userDetails.Add(new UserModel()
                 {
-                    userDetails.Add(new UserModel()
-                    {
-                        UserID = data.GetInt32(0),
-                        Username = data.GetString(1),
-                        HashedPassword = data.GetString(2),
-                        TotalPoints = data.GetInt32(3)
-                    });
-                }
+                    UserID = data.GetInt32(0),
+                    Username = data.GetString(1),
+                    HashedPassword = data.GetString(2),
+                    TotalPoints = data.GetInt32(3)
+                });
             }
             return userDetails; 
-
         }
 
     }

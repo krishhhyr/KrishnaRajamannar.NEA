@@ -136,31 +136,64 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
         public void Login()
         {
-            if ((Username != null) || (Password != null))
+            //if ((Username != null) || (Password != null))
+            //{
+            //    GetUserDetails(Username);
+
+            //    if ((ValidateUserNameLogin(Username) == true) && (ValidatePasswordLogin(Username, Password) == true))
+            //    {
+            //        UserID = (int)_userModel.UserID;
+            //        Username = _userModel.Username;
+            //        TotalPoints = (int)_userModel.TotalPoints;
+
+            //        ShowMessageDialog("Account Login successful");
+            //        ShowMainMenu();
+            //        HideAccountLogin();
+            //    }
+            //    else
+            //    {
+            //        ShowMessageDialog("Username and password do no match. Try again.");
+            //    }
+            //}
+            //else
+            //{
+
+            //    ShowMessageDialog("No details entered");
+            //}
+
+            if (!(Username != null) && (Password != null)) 
+            {
+                ShowMessageDialog("Enter valid input.");
+            }
+            else 
             {
                 GetUserDetails(Username);
 
-                if ((ValidateUserNameLogin(Username) == true) && (ValidatePasswordLogin(Username, Password) == true))
+                if (ValidateUserNameLogin(Username) != true)
+                {
+                    ShowMessageDialog("Username does not exist.");
+                }
+                else if (ValidatePasswordLogin(Username, Password) != true)
+                {
+                    ShowMessageDialog("Invalid password.");
+                }
+                else
                 {
                     UserID = (int)_userModel.UserID;
                     Username = _userModel.Username;
                     TotalPoints = (int)_userModel.TotalPoints;
 
                     ShowMessageDialog("Account Login successful");
-                    ShowMainMenu();
+
                     HideAccountLogin();
-
-                }
-                else
-                {
-                    ShowMessageDialog("Username and password do no match. Try again.");
+                    ShowMainMenu();
+                    
                 }
             }
-            else
-            {
-
-                ShowMessageDialog("No details entered");
-            }
+        }
+        public void Register() 
+        {
+            ShowAccountCreation();
         }
         public bool ValidateUserNameLogin(string username)
         {
@@ -168,7 +201,6 @@ namespace KrishnaRajamannar.NEA.ViewModels
             {
                 return true;
             }
-            MessageBox.Show("This username does not exist.");
             return false;
         }
         public bool ValidatePasswordLogin(string username, string password)

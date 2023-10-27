@@ -41,7 +41,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
             _userModel = userModel;
 
             // Not allowed!
-            _accountCreation = new AccountCreation(this);
+            //_accountCreation = new AccountCreation(this);
             //_accountLogin = new AccountLogin(this); 
 
             _mainMenu = new MainMenu(this ,mainMenuViewModel);
