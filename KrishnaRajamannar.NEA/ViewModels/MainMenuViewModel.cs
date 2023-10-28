@@ -122,6 +122,14 @@ namespace KrishnaRajamannar.NEA.ViewModels
         {
             ShowHostSession();
         }
+        public void DisplayJoinSessionWindow() 
+        {
+            ShowJoinSession();
+        }
+        public void CloseMainMenuWindow() 
+        {
+            HideMainMenu();
+        }
 
         private readonly AccountLogin _accountLogin;
 

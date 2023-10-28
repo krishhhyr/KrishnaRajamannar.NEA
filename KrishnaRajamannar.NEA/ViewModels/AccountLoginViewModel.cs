@@ -122,6 +122,10 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 handler(this, e);
             }
         }
+        public void DisplayAccountCreationWindow()
+        {
+            ShowAccountCreation();
+        }
         public void GetUserDetails(string username)
         {
             IList<UserModel> userDetails = new List<UserModel>();
@@ -165,10 +169,6 @@ namespace KrishnaRajamannar.NEA.ViewModels
                     
                 }
             }
-        }
-        public void Register() 
-        {
-            ShowAccountCreation();
         }
         public bool ValidateUserNameLogin(string username)
         {

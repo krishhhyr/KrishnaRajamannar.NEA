@@ -22,8 +22,11 @@ namespace KrishnaRajamannar.NEA.Views
     /// </summary>
     public partial class MainMenu : Window
     {
-        UserViewModel _userViewModel;
-        MainMenuViewModel _mainMenuViewModel;
+        private readonly MainMenuViewModel _mainMenuViewModel;
+
+
+        //UserViewModel _userViewModel;
+        //MainMenuViewModel _mainMenuViewModel;
 
         //private int userID;
         //private string username;
@@ -33,7 +36,6 @@ namespace KrishnaRajamannar.NEA.Views
         {
             InitializeComponent();
 
-            //_userViewModel = userViewModel;
             _mainMenuViewModel = mainMenuViewModel;
             //_mainMenuViewModel.HideMainMenuWindow += _mainMenuViewModel_HideWindow;
         }

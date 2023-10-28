@@ -94,18 +94,6 @@ namespace KrishnaRajamannar.NEA.ViewModels
         }
         public void Creation()
         {
-            //if ((Username != null) || (Password != null) || (RetypedPassword != null))
-            //{
-            //    if ((ValidateUsernameCreation(Username) == true) && (ValidatePasswordCreation(Password, RetypedPassword) == true))
-            //    {
-            //        //call services to create the account 
-            //        _userService.CreateUser(Username, Password);
-
-            //        ShowMessageDialog("Account Creation Successful");
-            //        HideAccountCreation();
-            //    }
-            //}
-
             if (!(Username != null) && (Password != null) && (RetypedPassword != null))
             {
                 ShowMessageDialog("Enter valid input.");
@@ -125,19 +113,22 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
 
         }
-        public void ShowLoginWindow() 
+        public void CloseAccountCreationWindow() 
         {
             HideAccountCreation();
         }
         public bool ValidateUsernameCreation(string username)
         {
-            if (username == null) return false;
+            if (username == null)
+            {
+                return false;
+            } 
 
             if (!(username.Length >= 4) && (username.Length <= 15))
             {
                 ShowMessageDialog("Username must be between 4-15 characters.");
             }
-            else if (!(_userService.IsUserExists(username) == false))
+            else if (!(_userService.IsUserExists(username) == true))
             {
                 ShowMessageDialog("Username already exists.");
             }
