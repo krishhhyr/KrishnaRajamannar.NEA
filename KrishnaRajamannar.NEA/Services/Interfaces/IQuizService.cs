@@ -9,7 +9,7 @@ namespace KrishnaRajamannar.NEA.Services
 
         public void CreateQuiz(int? userID, string quizTitle);
 
-        public void DeleteQuiz(int quizID, string quizTitle, int userID)
+        public void DeleteQuiz(int quizID, string quizTitle, int userID);
 
         public bool IsQuizExists(int userID, string quizTitleInput);
 

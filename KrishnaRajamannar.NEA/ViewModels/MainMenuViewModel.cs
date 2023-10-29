@@ -15,7 +15,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
     {
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        public event ShowWindowEventHandler ShowViewQuizzesWindow;
+        public event ShowAccountParameterWindowEventHandler ShowViewQuizzesWindow;
 
         public event ShowWindowEventHandler ShowLeaderboardWindow;
 
@@ -33,8 +33,8 @@ namespace KrishnaRajamannar.NEA.ViewModels
         {
             
         }
-        private int? _userid;
-        public int? UserID
+        private int _userid;
+        public int UserID
         {
             get { return _userid; }
             set
@@ -43,8 +43,8 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 RaisePropertyChange("UserID");
             }
         }
-        private string? _username;
-        public string? Username
+        private string _username;
+        public string Username
         {
             get { return _username; }
             set
@@ -53,8 +53,8 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 RaisePropertyChange("Username");
             }
         }
-        private int? _totalpoints;
-        public int? TotalPoints
+        private int _totalpoints;
+        public int TotalPoints
         {
             get { return _totalpoints; }
             set
@@ -78,7 +78,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
         }
         private void ShowViewQuizzes()
         {
-            ShowWindowEventArgs args = new ShowWindowEventArgs();
+            ShowAccountParameterWindowEventArgs args = new ShowAccountParameterWindowEventArgs();
             args.IsShown = true;
             OnShowViewQuizzesWindow(args);
 
@@ -104,9 +104,9 @@ namespace KrishnaRajamannar.NEA.ViewModels
             OnShowJoinSessionWindow(args);
 
         }
-        protected virtual void OnShowViewQuizzesWindow(ShowWindowEventArgs e)
+        protected virtual void OnShowViewQuizzesWindow(ShowAccountParameterWindowEventArgs e)
         {
-            ShowWindowEventHandler handler = ShowViewQuizzesWindow;
+            ShowAccountParameterWindowEventHandler handler = ShowViewQuizzesWindow;
             if (handler != null)
             {
                 handler(this, e);

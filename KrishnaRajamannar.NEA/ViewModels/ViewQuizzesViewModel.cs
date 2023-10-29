@@ -34,7 +34,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
         private readonly UserModel _questionModel;
 
-        public int UserID;
+        public int? UserID;
         public int QuizID;
 
         public ViewQuizzesViewModel(IQuizService quizService, IQuestionService questionService, QuizModel quizModel, UserModel questionModel)
@@ -164,6 +164,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
         public IList<QuizModel> LoadQuiz()
         {
+
             return _quizService.GetQuiz(UserID);
         }
         public IList<QuizModel> DeleteQuiz()

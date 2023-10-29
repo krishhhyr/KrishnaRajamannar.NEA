@@ -33,14 +33,16 @@ namespace KrishnaRajamannar.NEA.Views
         private readonly AccountCreationViewModel _accountCreationViewModel;
         private readonly AccountLoginViewModel _accountLoginViewModel;
         private readonly MainMenuViewModel _mainMenuViewModel;
+        private readonly ViewQuizzesViewModel _viewQuizzesViewModel;
 
-        public AccountLogin(AccountLoginViewModel accountLoginViewModel, AccountCreationViewModel accountCreationViewModel, MainMenuViewModel mainMenuViewModel)
+        public AccountLogin(AccountLoginViewModel accountLoginViewModel, AccountCreationViewModel accountCreationViewModel, MainMenuViewModel mainMenuViewModel, ViewQuizzesViewModel viewQuizzesViewModel)
         {
             InitializeComponent();
 
             _accountLoginViewModel = accountLoginViewModel;
             _accountCreationViewModel = accountCreationViewModel;
             _mainMenuViewModel = mainMenuViewModel;
+            _viewQuizzesViewModel = viewQuizzesViewModel;
 
             this.DataContext = _accountLoginViewModel;
 
@@ -50,6 +52,7 @@ namespace KrishnaRajamannar.NEA.Views
 
             accountLoginViewModel.ShowAccountCreationWindow += AccountLoginViewModel_ShowAccountCreationWindow;
             accountLoginViewModel.ShowParameterMainMenuWindow += AccountLoginViewModel_ShowParameterMainMenuWindow;
+            _viewQuizzesViewModel = viewQuizzesViewModel;
         }
 
         private void AccountLoginViewModel_ShowParameterMainMenuWindow(object sender, Events.ShowAccountParameterWindowEventArgs e)
@@ -58,7 +61,7 @@ namespace KrishnaRajamannar.NEA.Views
             _mainMenuViewModel.Username = e.Username;
             _mainMenuViewModel.TotalPoints = e.TotalPoints;
 
-            mainMenu = new MainMenu(_mainMenuViewModel);
+            mainMenu = new MainMenu(_mainMenuViewModel, _viewQuizzesViewModel);
 
             mainMenu.ShowDialog();
         }

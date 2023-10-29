@@ -44,7 +44,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
             //_accountCreation = new AccountCreation(this);
             //_accountLogin = new AccountLogin(this); 
 
-            _mainMenu = new MainMenu(mainMenuViewModel);
+            //_mainMenu = new MainMenu(mainMenuViewModel);
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

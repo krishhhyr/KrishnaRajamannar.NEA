@@ -21,7 +21,7 @@ namespace KrishnaRajamannar.NEA.Views
     public partial class ViewQuizzes : Window
     {
 
-        int? userID;
+        //int? userID;
 
         // Used to access the methods within the view model
         //QuizQuestionViewModel _quizQuestionViewModel = new QuizQuestionViewModel();
@@ -42,46 +42,43 @@ namespace KrishnaRajamannar.NEA.Views
         // the questions for that quiz load in the data grid for questions
         private void quizDataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            questionDataGrid.ItemsSource = _quizQuestionViewModel.LoadQuestions();
+            questionDataGrid.ItemsSource = _viewQuizzesViewModel.LoadQuestions();
         }
 
         private void createQuizMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            CreateQuiz createQuiz = new CreateQuiz(userID);
-            createQuiz.Show();
-
             // Checks if CreateQuiz is closed so that the data grid can refresh.
             // could add a button
 
-           this.quizDataGrid.ItemsSource = _quizQuestionViewModel.LoadQuiz(userID);
+           this.quizDataGrid.ItemsSource = _viewQuizzesViewModel.LoadQuiz();
 
         }
 
         private void deleteQuizMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            this.quizDataGrid.ItemsSource = _quizQuestionViewModel.DeleteQuiz(userID);
-            MessageBox.Show("Quiz Deleted.");
+            this.quizDataGrid.ItemsSource = _viewQuizzesViewModel.DeleteQuiz();
+            //MessageBox.Show("Quiz Deleted.");
         }
 
 
         private void refreshBtn_Click(object sender, RoutedEventArgs e)
         {
-            this.quizDataGrid.ItemsSource = _quizQuestionViewModel.LoadQuiz(userID);
+            this.quizDataGrid.ItemsSource = _viewQuizzesViewModel.LoadQuiz();
 
-            this.questionDataGrid.ItemsSource = _quizQuestionViewModel.LoadQuestions();
+            this.questionDataGrid.ItemsSource = _viewQuizzesViewModel.LoadQuestions();
         }
 
         private void createQuestionMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            CreateQuestion createQuestion = new CreateQuestion(_quizQuestionViewModel.GetRowQuizID());
-            createQuestion.Show();
+            //CreateQuestion createQuestion = new CreateQuestion(_quizQuestionViewModel.GetRowQuizID());
+            //createQuestion.Show();
 
         }
 
         private void deleteQuestionMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            this.questionDataGrid.ItemsSource = _quizQuestionViewModel.DeleteQuestions();
-            MessageBox.Show("Question Deleted.");
+            //this.questionDataGrid.ItemsSource = _quizQuestionViewModel.DeleteQuestions();
+            //MessageBox.Show("Question Deleted.");
         }
 
         private void reviewQuizMenuItem_Click(object sender, RoutedEventArgs e)

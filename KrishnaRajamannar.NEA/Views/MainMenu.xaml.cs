@@ -25,13 +25,16 @@ namespace KrishnaRajamannar.NEA.Views
         private readonly ViewLeaderboard viewLeaderboard;
         private readonly HostSession hostSession;
         private readonly JoinSession joinSession;
+        private ViewQuizzes viewQuizzes;
 
         private readonly MainMenuViewModel _mainMenuViewModel;
-        public MainMenu(MainMenuViewModel mainMenuViewModel)
+        private readonly ViewQuizzesViewModel _viewQuizzesViewModel;
+        public MainMenu(MainMenuViewModel mainMenuViewModel, ViewQuizzesViewModel viewQuizzesViewModel)
         {
             InitializeComponent();
 
             _mainMenuViewModel = mainMenuViewModel;
+            _viewQuizzesViewModel = viewQuizzesViewModel;
 
             this.DataContext = _mainMenuViewModel;
 
@@ -39,18 +42,21 @@ namespace KrishnaRajamannar.NEA.Views
             hostSession = new HostSession();
             joinSession = new JoinSession();
 
-
-
-            // yo come back and bind this instead bro
-
-            //userIDTxtBlock.Text = "User ID: " + _mainMenuViewModel.UserID.ToString();
-            //usernameTxtBlock.Text = "Username: " + _mainMenuViewModel.Username;
-            //pointsTxtBlock.Text = "Total Points:" + _mainMenuViewModel.TotalPoints.ToString();
-
             mainMenuViewModel.HideMainMenuWindow += MainMenuViewModel_HideMainMenuWindow;
+
+            mainMenuViewModel.ShowViewQuizzesWindow += MainMenuViewModel_ShowViewQuizzesWindow;
             mainMenuViewModel.ShowLeaderboardWindow += MainMenuViewModel_ShowLeaderboardWindow;
             mainMenuViewModel.ShowHostSessionWindow += MainMenuViewModel_ShowHostSessionWindow;
             mainMenuViewModel.ShowJoinSessionWindow += MainMenuViewModel_ShowJoinSessionWindow;
+        }
+
+        private void MainMenuViewModel_ShowViewQuizzesWindow(object sender, Events.ShowAccountParameterWindowEventArgs e)
+        {
+            _viewQuizzesViewModel.UserID = e.UserID;
+
+            viewQuizzes = new ViewQuizzes(_viewQuizzesViewModel);
+
+            viewQuizzes.Show();
         }
 
         private void MainMenuViewModel_ShowJoinSessionWindow(object sender, Events.ShowWindowEventArgs e)
@@ -81,7 +87,7 @@ namespace KrishnaRajamannar.NEA.Views
 
         private void viewQuizzesBtn_Click(object sender, RoutedEventArgs e)
         {
-
+            _mainMenuViewModel.DisplayViewQuizzesWindow();
         }
 
         private void leaderboardBtn_Click(object sender, RoutedEventArgs e)
