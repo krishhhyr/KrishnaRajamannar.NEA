@@ -68,6 +68,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
         {
             ShowMessageEventArgs args = new ShowMessageEventArgs();
             args.Message = message;
+
             OnShowMessage(args);
         }
         private void HideAccountCreation()
@@ -79,6 +80,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
         protected virtual void OnShowMessage(ShowMessageEventArgs e)
         {
             ShowMessageEventHandler handler = ShowMessage;
+
             if (handler != null)
             {
                 handler(this, e);

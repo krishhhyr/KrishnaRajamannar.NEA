@@ -24,19 +24,18 @@ namespace KrishnaRajamannar.NEA.Views
         int? userID;
 
         // Used to access the methods within the view model
-        QuizQuestionViewModel _quizQuestionViewModel = new QuizQuestionViewModel();
+        //QuizQuestionViewModel _quizQuestionViewModel = new QuizQuestionViewModel();
 
+        private readonly ViewQuizzesViewModel _viewQuizzesViewModel; 
 
-        public ViewQuizzes(int? _userID)
+        public ViewQuizzes(ViewQuizzesViewModel viewQuizzesViewModel)
         {
-            
-            userID = _userID;
+            _viewQuizzesViewModel = viewQuizzesViewModel;
 
             InitializeComponent();
-            // Used to populate the data grid with the quizzes that a particular user has made. 
-            // Calls a procedure which loads the quizzes in which the quizzes are retrieved from the database.
-            this.quizDataGrid.ItemsSource = _quizQuestionViewModel.LoadQuiz(userID);
-            this.DataContext = _quizQuestionViewModel;
+
+            this.quizDataGrid.ItemsSource = _viewQuizzesViewModel.LoadQuiz();
+            this.DataContext = _viewQuizzesViewModel;
         }
 
         // When a user double clicks a row in the quiz data grid,

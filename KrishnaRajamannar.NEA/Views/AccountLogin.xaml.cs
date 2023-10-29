@@ -28,11 +28,11 @@ namespace KrishnaRajamannar.NEA.Views
         //private readonly UserViewModel _userViewModel;
 
         private readonly AccountCreation accountCreation;
+        private MainMenu mainMenu;
+
         private readonly AccountCreationViewModel _accountCreationViewModel;
         private readonly AccountLoginViewModel _accountLoginViewModel;
         private readonly MainMenuViewModel _mainMenuViewModel;
-
-        private MainMenu mainMenu;
 
         public AccountLogin(AccountLoginViewModel accountLoginViewModel, AccountCreationViewModel accountCreationViewModel, MainMenuViewModel mainMenuViewModel)
         {
@@ -50,9 +50,6 @@ namespace KrishnaRajamannar.NEA.Views
 
             accountLoginViewModel.ShowAccountCreationWindow += AccountLoginViewModel_ShowAccountCreationWindow;
             accountLoginViewModel.ShowParameterMainMenuWindow += AccountLoginViewModel_ShowParameterMainMenuWindow;
-
-            loginBtn.Click += LoginBtn_Click;
-
         }
 
         private void AccountLoginViewModel_ShowParameterMainMenuWindow(object sender, Events.ShowAccountParameterWindowEventArgs e)
@@ -63,7 +60,7 @@ namespace KrishnaRajamannar.NEA.Views
 
             mainMenu = new MainMenu(_mainMenuViewModel);
 
-            mainMenu.Show();
+            mainMenu.ShowDialog();
         }
 
         private void AccountLoginViewModel_ShowAccountCreationWindow(object sender, Events.ShowWindowEventArgs e)

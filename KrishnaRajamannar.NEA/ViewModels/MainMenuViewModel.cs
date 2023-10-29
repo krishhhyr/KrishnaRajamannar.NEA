@@ -25,13 +25,43 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
         public event HideWindowEventHandler HideMainMenuWindow;
 
-        public int? UserID;
-        public string? Username;
-        public int? TotalPoints;
+        //public int? UserID;
+        //public string? Username;
+        //public int? TotalPoints;
 
         public MainMenuViewModel()
         {
             
+        }
+        private int? _userid;
+        public int? UserID
+        {
+            get { return _userid; }
+            set
+            {
+                _userid = value;
+                RaisePropertyChange("UserID");
+            }
+        }
+        private string? _username;
+        public string? Username
+        {
+            get { return _username; }
+            set
+            {
+                _username = value;
+                RaisePropertyChange("Username");
+            }
+        }
+        private int? _totalpoints;
+        public int? TotalPoints
+        {
+            get { return _totalpoints; }
+            set
+            {
+                _totalpoints = value;
+                RaisePropertyChange("TotalPoints");
+            }
         }
         public void RaisePropertyChange(string propertyname)
         {
