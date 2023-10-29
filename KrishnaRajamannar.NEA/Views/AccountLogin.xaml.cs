@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -27,10 +28,12 @@ namespace KrishnaRajamannar.NEA.Views
         //private readonly UserViewModel _userViewModel;
 
         private readonly AccountCreation accountCreation;
+        private MainMenu mainMenu;
         private readonly AccountCreationViewModel _accountCreationViewModel;
         private readonly AccountLoginViewModel _accountLoginViewModel;
+        private readonly MainMenuViewModel _mainMenuViewModel;
 
-        public AccountLogin(AccountLoginViewModel accountLoginViewModel, AccountCreationViewModel accountCreationViewModel)
+        public AccountLogin(AccountLoginViewModel accountLoginViewModel, AccountCreationViewModel accountCreationViewModel, MainMenuViewModel mainMenuViewModel)
         {
             InitializeComponent();
 
@@ -44,18 +47,24 @@ namespace KrishnaRajamannar.NEA.Views
             _accountLoginViewModel.ShowMessage += _accountLoginViewModel_ShowMessage;
 
             accountLoginViewModel.ShowAccountCreationWindow += AccountLoginViewModel_ShowAccountCreationWindow;
-            accountLoginViewModel.ShowMainMenuWindow += AccountLoginViewModel_ShowMainMenuWindow;
+            //accountLoginViewModel.ShowMainMenuWindow += AccountLoginViewModel_ShowMainMenuWindow;
+            accountLoginViewModel.ShowParameterMainMenuWindow += AccountLoginViewModel_ShowParameterMainMenuWindow;
 
             loginBtn.Click += LoginBtn_Click;
 
             //this.accountCreation = accountCreation;
 
             _accountCreationViewModel = accountCreationViewModel;
+            _mainMenuViewModel= mainMenuViewModel;
         }
 
-        private void AccountLoginViewModel_ShowMainMenuWindow(object sender, Events.ShowWindowEventArgs e)
+        private void AccountLoginViewModel_ShowParameterMainMenuWindow(object sender, Events.ShowAccountParameterWindowEventArgs e)
         {
-            
+            _mainMenuViewModel.UserID = e.UserID;
+            _mainMenuViewModel.Username = e.Username;
+            _mainMenuViewModel.TotalPoints = e.TotalPoints;
+            mainMenu = new MainMenu(_mainMenuViewModel);
+            mainMenu.Show();
         }
 
         private void AccountLoginViewModel_ShowAccountCreationWindow(object sender, Events.ShowWindowEventArgs e)

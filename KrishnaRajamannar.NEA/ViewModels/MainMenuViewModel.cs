@@ -25,6 +25,10 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
         public event HideWindowEventHandler HideMainMenuWindow;
 
+        public int? UserID;
+        public string? Username;
+        public int? TotalPoints;
+
         public MainMenuViewModel()
         {
             
@@ -146,7 +150,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
         private  UserModel _userModel;
         private UserViewModel _userViewModel;
 
-        private string Username;
+        //private string Username;
 
 
         //public MainMenuViewModel()

@@ -19,6 +19,10 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
         public event ShowWindowEventHandler ShowMainMenuWindow;
 
+        //Test
+
+        public event ShowAccountParameterWindowEventHandler ShowParameterMainMenuWindow;
+
         public event ShowWindowEventHandler ShowAccountCreationWindow;
 
         public event HideWindowEventHandler HideAccountLoginWindow;
@@ -83,6 +87,16 @@ namespace KrishnaRajamannar.NEA.ViewModels
             OnShowMainMenuWindow(args);
             
         }
+        // Test
+        private void ShowParameterMainMenu() 
+        {
+            ShowAccountParameterWindowEventArgs args = new ShowAccountParameterWindowEventArgs();
+            args.IsShown = true;
+            args.UserID = UserID;
+            args.Username = Username;
+            args.TotalPoints = TotalPoints;
+            OnShowParameterMainMenuWindow(args);
+        }
         private void ShowAccountCreation() 
         {
             ShowWindowEventArgs args = new ShowWindowEventArgs();
@@ -112,6 +126,15 @@ namespace KrishnaRajamannar.NEA.ViewModels
             if (handler != null) 
             {
                 handler(this, e);   
+            }
+        }
+        // Test
+        protected virtual void OnShowParameterMainMenuWindow(ShowAccountParameterWindowEventArgs e) 
+        {
+            ShowAccountParameterWindowEventHandler handler = ShowParameterMainMenuWindow;
+            if (handler != null) 
+            {
+                handler(this, e);
             }
         }
         protected virtual void OnShowAccountCreationWindow(ShowWindowEventArgs e) 
@@ -165,7 +188,8 @@ namespace KrishnaRajamannar.NEA.ViewModels
                     ShowMessageDialog("Account Login successful");
 
                     HideAccountLogin();
-                    ShowMainMenu();
+                    //ShowMainMenu();
+                    ShowParameterMainMenu();
                     
                 }
             }

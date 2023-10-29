@@ -37,6 +37,9 @@ namespace KrishnaRajamannar.NEA.Views
             InitializeComponent();
 
             _mainMenuViewModel = mainMenuViewModel;
+
+            userIDTxtBlock.Text =_mainMenuViewModel.UserID.ToString();
+
             //_mainMenuViewModel.HideMainMenuWindow += _mainMenuViewModel_HideWindow;
         }
 
@@ -52,9 +55,6 @@ namespace KrishnaRajamannar.NEA.Views
 
         public void LoadData()
         {
-            //userIDTxtBlock.Text = "User ID: " + _userViewModel.UserID;
-            //usernameTxtBlock.Text = "Username: " + _userViewModel.Username;
-            //pointsTxtBlock.Text = "Total Points: " + _userViewModel.TotalPoints;
         }
 
         private void viewQuizzesBtn_Click(object sender, RoutedEventArgs e)
