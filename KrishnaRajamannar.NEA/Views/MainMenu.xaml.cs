@@ -23,38 +23,21 @@ namespace KrishnaRajamannar.NEA.Views
     public partial class MainMenu : Window
     {
         private readonly MainMenuViewModel _mainMenuViewModel;
-
-
-        //UserViewModel _userViewModel;
-        //MainMenuViewModel _mainMenuViewModel;
-
-        //private int userID;
-        //private string username;
-        //private string totalPoints;
-
         public MainMenu(MainMenuViewModel mainMenuViewModel)
         {
             InitializeComponent();
 
             _mainMenuViewModel = mainMenuViewModel;
 
-            userIDTxtBlock.Text =_mainMenuViewModel.UserID.ToString();
-
-            //_mainMenuViewModel.HideMainMenuWindow += _mainMenuViewModel_HideWindow;
+            userIDTxtBlock.Text = "User ID: " + _mainMenuViewModel.UserID.ToString();
+            usernameTxtBlock.Text = "Username: " + _mainMenuViewModel.Username;
+            pointsTxtBlock.Text = "Total Points:" + _mainMenuViewModel.TotalPoints.ToString();
         }
 
-        //private void _mainMenuViewModel_HideWindow(object sender, HideWindowEventArgs e)
-        //{
-        //    this.Visibility = Visibility.Hidden;
-        //}
 
         private void logOutBtn_Click(object sender, RoutedEventArgs e)
         {
-            //_mainMenuViewModel.Logout();
-        }
-
-        public void LoadData()
-        {
+            _mainMenuViewModel.CloseMainMenuWindow();
         }
 
         private void viewQuizzesBtn_Click(object sender, RoutedEventArgs e)

@@ -28,10 +28,11 @@ namespace KrishnaRajamannar.NEA.Views
         //private readonly UserViewModel _userViewModel;
 
         private readonly AccountCreation accountCreation;
-        private MainMenu mainMenu;
         private readonly AccountCreationViewModel _accountCreationViewModel;
         private readonly AccountLoginViewModel _accountLoginViewModel;
         private readonly MainMenuViewModel _mainMenuViewModel;
+
+        private MainMenu mainMenu;
 
         public AccountLogin(AccountLoginViewModel accountLoginViewModel, AccountCreationViewModel accountCreationViewModel, MainMenuViewModel mainMenuViewModel)
         {
@@ -39,6 +40,7 @@ namespace KrishnaRajamannar.NEA.Views
 
             _accountLoginViewModel = accountLoginViewModel;
             _accountCreationViewModel = accountCreationViewModel;
+            _mainMenuViewModel = mainMenuViewModel;
 
             this.DataContext = _accountLoginViewModel;
 
@@ -47,15 +49,10 @@ namespace KrishnaRajamannar.NEA.Views
             _accountLoginViewModel.ShowMessage += _accountLoginViewModel_ShowMessage;
 
             accountLoginViewModel.ShowAccountCreationWindow += AccountLoginViewModel_ShowAccountCreationWindow;
-            //accountLoginViewModel.ShowMainMenuWindow += AccountLoginViewModel_ShowMainMenuWindow;
             accountLoginViewModel.ShowParameterMainMenuWindow += AccountLoginViewModel_ShowParameterMainMenuWindow;
 
             loginBtn.Click += LoginBtn_Click;
 
-            //this.accountCreation = accountCreation;
-
-            _accountCreationViewModel = accountCreationViewModel;
-            _mainMenuViewModel= mainMenuViewModel;
         }
 
         private void AccountLoginViewModel_ShowParameterMainMenuWindow(object sender, Events.ShowAccountParameterWindowEventArgs e)
@@ -63,7 +60,9 @@ namespace KrishnaRajamannar.NEA.Views
             _mainMenuViewModel.UserID = e.UserID;
             _mainMenuViewModel.Username = e.Username;
             _mainMenuViewModel.TotalPoints = e.TotalPoints;
+
             mainMenu = new MainMenu(_mainMenuViewModel);
+
             mainMenu.Show();
         }
 
@@ -76,24 +75,13 @@ namespace KrishnaRajamannar.NEA.Views
         {
             MessageBox.Show(e.Message);
         }
-
-        //Used when the user clicks the login button. 
         private void LoginBtn_Click(object sender, RoutedEventArgs e)
         {
             _accountLoginViewModel.Password = passwordInputTxt.Password;
-
-            // Calls the Login function from the UserViewModel class. 
-            // Used to verify if the login details provided are valid or not. 
-            // If it is valid, the accountlogin window is hidden
             _accountLoginViewModel.Login();
         }
-
         private void registerBtn_Click(object sender, RoutedEventArgs e)
         {
-            // Calls the ShowAccountCreation subroutine which displays the window
-            // where users can create an account
-            //_userViewModel.ShowAccountCreation();
-
             _accountLoginViewModel.DisplayAccountCreationWindow();
         }
     }

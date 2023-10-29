@@ -20,10 +20,6 @@ namespace KrishnaRajamannar.NEA.Views
     /// </summary>
     public partial class AccountCreation : Window
     {
-        // Used to link to the UserViewModel class
-
-        //private readonly UserViewModel _userViewModel;
-
         private readonly AccountCreationViewModel _accountCreationViewModel;
 
         public AccountCreation(AccountCreationViewModel accountCreationViewModel)
@@ -50,27 +46,15 @@ namespace KrishnaRajamannar.NEA.Views
 
         private void createAccBtn_Click(object sender, RoutedEventArgs e)
         {
-            // Assigns the local variables from the UserViewModel class to the password inputs
-            // Given that data binding is not supported with passwordboxes
-
             _accountCreationViewModel.Password = initialPasswordInputTxt.Password;
             _accountCreationViewModel.RetypedPassword = secondPasswordInputTxt.Password;
-
-            // Calls a subroutine which validates the inputs that the user provides for an account creation
-            // If the inputs are valid, the account creation window is hidden and the main menu is displayed
 
             _accountCreationViewModel.Creation();
         }
 
         private void backBtn_Click(object sender, RoutedEventArgs e)
         {
-            // Calls a subroutine which displays the Account Login window 
-            //_userViewModel.ShowAccountLogin();
-            // This hides the current window
-
             _accountCreationViewModel.CloseAccountCreationWindow();
-            
-            //this.Close();
         }
     }
 }

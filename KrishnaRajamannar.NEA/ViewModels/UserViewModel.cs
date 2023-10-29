@@ -126,17 +126,17 @@ namespace KrishnaRajamannar.NEA.ViewModels
             }
         }
 
-        public void ShowMainMenu()
-        {
-            if (_mainMenu != null)
-            {
-                _mainMenu.LoadData();
+        //public void ShowMainMenu()
+        //{
+        //    if (_mainMenu != null)
+        //    {
+        //        _mainMenu.LoadData();
 
-                _mainMenu.Visibility = Visibility.Visible;
+        //        _mainMenu.Visibility = Visibility.Visible;
 
-                _accountLogin.Visibility= Visibility.Hidden;
-            }
-        }
+        //        _accountLogin.Visibility= Visibility.Hidden;
+        //    }
+        //}
 
         #endregion
 
@@ -174,8 +174,6 @@ namespace KrishnaRajamannar.NEA.ViewModels
                     ShowMessageEventArgs args = new ShowMessageEventArgs();
                     args.Message = "Successful Account Login.";
                     OnShowMessage(args);
-
-                    ShowMainMenu();
 
                     return true;
                 }
