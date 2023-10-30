@@ -17,11 +17,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
         public event ShowMessageEventHandler ShowMessage;
 
-        public event ShowWindowEventHandler ShowMainMenuWindow;
-
-        //Test
-
-        public event ShowAccountParameterWindowEventHandler ShowParameterMainMenuWindow;
+        public event ShowAccountParameterWindowEventHandler ShowMainMenuWindow;
 
         public event ShowWindowEventHandler ShowAccountCreationWindow;
 
@@ -82,20 +78,12 @@ namespace KrishnaRajamannar.NEA.ViewModels
         }
         private void ShowMainMenu() 
         {
-            ShowWindowEventArgs args = new ShowWindowEventArgs();
-            args.IsShown = true;
-            OnShowMainMenuWindow(args);
-            
-        }
-        // Test
-        private void ShowParameterMainMenu() 
-        {
             ShowAccountParameterWindowEventArgs args = new ShowAccountParameterWindowEventArgs();
             args.IsShown = true;
             args.UserID = UserID;
             args.Username = Username;
             args.TotalPoints = TotalPoints;
-            OnShowParameterMainMenuWindow(args);
+            OnShowMainMenuWindow(args);
         }
         private void ShowAccountCreation() 
         {
@@ -120,21 +108,12 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 handler(this, e);
             }
         }
-        protected virtual void OnShowMainMenuWindow(ShowWindowEventArgs e) 
+        protected virtual void OnShowMainMenuWindow(ShowAccountParameterWindowEventArgs e) 
         {
-            ShowWindowEventHandler handler = ShowMainMenuWindow;
+            ShowAccountParameterWindowEventHandler handler = ShowMainMenuWindow;
             if (handler != null) 
             {
                 handler(this, e);   
-            }
-        }
-        // Test
-        protected virtual void OnShowParameterMainMenuWindow(ShowAccountParameterWindowEventArgs e) 
-        {
-            ShowAccountParameterWindowEventHandler handler = ShowParameterMainMenuWindow;
-            if (handler != null) 
-            {
-                handler(this, e);
             }
         }
         protected virtual void OnShowAccountCreationWindow(ShowWindowEventArgs e) 
@@ -188,9 +167,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
                     ShowMessageDialog("Account Login successful");
 
                     HideAccountLogin();
-                    //ShowMainMenu();
-                    ShowParameterMainMenu();
-                    
+                    ShowMainMenu();
                 }
             }
         }

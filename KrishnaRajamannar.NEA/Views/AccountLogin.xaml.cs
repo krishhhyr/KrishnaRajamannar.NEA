@@ -51,10 +51,17 @@ namespace KrishnaRajamannar.NEA.Views
             _accountLoginViewModel.ShowMessage += _accountLoginViewModel_ShowMessage;
 
             accountLoginViewModel.ShowAccountCreationWindow += AccountLoginViewModel_ShowAccountCreationWindow;
-            accountLoginViewModel.ShowParameterMainMenuWindow += AccountLoginViewModel_ShowParameterMainMenuWindow;
+            accountLoginViewModel.ShowMainMenuWindow += AccountLoginViewModel_ShowMainMenuWindow;
+            accountLoginViewModel.HideAccountLoginWindow += AccountLoginViewModel_HideAccountLoginWindow;
+            //accountLoginViewModel.ShowParameterMainMenuWindow += AccountLoginViewModel_ShowParameterMainMenuWindow;
         }
 
-        private void AccountLoginViewModel_ShowParameterMainMenuWindow(object sender, Events.ShowAccountParameterWindowEventArgs e)
+        private void AccountLoginViewModel_HideAccountLoginWindow(object sender, Events.HideWindowEventArgs e)
+        {
+            this.Close();   
+        }
+
+        private void AccountLoginViewModel_ShowMainMenuWindow(object sender, Events.ShowAccountParameterWindowEventArgs e)
         {
             _mainMenuViewModel.UserID = e.UserID;
             _mainMenuViewModel.Username = e.Username;

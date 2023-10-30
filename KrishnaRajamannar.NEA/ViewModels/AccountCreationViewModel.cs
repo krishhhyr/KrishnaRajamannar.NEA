@@ -130,7 +130,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
             {
                 ShowMessageDialog("Username must be between 4-15 characters.");
             }
-            else if (!(_userService.IsUserExists(username) == true))
+            else if (!(_userService.IsUserExists(username) == false))
             {
                 ShowMessageDialog("Username already exists.");
             }
