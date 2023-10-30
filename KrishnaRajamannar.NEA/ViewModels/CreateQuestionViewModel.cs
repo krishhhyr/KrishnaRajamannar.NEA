@@ -155,11 +155,14 @@ namespace KrishnaRajamannar.NEA.ViewModels
         }
         public bool ValidateOptions() 
         {
-            if ((Option1 == null) || (Option2 == null)) 
+            if ((Option1 != null) || (Option2 != null))
             {
-                return false;
+                return true;
             }
-            return true;
+            else 
+            {
+                return true;
+            }
         }
         public bool ValidateNumberOfPoints()
         {

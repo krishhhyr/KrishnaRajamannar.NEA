@@ -12,6 +12,8 @@ namespace KrishnaRajamannar.NEA.ViewModels
     {
         private readonly IIndependentReviewQuizService _independentReviewQuizService;
 
+        public int QuizID;
+
         public IndependentReviewQuizFeedbackViewModel(IIndependentReviewQuizService independentReviewQuizService)
         {
             _independentReviewQuizService = independentReviewQuizService;
@@ -19,7 +21,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
         public IList<IndependentReviewQuizFeedbackModel> GetQuizzes() 
         {
-            IList<IndependentReviewQuizFeedbackModel> feedback = _independentReviewQuizService.GetQuizFeedback(36);
+            IList<IndependentReviewQuizFeedbackModel> feedback = _independentReviewQuizService.GetQuizFeedback(QuizID);
 
             return feedback;
         }

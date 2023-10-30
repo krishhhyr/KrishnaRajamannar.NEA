@@ -22,6 +22,8 @@ namespace KrishnaRajamannar.NEA.Views
     {
         private CreateQuiz createQuiz;
         private CreateQuestion createQuestion;
+        private IndependentReviewQuiz independentReviewQuiz;
+        private IndependentReviewFeedback IndependentReviewFeedback;
 
 
         private readonly ViewQuizzesViewModel _viewQuizzesViewModel;
@@ -39,6 +41,24 @@ namespace KrishnaRajamannar.NEA.Views
             _viewQuizzesViewModel.ShowMessage += _viewQuizzesViewModel_ShowMessage;
             viewQuizzesViewModel.ShowCreateQuizWindow += ViewQuizzesViewModel_ShowCreateQuizWindow;
             viewQuizzesViewModel.ShowCreateQuestionWindow += ViewQuizzesViewModel_ShowCreateQuestionWindow;
+            viewQuizzesViewModel.ShowIndependentReviewQuizWindow += ViewQuizzesViewModel_ShowIndependentReviewQuizWindow;
+            viewQuizzesViewModel.ShowIndependentReviewFeedbackWindow += ViewQuizzesViewModel_ShowIndependentReviewFeedbackWindow;
+        }
+
+        private void ViewQuizzesViewModel_ShowIndependentReviewFeedbackWindow(object sender, Events.ShowQuizParameterWindowEventArgs e)
+        {
+            _viewQuizzesViewModel.IndependentReviewFeedbackViewModel.QuizID = e.QuizID;
+            IndependentReviewFeedback = new IndependentReviewFeedback(_viewQuizzesViewModel.IndependentReviewFeedbackViewModel);
+
+            IndependentReviewFeedback.Show();
+        }
+
+        private void ViewQuizzesViewModel_ShowIndependentReviewQuizWindow(object sender, Events.ShowQuizParameterWindowEventArgs e)
+        {
+            _viewQuizzesViewModel.IndependentReviewViewModel.QuizID = e.QuizID;
+            independentReviewQuiz = new IndependentReviewQuiz(_viewQuizzesViewModel.IndependentReviewViewModel);
+
+            independentReviewQuiz.Show();
         }
 
         private void ViewQuizzesViewModel_ShowCreateQuestionWindow(object sender, Events.ShowQuizParameterWindowEventArgs e)
@@ -97,12 +117,12 @@ namespace KrishnaRajamannar.NEA.Views
 
         private void reviewQuizMenuItem_Click(object sender, RoutedEventArgs e)
         {
-
+            _viewQuizzesViewModel.DisplayIndependentReviewQuizWindow();
         }
 
         private void quizFeedbackMenuItem_Click(object sender, RoutedEventArgs e)
         {
-
+            _viewQuizzesViewModel.DisplayIndependentReviewFeedbackWindow();
         }
 
         private void backBtn_Click(object sender, RoutedEventArgs e)
