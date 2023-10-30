@@ -25,7 +25,6 @@ namespace KrishnaRajamannar.NEA.Views
         private IndependentReviewQuiz independentReviewQuiz;
         private IndependentReviewFeedback IndependentReviewFeedback;
 
-
         private readonly ViewQuizzesViewModel _viewQuizzesViewModel;
 
         public ViewQuizzes(ViewQuizzesViewModel viewQuizzesViewModel)
@@ -39,10 +38,17 @@ namespace KrishnaRajamannar.NEA.Views
             this.quizDataGrid.ItemsSource = _viewQuizzesViewModel.LoadQuiz();
 
             _viewQuizzesViewModel.ShowMessage += _viewQuizzesViewModel_ShowMessage;
+
             viewQuizzesViewModel.ShowCreateQuizWindow += ViewQuizzesViewModel_ShowCreateQuizWindow;
             viewQuizzesViewModel.ShowCreateQuestionWindow += ViewQuizzesViewModel_ShowCreateQuestionWindow;
             viewQuizzesViewModel.ShowIndependentReviewQuizWindow += ViewQuizzesViewModel_ShowIndependentReviewQuizWindow;
             viewQuizzesViewModel.ShowIndependentReviewFeedbackWindow += ViewQuizzesViewModel_ShowIndependentReviewFeedbackWindow;
+            viewQuizzesViewModel.HideViewQuizzesWindow += ViewQuizzesViewModel_HideViewQuizzesWindow;
+        }
+
+        private void ViewQuizzesViewModel_HideViewQuizzesWindow(object sender, Events.HideWindowEventArgs e)
+        {
+            this.Close();
         }
 
         private void ViewQuizzesViewModel_ShowIndependentReviewFeedbackWindow(object sender, Events.ShowQuizParameterWindowEventArgs e)
@@ -127,12 +133,7 @@ namespace KrishnaRajamannar.NEA.Views
 
         private void backBtn_Click(object sender, RoutedEventArgs e)
         {
-            // this is not the right parameter to pass back to Main Menu!
-            // should be a username
-
-            //MainMenu mainMenu = new MainMenu(Convert.ToString(userID));
-            //mainMenu.Show();
-            //this.Close();
+            _viewQuizzesViewModel.CloseViewQuizzesWindow();
         }
     }
 }

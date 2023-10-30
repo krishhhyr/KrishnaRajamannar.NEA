@@ -34,22 +34,12 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        // get questions DONE!
-        // merge sort to sort qs based on points previously awarded DONE!
-        // display questions, question number 
-        // check if answer is correct
-        // display correct answer + calculate no of points awarded
-        // update no of points in database, update label for points
-        // total number of points = use sum function. 
-        // provide user feedback when quiz has ended - data grid?
-
-
         #region SortingQuestions
         public IList<IndependentReviewQuizModel> GetQuestionsInOrder() 
         {
             // Calls a function which returns all the questions for a particular quiz from the database.
             // These questions have not been sorted in order based on the number of points gained when reviewed by users. 
-            IList<IndependentReviewQuizModel> unsortedquestions = _independentReviewQuizService.GetAllQuestions(36);
+            IList<IndependentReviewQuizModel> unsortedquestions = _independentReviewQuizService.GetAllQuestions(QuizID);
 
             // A list for the number of points which can be initally gained by users when first reviewing a quiz.
             // This values were specified by users during the creation of questions.
@@ -85,8 +75,6 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 }
             }
             return sortedquestions;
-
-            //(recentQuestionAdded.Points != question.Points)
         }
 
         #region MergeSort
@@ -192,7 +180,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
             // Checks if the question number is greater than the number of questions in the quiz. 
             if (questionNumber >= questions.Count)
             {
-                MessageBox.Show("No more questions left to review.", "Quiz Review", MessageBoxButton.OK);
+                MessageBox.Show("No questions to review.", "Quiz Review", MessageBoxButton.OK);
                 // show quiz feedback
                 return "";
             }
@@ -209,7 +197,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
         {
             if (questionNumber > questions.Count)
             {
-                MessageBox.Show("You have answered all the questions");
+                MessageBox.Show("All questions have been answered.");
                 //display quiz feedback - new window
             }
 
@@ -249,7 +237,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
             // Checks if a user has not inputted an answer.
             if (answerInput == "") 
             {
-                MessageBox.Show("No answer has been inputted.", "Independent Quiz Review");
+                MessageBox.Show("Enter a valid input.", "Independent Quiz Review");
                 
                 return ("", 0);
             }
@@ -260,7 +248,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 // Calls a function which calculates the number of points gained for the correct answer.
                 int pointsForCorrectAnswer = CalculatePoints(currentQuestion, isCorrect);
 
-                MessageBox.Show($"Correct! You have been awarded {pointsForCorrectAnswer} points.", "Independent Quiz Review");
+                MessageBox.Show($"Correct. {pointsForCorrectAnswer} points have been awarded.", "Independent Quiz Review");
                 totalPoints = totalPoints + pointsForCorrectAnswer;
 
                 // Calls the IndependentReviewQuizService which uses an UPDATE command to update whether a question is correct 
@@ -284,14 +272,14 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 {
                     totalPoints = 0; 
                     // Displays a message to the user indicating that the answer was wrong. 
-                    MessageBox.Show($"Incorrect answer! You have zero points.", "Independent Quiz Review");
+                    MessageBox.Show($"Incorrect. 0 points have been awarded.", "Independent Quiz Review");
 
                     return (correctAnswer, totalPoints);
                 }
 
                 if (totalPoints > 0)
                 {
-                    MessageBox.Show($"Incorrect answer! You have lost {pointsForIncorrectAnswer} points.", "Independent Quiz Review");
+                    MessageBox.Show($"Incorrect. {pointsForIncorrectAnswer} points have been deducted.", "Independent Quiz Review");
                     return (correctAnswer, totalPoints);
                 }
 

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:KrishnaRajamannar.NEA.Views"
         mc:Ignorable="d"
-        Title="ViewQuizzes" Height="850" Width="1500" WindowStartupLocation="CenterScreen">
+        Title="ViewQuizzes" Height="550" Width="1500" WindowStartupLocation="CenterScreen">
 
     <Window.Resources>
         <Style TargetType="DataGridColumnHeader">
@@ -15,57 +15,53 @@
     
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="40"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="3*"></ColumnDefinition>
-            <ColumnDefinition Width="4*"></ColumnDefinition>
+            <ColumnDefinition Width="2*"></ColumnDefinition>
+            <ColumnDefinition Width="2*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
 
-        <Grid Grid.Row="0" Grid.Column="0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="1*"></RowDefinition>
-                <RowDefinition Height="18*"></RowDefinition>
-            </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal" Width="1300" Grid.Column="0" Grid.Row="0">
 
-            <StackPanel Orientation="Horizontal" Width="1300">
-
-                <Button x:Name="backBtn" Content="Back" Grid.Row="0" Width="75" Margin="10,10,0,5" 
+            <Button x:Name="backBtn" Content="Back" Grid.Row="0" Width="75" Margin="10,10,0,5" 
                     HorizontalAlignment="Left" FontSize="16" BorderBrush="Black" Background="White" 
                     FontFamily="Segoe UI Light" Click="backBtn_Click"/>
 
-                <Button x:Name="refreshBtn" Content="Refresh" Width="75" FontSize="16" 
+            <Button x:Name="refreshBtn" Content="Refresh" Width="75" FontSize="16" 
                         Margin="10,10,0,5" Background="#FFABADB3" Foreground="White" BorderBrush="Black" 
                         FontFamily="Segoe UI Light" Click="refreshBtn_Click"></Button>
-                
-            </StackPanel>
-            
-            <DataGrid  x:Name ="quizDataGrid" SelectionMode="Single" IsReadOnly="True" SelectedItem="{Binding SelectedQuiz}" 
-                       AutoGenerateColumns="True"  CanUserAddRows="False" Grid.Row="4" FontSize="20" 
-                       FontFamily="Segoe UI Light" Margin="10,0,5,10" ColumnWidth="Auto" MouseDoubleClick="quizDataGrid_MouseDoubleClick">
+
+        </StackPanel>
+
+        <DataGrid  x:Name ="quizDataGrid" SelectionMode="Single" IsReadOnly="True" SelectedItem="{Binding SelectedQuiz}" 
+                       AutoGenerateColumns="True" Height="475" VerticalAlignment="Top" CanUserAddRows="False" Grid.Column="0" Grid.Row="1" FontSize="20" 
+                       FontFamily="Segoe UI Light" Margin="10,0,5,10" ColumnWidth="*" AlternatingRowBackground="AliceBlue"
+                       MouseDoubleClick="quizDataGrid_MouseDoubleClick">
 
                 <DataGrid.ContextMenu>
 
                     <ContextMenu>
-                        <MenuItem x:Name="createQuizMenuItem" Header="Create a Quiz" Click="createQuizMenuItem_Click"/>
-                        <MenuItem x:Name="deleteQuizMenuItem" Header="Delete this Quiz" Click="deleteQuizMenuItem_Click"/>
-                        <MenuItem x:Name="reviewQuizMenuItem" Header="Review this Quiz" Click="reviewQuizMenuItem_Click"/>
-                        <MenuItem  x:Name="quizFeedbackMenuItem" Header="View this Quiz Feedback" Click="quizFeedbackMenuItem_Click"/>
+                        <MenuItem x:Name="createQuizMenuItem" Header="Create Quiz" Click="createQuizMenuItem_Click"/>
+                        <MenuItem x:Name="deleteQuizMenuItem" Header="Delete Quiz" Click="deleteQuizMenuItem_Click"/>
+                        <MenuItem x:Name="reviewQuizMenuItem" Header="Review Quiz" Click="reviewQuizMenuItem_Click"/>
+                        <MenuItem  x:Name="quizFeedbackMenuItem" Header="View Quiz Feedback" Click="quizFeedbackMenuItem_Click"/>
                     </ContextMenu>
 
                 </DataGrid.ContextMenu>
             </DataGrid>
-        </Grid>
+        
 
-        <DataGrid x:Name="questionDataGrid" Grid.Column="1" AutoGenerateColumns="True" Margin="10,44,10,10" 
-                  Grid.Row="0" FontSize="20" FontFamily="Segoe UI Light" CanUserAddRows="False" 
-                  IsReadOnly="True" SelectedItem="{Binding SelectedQuestion}" ColumnWidth="Auto">
+        <DataGrid x:Name="questionDataGrid" Grid.Column="1" Grid.Row="1" AutoGenerateColumns="True" Margin="10,0,5,10" 
+                   FontSize="20" Height="475" VerticalAlignment="Top" FontFamily="Segoe UI Light" CanUserAddRows="False" 
+                  IsReadOnly="True" SelectedItem="{Binding SelectedQuestion}" AlternatingRowBackground="AliceBlue" ColumnWidth="Auto">
 
             <DataGrid.ContextMenu>
                 
                 <ContextMenu>
-                    <MenuItem x:Name="createQuestionMenuItem" Header="Create a Question" Click="createQuestionMenuItem_Click"/>
-                    <MenuItem x:Name="deleteQuestionMenuItem" Header="Delete this Question" Click="deleteQuestionMenuItem_Click"/>
+                    <MenuItem x:Name="createQuestionMenuItem" Header="Create Question" Click="createQuestionMenuItem_Click"/>
+                    <MenuItem x:Name="deleteQuestionMenuItem" Header="Delete Question" Click="deleteQuestionMenuItem_Click"/>
                 </ContextMenu>
                 
             </DataGrid.ContextMenu>
