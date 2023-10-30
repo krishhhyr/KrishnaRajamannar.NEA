@@ -34,7 +34,7 @@ namespace KrishnaRajamannar.NEA.Views
 
             _independentReviewViewModel = independentReviewViewModel;
 
-           IList<IndependentReviewQuizModel> _independentReviewQuizModel = _independentReviewViewModel.GetQuestionsInOrder();
+           //IList<IndependentReviewQuizModel> _independentReviewQuizModel = _independentReviewViewModel.GetQuestionsInOrder();
 
         }
 
@@ -130,9 +130,7 @@ namespace KrishnaRajamannar.NEA.Views
         {
             // This hides the next button so that users have to submit an answer before moving onto the next question.
             nextBtn.Visibility = Visibility.Hidden;
-
             textAnswerBtn.Visibility = Visibility.Visible;
-
             multipleChoiceAnswerBtn.Visibility = Visibility.Visible;
 
             // This displays how many points were now awarded, having answered a question.
@@ -159,35 +157,42 @@ namespace KrishnaRajamannar.NEA.Views
                 button.IsChecked = false;
             }
 
-            questionLbl.Content = _independentReviewViewModel.SendQuestion(_independentReviewQuizModel);
-
-            questionNumberLbl.Content = _independentReviewViewModel.SendQuestionNumber(_independentReviewQuizModel);
-
-            List<string?> options = _independentReviewViewModel.SendOptions(_independentReviewQuizModel);
-
-            // If the first option is null, then the question must be a text-based question.
-            // This is because the first option cannot be null for a multiple-choice based question 
-            // As options 1 and 2 are required during the creation of a multiple-choice based question.
-            if (options.First() == "NULL")
+            string? question = _independentReviewViewModel.SendQuestion(_independentReviewQuizModel);
+            if (question != null)
             {
-                // This code displays the stack panel representing text-based questions
-                // And hides the panel for a multiple-choice based question.
-                textAnswerStackPanel.Visibility = Visibility.Visible;
-                multipleChoiceAnswerStackPanel.Visibility = Visibility.Hidden;
+                questionLbl.Content = question;
+                questionNumberLbl.Content = _independentReviewViewModel.SendQuestionNumber(_independentReviewQuizModel);
+
+                List<string?> options = _independentReviewViewModel.SendOptions(_independentReviewQuizModel);
+
+                // If the first option is null, then the question must be a text-based question.
+                // This is because the first option cannot be null for a multiple-choice based question 
+                // As options 1 and 2 are required during the creation of a multiple-choice based question.
+                if (options.First() == "NULL")
+                {
+                    // This code displays the stack panel representing text-based questions
+                    // And hides the panel for a multiple-choice based question.
+                    textAnswerStackPanel.Visibility = Visibility.Visible;
+                    multipleChoiceAnswerStackPanel.Visibility = Visibility.Hidden;
+                }
+                // This is for a multiple-choice based question.
+                // It assigns the options to the radio buttons in the UI so that users can press an option. 
+                else
+                {
+                    textAnswerStackPanel.Visibility = Visibility.Hidden;
+                    multipleChoiceAnswerStackPanel.Visibility = Visibility.Visible;
+
+                    option1rb.Content = options[0];
+                    option2rb.Content = options[1];
+                    option3rb.Content = options[2];
+                    option4rb.Content = options[3];
+                    option5rb.Content = options[4];
+                    option6rb.Content = options[5];
+                }
             }
-            // This is for a multiple-choice based question.
-            // It assigns the options to the radio buttons in the UI so that users can press an option. 
-            else
+            else 
             {
-                textAnswerStackPanel.Visibility = Visibility.Hidden;
-                multipleChoiceAnswerStackPanel.Visibility = Visibility.Visible;
-
-                option1rb.Content = options[0];
-                option2rb.Content = options[1];
-                option3rb.Content = options[2];
-                option4rb.Content = options[3];
-                option5rb.Content = options[4];
-                option6rb.Content = options[5];
+                
             }
         }
 

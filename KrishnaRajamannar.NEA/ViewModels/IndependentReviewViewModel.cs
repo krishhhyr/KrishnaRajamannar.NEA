@@ -175,14 +175,14 @@ namespace KrishnaRajamannar.NEA.ViewModels
         #region SendDataToUI
         // Used to send the current question being answered to the user interface.
         // If all the questions have been answered, the review session ends. 
-        public string SendQuestion(IList<IndependentReviewQuizModel> questions) 
+        public string? SendQuestion(IList<IndependentReviewQuizModel> questions) 
         {
             // Checks if the question number is greater than the number of questions in the quiz. 
             if (questionNumber >= questions.Count)
             {
                 MessageBox.Show("No questions to review.", "Quiz Review", MessageBoxButton.OK);
                 // show quiz feedback
-                return "";
+                return null;
             }
             else 
             {
