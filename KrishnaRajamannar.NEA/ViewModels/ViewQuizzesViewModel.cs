@@ -22,7 +22,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
         public event ShowQuizParameterWindowEventHandler ShowCreateQuestionWindow;
 
-        public event ShowQuizParameterWindowEventHandler ShowCreateQuizWindow;
+        public event ShowAccountParameterWindowEventHandler ShowCreateQuizWindow;
 
         public event HideWindowEventHandler HideViewQuizzesWindow;
 
@@ -34,6 +34,15 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
         private readonly UserModel _questionModel;
 
+        public CreateQuizViewModel CreateQuizViewModel;
+
+        public CreateQuestionViewModel CreateQuestionViewModel;
+
+        public IndependentReviewViewModel IndependentReviewViewModel;   
+
+        public IndependentReviewQuizFeedbackViewModel IndependentReviewFeedbackViewModel;
+
+
         public int? UserID;
         public int QuizID;
 
@@ -44,6 +53,10 @@ namespace KrishnaRajamannar.NEA.ViewModels
             _quizModel = quizModel;
             _questionModel = questionModel;
 
+            CreateQuizViewModel = App.ServiceProvider.GetService(typeof(CreateQuizViewModel)) as CreateQuizViewModel;
+            CreateQuestionViewModel = App.ServiceProvider.GetService(typeof(CreateQuestionViewModel)) as CreateQuestionViewModel;
+            IndependentReviewViewModel = App.ServiceProvider.GetService(typeof(IndependentReviewViewModel)) as IndependentReviewViewModel;
+            IndependentReviewFeedbackViewModel = App.ServiceProvider.GetService(typeof(IndependentReviewQuizFeedbackViewModel)) as IndependentReviewQuizFeedbackViewModel;
         }
 
         private QuizModel _selectedQuiz;
@@ -103,7 +116,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
         }
         private void ShowCreateQuiz()
         {
-            ShowQuizParameterWindowEventArgs args = new ShowQuizParameterWindowEventArgs();
+            ShowAccountParameterWindowEventArgs args = new ShowAccountParameterWindowEventArgs();
             args.IsShown = true;
             OnShowCreateQuizWindow(args);
         }
@@ -111,6 +124,8 @@ namespace KrishnaRajamannar.NEA.ViewModels
         {
             ShowQuizParameterWindowEventArgs args = new ShowQuizParameterWindowEventArgs();
             args.IsShown = true;
+            args.QuizID = SelectedQuiz.QuizID;
+
             OnShowCreateQuestionWindow(args);
         }
         protected virtual void OnShowMessage(ShowMessageEventArgs e)
@@ -145,9 +160,9 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 handler(this, e);
             }
         }
-        protected virtual void OnShowCreateQuizWindow(ShowQuizParameterWindowEventArgs e)
+        protected virtual void OnShowCreateQuizWindow(ShowAccountParameterWindowEventArgs e)
         {
-            ShowQuizParameterWindowEventHandler handler = ShowCreateQuizWindow;
+            ShowAccountParameterWindowEventHandler handler = ShowCreateQuizWindow;
             if (handler != null)
             {
                 handler(this, e);
@@ -160,6 +175,26 @@ namespace KrishnaRajamannar.NEA.ViewModels
             {
                 handler(this, e);
             }
+        }
+        public void CloseViewQuizzesWindow() 
+        {
+            HideViewQuizzes();
+        }
+        public void DisplayIndependentReviewQuizWindow() 
+        {
+            ShowIndependentReviewQuiz();
+        }
+        public void DisplayIndependentReviewFeedbackWindow() 
+        {
+            ShowIndependentReviewFeedback();
+        }
+        public void DisplayCreateQuizWindow() 
+        {
+            ShowCreateQuiz();
+        }
+        public void DisplayCreateQuestionWindow() 
+        {
+            ShowCreateQuestion();   
         }
 
         public IList<QuizModel> LoadQuiz()
@@ -175,6 +210,8 @@ namespace KrishnaRajamannar.NEA.ViewModels
             }
 
             _quizService.DeleteQuiz(SelectedQuiz.QuizID, SelectedQuiz.QuizTitle, SelectedQuiz.UserID);
+
+            ShowMessageDialog("Quiz Deleted.");
 
             return LoadQuiz();
         }
@@ -221,6 +258,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 _quizService.UpdateNumberOfQuestions(_questionService.GetNumberOfQuestions(quizID), quizID);
             }
 
+            ShowMessageDialog("Question Deleted.");
             return _questionService.GetQuestions(quizID);
         }
     }

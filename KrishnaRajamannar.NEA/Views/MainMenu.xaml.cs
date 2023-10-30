@@ -1,4 +1,5 @@
-﻿using KrishnaRajamannar.NEA.Models;
+﻿
+using KrishnaRajamannar.NEA.Models;
 using KrishnaRajamannar.NEA.Services;
 using KrishnaRajamannar.NEA.ViewModels;
 using System;
@@ -29,6 +30,7 @@ namespace KrishnaRajamannar.NEA.Views
 
         private readonly MainMenuViewModel _mainMenuViewModel;
         private readonly ViewQuizzesViewModel _viewQuizzesViewModel;
+        private readonly CreateQuizViewModel _createQuizViewModel;
         public MainMenu(MainMenuViewModel mainMenuViewModel, ViewQuizzesViewModel viewQuizzesViewModel)
         {
             InitializeComponent();

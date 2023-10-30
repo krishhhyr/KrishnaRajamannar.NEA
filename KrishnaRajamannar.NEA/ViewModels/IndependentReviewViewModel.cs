@@ -24,6 +24,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
         private int questionNumber = 0;
         private int totalPoints = 0;
 
+        public int QuizID;
 
         public IndependentReviewViewModel(IIndependentReviewQuizService independentReviewQuizService, IndependentReviewQuizModel independentReviewQuizModel)
         {

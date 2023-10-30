@@ -1,4 +1,5 @@
 ﻿using KrishnaRajamannar.NEA.Services;
+using Microsoft.Identity.Client;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,10 +16,14 @@ namespace KrishnaRajamannar.NEA.ViewModels
         // This instantiates the class which handles the data being sent and recieved from the database for the Quiz table.
         public QuizService _quizService = new QuizService();
 
+        public int UserID;
+
+
         public CreateQuizViewModel()
         {
             _quizService = new QuizService();
         }
+
 
         public event PropertyChangedEventHandler? PropertyChanged;
 

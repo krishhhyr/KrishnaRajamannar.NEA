@@ -52,7 +52,6 @@ namespace KrishnaRajamannar.NEA.Views
 
             accountLoginViewModel.ShowAccountCreationWindow += AccountLoginViewModel_ShowAccountCreationWindow;
             accountLoginViewModel.ShowParameterMainMenuWindow += AccountLoginViewModel_ShowParameterMainMenuWindow;
-            _viewQuizzesViewModel = viewQuizzesViewModel;
         }
 
         private void AccountLoginViewModel_ShowParameterMainMenuWindow(object sender, Events.ShowAccountParameterWindowEventArgs e)

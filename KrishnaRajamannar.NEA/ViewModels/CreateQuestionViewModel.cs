@@ -17,6 +17,8 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
         public IndependentReviewQuizService _independentReviewQuizService { get; set;}
 
+        public int QuizID;
+
         public CreateQuestionViewModel()
         {
             _questionService = new QuestionService();

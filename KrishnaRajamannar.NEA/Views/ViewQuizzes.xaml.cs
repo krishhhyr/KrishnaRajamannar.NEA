@@ -20,26 +20,48 @@ namespace KrishnaRajamannar.NEA.Views
     /// </summary>
     public partial class ViewQuizzes : Window
     {
+        private CreateQuiz createQuiz;
+        private CreateQuestion createQuestion;
 
-        //int? userID;
 
-        // Used to access the methods within the view model
-        //QuizQuestionViewModel _quizQuestionViewModel = new QuizQuestionViewModel();
-
-        private readonly ViewQuizzesViewModel _viewQuizzesViewModel; 
+        private readonly ViewQuizzesViewModel _viewQuizzesViewModel;
 
         public ViewQuizzes(ViewQuizzesViewModel viewQuizzesViewModel)
         {
-            _viewQuizzesViewModel = viewQuizzesViewModel;
-
             InitializeComponent();
 
-            this.quizDataGrid.ItemsSource = _viewQuizzesViewModel.LoadQuiz();
+            _viewQuizzesViewModel = viewQuizzesViewModel;
+
             this.DataContext = _viewQuizzesViewModel;
+
+            this.quizDataGrid.ItemsSource = _viewQuizzesViewModel.LoadQuiz();
+
+            _viewQuizzesViewModel.ShowMessage += _viewQuizzesViewModel_ShowMessage;
+            viewQuizzesViewModel.ShowCreateQuizWindow += ViewQuizzesViewModel_ShowCreateQuizWindow;
+            viewQuizzesViewModel.ShowCreateQuestionWindow += ViewQuizzesViewModel_ShowCreateQuestionWindow;
         }
 
-        // When a user double clicks a row in the quiz data grid,
-        // the questions for that quiz load in the data grid for questions
+        private void ViewQuizzesViewModel_ShowCreateQuestionWindow(object sender, Events.ShowQuizParameterWindowEventArgs e)
+        {
+            _viewQuizzesViewModel.CreateQuestionViewModel.QuizID = e.QuizID;
+            createQuestion = new CreateQuestion(_viewQuizzesViewModel.CreateQuestionViewModel);
+
+            createQuestion.Show();
+        }
+
+        private void ViewQuizzesViewModel_ShowCreateQuizWindow(object sender, Events.ShowAccountParameterWindowEventArgs e)
+        {
+            _viewQuizzesViewModel.CreateQuizViewModel.UserID = e.UserID;
+            createQuiz = new CreateQuiz(_viewQuizzesViewModel.CreateQuizViewModel);
+
+            createQuiz.Show();
+        }
+
+        private void _viewQuizzesViewModel_ShowMessage(object sender, Events.ShowMessageEventArgs e)
+        {
+            MessageBox.Show(e.Message);
+        }
+
         private void quizDataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             questionDataGrid.ItemsSource = _viewQuizzesViewModel.LoadQuestions();
@@ -47,20 +69,15 @@ namespace KrishnaRajamannar.NEA.Views
 
         private void createQuizMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            // Checks if CreateQuiz is closed so that the data grid can refresh.
-            // could add a button
+            _viewQuizzesViewModel.DisplayCreateQuizWindow();
 
            this.quizDataGrid.ItemsSource = _viewQuizzesViewModel.LoadQuiz();
-
         }
 
         private void deleteQuizMenuItem_Click(object sender, RoutedEventArgs e)
         {
             this.quizDataGrid.ItemsSource = _viewQuizzesViewModel.DeleteQuiz();
-            //MessageBox.Show("Quiz Deleted.");
         }
-
-
         private void refreshBtn_Click(object sender, RoutedEventArgs e)
         {
             this.quizDataGrid.ItemsSource = _viewQuizzesViewModel.LoadQuiz();
@@ -70,15 +87,12 @@ namespace KrishnaRajamannar.NEA.Views
 
         private void createQuestionMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            //CreateQuestion createQuestion = new CreateQuestion(_quizQuestionViewModel.GetRowQuizID());
-            //createQuestion.Show();
-
+            _viewQuizzesViewModel.DisplayCreateQuestionWindow();
         }
 
         private void deleteQuestionMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            //this.questionDataGrid.ItemsSource = _quizQuestionViewModel.DeleteQuestions();
-            //MessageBox.Show("Question Deleted.");
+            this.questionDataGrid.ItemsSource = _viewQuizzesViewModel.DeleteQuestions();
         }
 
         private void reviewQuizMenuItem_Click(object sender, RoutedEventArgs e)
@@ -87,11 +101,6 @@ namespace KrishnaRajamannar.NEA.Views
         }
 
         private void quizFeedbackMenuItem_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
         {
 
         }

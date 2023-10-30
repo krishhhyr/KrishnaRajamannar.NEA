@@ -24,9 +24,9 @@ namespace KrishnaRajamannar.NEA.Views
 
         CreateQuestionViewModel _createQuestionviewModel = new CreateQuestionViewModel();
 
-        public CreateQuestion(int _quizID)
+        public CreateQuestion(CreateQuestionViewModel createQuestionViewModel)
         {
-            quizID = _quizID;
+            //quizID = _quizID;
             InitializeComponent();
             this.DataContext = _createQuestionviewModel;
         }

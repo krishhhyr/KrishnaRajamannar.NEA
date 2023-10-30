@@ -26,13 +26,13 @@ namespace KrishnaRajamannar.NEA.Views
         int? userID;
 
         // This constructor passes the userID which is used to recognise which user is creating a new quiz into the database.
-        public CreateQuiz(int? _userID)
+        public CreateQuiz(CreateQuizViewModel createQuizViewModel)
         {
             InitializeComponent();
             this.DataContext = _createQuizViewModel;
             
             // Assignment of userID from constructor to the userID variable in this class.
-            userID = _userID;
+            //userID = _userID;
         }
 
         // When the create button is pressed, a CreateQuiz subroutine is called which handles all the logic for creating quizzes.
