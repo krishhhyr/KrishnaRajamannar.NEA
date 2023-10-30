@@ -175,9 +175,9 @@ namespace KrishnaRajamannar.NEA.ViewModels
                     TotalPoints = (int)_userModel.TotalPoints;
 
                     ShowMessageDialog("Account Login successful");
-                    
-                    ShowMainMenu();
+
                     HideAccountLogin();
+                    ShowMainMenu();
                 }
             }
         }

@@ -26,20 +26,19 @@ namespace KrishnaRajamannar.NEA.Views
         private readonly ViewLeaderboard viewLeaderboard;
         private readonly HostSession hostSession;
         private readonly JoinSession joinSession;
+        private AccountLogin accountLogin;
         private ViewQuizzes viewQuizzes;
 
         private readonly MainMenuViewModel _mainMenuViewModel;
-        private readonly ViewQuizzesViewModel _viewQuizzesViewModel;
-        private readonly CreateQuizViewModel _createQuizViewModel;
-        public MainMenu(MainMenuViewModel mainMenuViewModel, ViewQuizzesViewModel viewQuizzesViewModel)
+        public MainMenu(MainMenuViewModel mainMenuViewModel)
         {
             InitializeComponent();
 
             _mainMenuViewModel = mainMenuViewModel;
-            _viewQuizzesViewModel = viewQuizzesViewModel;
 
             this.DataContext = _mainMenuViewModel;
 
+            // need to fix this later
             viewLeaderboard = new ViewLeaderboard();
             hostSession = new HostSession();
             joinSession = new JoinSession();
@@ -50,14 +49,22 @@ namespace KrishnaRajamannar.NEA.Views
             mainMenuViewModel.ShowLeaderboardWindow += MainMenuViewModel_ShowLeaderboardWindow;
             mainMenuViewModel.ShowHostSessionWindow += MainMenuViewModel_ShowHostSessionWindow;
             mainMenuViewModel.ShowJoinSessionWindow += MainMenuViewModel_ShowJoinSessionWindow;
+            mainMenuViewModel.ShowAccountLoginWindow += MainMenuViewModel_ShowAccountLoginWindow;
+        }
+
+        private void MainMenuViewModel_ShowAccountLoginWindow(object sender, Events.ShowWindowEventArgs e)
+        {
+            accountLogin = new AccountLogin(_mainMenuViewModel.accountLoginViewModel);
+
+            //accountLogin.ShowDialog();
         }
 
         private void MainMenuViewModel_ShowViewQuizzesWindow(object sender, Events.ShowAccountParameterWindowEventArgs e)
         {
-            _viewQuizzesViewModel.UserID = e.UserID;
-            viewQuizzes = new ViewQuizzes(_viewQuizzesViewModel);
+            _mainMenuViewModel.viewQuizzesViewModel.UserID = e.UserID;
+            viewQuizzes = new ViewQuizzes(_mainMenuViewModel.viewQuizzesViewModel);
 
-            viewQuizzes.Show();
+            viewQuizzes.ShowDialog();
         }
 
         private void MainMenuViewModel_ShowJoinSessionWindow(object sender, Events.ShowWindowEventArgs e)
@@ -72,7 +79,6 @@ namespace KrishnaRajamannar.NEA.Views
 
         private void MainMenuViewModel_ShowLeaderboardWindow(object sender, Events.ShowWindowEventArgs e)
         {
-            //e.IsShown = true;
             viewLeaderboard.ShowDialog();
         }
 
@@ -84,6 +90,7 @@ namespace KrishnaRajamannar.NEA.Views
         private void logOutBtn_Click(object sender, RoutedEventArgs e)
         {
             _mainMenuViewModel.CloseMainMenuWindow();
+            _mainMenuViewModel.DisplayAccountLoginWindow();
         }
 
         private void viewQuizzesBtn_Click(object sender, RoutedEventArgs e)

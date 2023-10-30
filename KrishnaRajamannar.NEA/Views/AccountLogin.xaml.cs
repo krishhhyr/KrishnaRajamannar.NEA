@@ -46,7 +46,7 @@ namespace KrishnaRajamannar.NEA.Views
 
         private void AccountLoginViewModel_HideAccountLoginWindow(object sender, Events.HideWindowEventArgs e)
         {
-            this.Close();   
+            this.Hide();   
         }
 
         private void AccountLoginViewModel_ShowMainMenuWindow(object sender, Events.ShowAccountParameterWindowEventArgs e)
@@ -55,7 +55,7 @@ namespace KrishnaRajamannar.NEA.Views
             _accountLoginViewModel.mainMenuViewModel.Username = e.Username;
             _accountLoginViewModel.mainMenuViewModel.TotalPoints = e.TotalPoints;
 
-            mainMenu = new MainMenu(_accountLoginViewModel.mainMenuViewModel, _accountLoginViewModel.viewQuizzesViewModel);
+            mainMenu = new MainMenu(_accountLoginViewModel.mainMenuViewModel);
 
             mainMenu.ShowDialog();
         }

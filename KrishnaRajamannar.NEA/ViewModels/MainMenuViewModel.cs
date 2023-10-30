@@ -23,13 +23,20 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
         public event ShowWindowEventHandler ShowJoinSessionWindow;
 
+        public event ShowWindowEventHandler ShowAccountLoginWindow;
+
         public event HideWindowEventHandler HideMainMenuWindow;
 
-        public int test;
+        // need to add other view models - leaderboardVM, hostsessionVM and joinsessionVM
+
+        public AccountLoginViewModel accountLoginViewModel;
+
+        public ViewQuizzesViewModel viewQuizzesViewModel;
 
         public MainMenuViewModel()
         {
-            
+            accountLoginViewModel = App.ServiceProvider.GetService(typeof(AccountLoginViewModel)) as AccountLoginViewModel;
+            viewQuizzesViewModel = App.ServiceProvider.GetService(typeof(ViewQuizzesViewModel)) as ViewQuizzesViewModel;
         }
         private int _userid;
         public int UserID
@@ -74,6 +81,13 @@ namespace KrishnaRajamannar.NEA.ViewModels
             args.IsHidden = true;
             OnHideMainMenuWindow(args);
         }
+        private void ShowAccountLogin()
+        {
+            ShowWindowEventArgs args = new ShowWindowEventArgs();
+            args.IsShown = true;
+            OnShowAccountLoginWindow(args);
+
+        }
         private void ShowViewQuizzes()
         {
             ShowAccountParameterWindowEventArgs args = new ShowAccountParameterWindowEventArgs();
@@ -102,6 +116,14 @@ namespace KrishnaRajamannar.NEA.ViewModels
             args.IsShown = true;
             OnShowJoinSessionWindow(args);
 
+        }
+        protected virtual void OnShowAccountLoginWindow(ShowWindowEventArgs e)
+        {
+            ShowWindowEventHandler handler = ShowAccountLoginWindow;
+            if (handler != null)
+            {
+                handler(this, e);
+            }
         }
         protected virtual void OnShowViewQuizzesWindow(ShowAccountParameterWindowEventArgs e)
         {
@@ -143,6 +165,10 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 handler(this, e);
             }
         }
+        public void DisplayAccountLoginWindow() 
+        {
+            ShowAccountLogin();
+        }
         public void DisplayViewQuizzesWindow() 
         {
             ShowViewQuizzes();
@@ -163,96 +189,5 @@ namespace KrishnaRajamannar.NEA.ViewModels
         {
             HideMainMenu();
         }
-
-        private readonly AccountLogin _accountLogin;
-
-        private readonly MainMenu _mainMenu;
-
-        //public event HideWindowEventHandler HideMainMenuWindow;
-        //public event ShowWindowEventHandler ShowAccountLoginWindow;
-
-        private ViewQuizzes _viewQuizzes;
-        private readonly ViewLeaderboard _viewLeaderboard;
-        private readonly HostSession _hostSession;
-        private readonly JoinSession _joinSession;
-
-        private  UserModel _userModel;
-        private UserViewModel _userViewModel;
-
-        //private string Username;
-
-
-        //public MainMenuViewModel()
-        //{
-        //    //_mainMenu = new MainMenu(_userViewModel, this);
-
-        //    //_accountLogin = new AccountLogin(_userViewModel);
-        //    _viewLeaderboard = new ViewLeaderboard();
-        //    _hostSession = new HostSession();
-        //    _joinSession = new JoinSession();
-                       
-
-        //}
-
-        //public void Logout() 
-        //{
-        //    if (MessageBox.Show("Do you want to log out of this account?", "Account Logout", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-        //    {
-        //        ShowAccountLogin();
-        //    }
-        //}
-
-        //public void ShowAccountLogin() 
-        //{
-        //    //_mainMenu.Visibility = Visibility.Hidden;
-        //    //_accountLogin.Visibility = Visibility.Visible;
-
-        //    //HideWindowEventArgs args = new HideWindowEventArgs();
-        //    //args.IsHidden = true;
-        //    //OnHideMainMenuWindows(args);
-
-        //}
-        //public void ViewQuizzes() 
-        //{
-        //    if (App.ServiceProvider == null)
-        //    {
-        //        return;
-        //    }
-            
-        //    _userModel = App.ServiceProvider.GetService(typeof(UserModel)) as UserModel;
-
-        //    _viewQuizzes = new ViewQuizzes(_userModel.UserID);
-
-        //    //_viewQuizzes.Show();
-
-        //    _mainMenu.Visibility = Visibility.Hidden;
-        //    _viewQuizzes.Visibility = Visibility.Visible;
-        //}
-        //public void ShowLeaderboard() 
-        //{
-        //    _mainMenu.Visibility = Visibility.Hidden;
-        //    _viewLeaderboard.Visibility = Visibility.Visible;
-        //}
-
-        //public void ShowHostSession() 
-        //{
-        //    _mainMenu.Visibility = Visibility.Hidden;
-        //    _hostSession.Visibility = Visibility.Visible;
-        //}
-
-        //public void ShowJoinSession()
-        //{
-        //    _mainMenu.Visibility = Visibility.Hidden;
-        //    _joinSession.Visibility= Visibility.Visible;
-        //}
-
-        //protected virtual void OnHideMainMenuWindows(HideWindowEventArgs e)
-        //{
-        //    HideWindowEventHandler handler = HideMainMenuWindow;
-        //    if (handler != null)
-        //    {
-        //        handler(this, e);
-        //    }
-        //}
     }
 }
