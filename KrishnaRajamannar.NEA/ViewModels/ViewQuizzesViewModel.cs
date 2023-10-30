@@ -42,8 +42,8 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
         public IndependentReviewQuizFeedbackViewModel IndependentReviewFeedbackViewModel;
 
-
         public int UserID;
+
         public int QuizID;
 
         public ViewQuizzesViewModel(IQuizService quizService, IQuestionService questionService, QuizModel quizModel, UserModel questionModel)

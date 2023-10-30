@@ -1,4 +1,5 @@
-﻿using KrishnaRajamannar.NEA.Models;
+﻿using KrishnaRajamannar.NEA.Events;
+using KrishnaRajamannar.NEA.Models;
 using KrishnaRajamannar.NEA.Services;
 using Microsoft.Win32;
 using System;
@@ -18,21 +19,139 @@ namespace KrishnaRajamannar.NEA.ViewModels
 {
     public class IndependentReviewViewModel: INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        public event ShowMessageEventHandler ShowMessage;
+
+        public event ShowQuizParameterWindowEventHandler ShowIndependentReviewFeedbackWindow;
+
+        public event HideWindowEventHandler HideIndependentReviewQuizWindow;
+
         private readonly IIndependentReviewQuizService _independentReviewQuizService;
-        private readonly IndependentReviewQuizModel _independentReviewQuizModel;
+
+        public IndependentReviewQuizFeedbackViewModel independentReviewQuizFeedbackViewModel;
+
+
+        public int QuizID;
 
         private int questionNumber = 0;
         private int totalPoints = 0;
 
-        public int QuizID;
-
-        public IndependentReviewViewModel(IIndependentReviewQuizService independentReviewQuizService, IndependentReviewQuizModel independentReviewQuizModel)
+        public IndependentReviewViewModel(IIndependentReviewQuizService independentReviewQuizService)
         {
             _independentReviewQuizService = independentReviewQuizService;
-            _independentReviewQuizModel = independentReviewQuizModel;
+
+            independentReviewQuizFeedbackViewModel = App.ServiceProvider.GetService(typeof(IndependentReviewQuizFeedbackViewModel)) as IndependentReviewQuizFeedbackViewModel;
         }
 
-        public event PropertyChangedEventHandler? PropertyChanged;
+        private string _question;
+        public string Question 
+        {
+            get { return _question; }
+            set 
+            {
+                _question = value;
+                RaisePropertyChange("Question"); 
+            }
+        }
+        private string _questionNumberText;
+        public string QuestionNumberText 
+        {
+            get { return _questionNumberText; }
+            set 
+            {
+                _questionNumberText = value;
+                RaisePropertyChange("QuestionNumberText");
+            }
+        }
+        private string _correctAnswer;
+        public string CorrectAnswer 
+        {
+            get { return _correctAnswer; }
+            set 
+            {
+                _correctAnswer = value;
+                RaisePropertyChange("CorrectAnswer");
+            }
+        }
+        private string _answerInput;
+        public string AnswerInput 
+        {
+            get { return _answerInput; }
+            set 
+            {
+                _answerInput = value;
+                RaisePropertyChange("AnswerInput");
+            }
+        }
+        private int _pointsGained;
+        public int PointsGained 
+        {
+            get { return _pointsGained; }
+            set 
+            {
+                _pointsGained = value;
+                RaisePropertyChange("PointsGained");
+            }
+        }
+        public void RaisePropertyChange(string propertyname)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyname));
+            }
+        }
+        private void ShowMessageDialog(string message)
+        {
+            ShowMessageEventArgs args = new ShowMessageEventArgs();
+            args.Message = message;
+
+            OnShowMessage(args);
+        }
+        private void HideIndependentReviewQuiz()
+        {
+            HideWindowEventArgs args = new HideWindowEventArgs();
+            args.IsHidden = true;
+            OnHideIndependentReviewQuizWindow(args);
+        }
+        private void ShowIndependentReviewFeedback() 
+        {
+            ShowQuizParameterWindowEventArgs args = new ShowQuizParameterWindowEventArgs();
+            args.IsShown = true;
+            args.QuizID = QuizID;
+            OnShowIndependentReviewFeedbackWindow(args);
+        }
+        protected virtual void OnShowMessage(ShowMessageEventArgs e)
+        {
+            ShowMessageEventHandler handler = ShowMessage;
+
+            if (handler != null)
+            {
+                handler(this, e);
+            }
+        }
+        protected virtual void OnHideIndependentReviewQuizWindow(HideWindowEventArgs e)
+        {
+            HideWindowEventHandler handler = HideIndependentReviewQuizWindow;
+            if (handler != null)
+            {
+                handler(this, e);
+            }
+        }
+        protected virtual void OnShowIndependentReviewFeedbackWindow(ShowQuizParameterWindowEventArgs e)
+        {
+            ShowQuizParameterWindowEventHandler handler = ShowIndependentReviewFeedbackWindow;
+            if (handler != null)
+            {
+                handler(this, e);
+            }
+        }
+
+        public void DisplayIndependentReviewFeedbackWindow() 
+        {
+            ShowIndependentReviewFeedback();
+        }
+
 
         #region SortingQuestions
         public IList<IndependentReviewQuizModel> GetQuestionsInOrder() 
@@ -175,48 +294,50 @@ namespace KrishnaRajamannar.NEA.ViewModels
         #region SendDataToUI
         // Used to send the current question being answered to the user interface.
         // If all the questions have been answered, the review session ends. 
-        public string? SendQuestion(IList<IndependentReviewQuizModel> questions) 
+        public void SendQuestion(IList<IndependentReviewQuizModel> questions) 
         {
-            // Checks if the question number is greater than the number of questions in the quiz. 
             if (questionNumber >= questions.Count)
             {
-                MessageBox.Show("No questions to review.", "Quiz Review", MessageBoxButton.OK);
-                // show quiz feedback
-                return null;
+                ShowMessageDialog("No more questions to review.");
+                HideIndependentReviewQuiz();
+                ShowIndependentReviewFeedback();
             }
             else 
             {
-                // Increments the questionNumber everytime that the function is called. 
-                IndependentReviewQuizModel currentQuestion = questions[questionNumber];
+                IndependentReviewQuizModel question = questions[questionNumber];
+                Question = question.Question;
                 questionNumber++;
-                return currentQuestion.Question;
+                QuestionNumberText = $"Question: {questionNumber}/{questions.Count}";
             }
         }
-        // Used to send what question the user is currently answering out of how many questions are in the quiz.
-        public string SendQuestionNumber(IList<IndependentReviewQuizModel> questions)
-        {
-            if (questionNumber > questions.Count)
-            {
-                MessageBox.Show("All questions have been answered.");
-                //display quiz feedback - new window
-            }
 
-            return $"Question: {questionNumber}/{questions.Count}";
+        public bool IsQuestionTextBasedQuestion(IList<IndependentReviewQuizModel> questions) 
+        {
+            IndependentReviewQuizModel question = questions[questionNumber - 1];
+
+            if (question.Option1 == "NULL")
+            {
+                return false;
+            }
+            else 
+            {
+                return true;
+            }
         }
 
         // For a multiple-choice based question, this function sends the possible options to the user.
         public List<string?> SendOptions(IList<IndependentReviewQuizModel> questions)
         {
-            IndependentReviewQuizModel currentQuestion = questions[questionNumber - 1];
+            IndependentReviewQuizModel question = questions[questionNumber - 1];
 
             List<string?> options = new List<string?>();
 
-            options.Add(currentQuestion.Option1);
-            options.Add(currentQuestion.Option2);
-            options.Add(currentQuestion.Option3);
-            options.Add(currentQuestion.Option4);
-            options.Add(currentQuestion.Option5);
-            options.Add(currentQuestion.Option6);
+            options.Add(question.Option1);
+            options.Add(question.Option2);
+            options.Add(question.Option3);
+            options.Add(question.Option4);
+            options.Add(question.Option5);
+            options.Add(question.Option6);
 
             return options;
         }
@@ -226,64 +347,58 @@ namespace KrishnaRajamannar.NEA.ViewModels
         // This function checks whether the user has inputted an answer to a question.
         // Also checks if the answer is correct or not.
         // Also calculates the total number of points gained for the review session. 
-        public (string, int) ValidateAnswer(string answerInput, IList<IndependentReviewQuizModel> question)
+        public void ValidateAnswer(IList<IndependentReviewQuizModel> questions)
         {
-            IndependentReviewQuizModel currentQuestion = question[questionNumber - 1];
-
-            string correctAnswer = currentQuestion.Answer;
-
-            bool isCorrect = true;
+            IndependentReviewQuizModel currentQuestion = questions[questionNumber - 1];
 
             // Checks if a user has not inputted an answer.
-            if (answerInput == "") 
+            if ((AnswerInput == "") || (AnswerInput == null))
             {
                 MessageBox.Show("Enter a valid input.", "Independent Quiz Review");
-                
-                return ("", 0);
             }
-
-            // Checks if the answer inputted by the user matches the correct answer. 
-            if (correctAnswer == answerInput)
-            {
-                // Calls a function which calculates the number of points gained for the correct answer.
-                int pointsForCorrectAnswer = CalculatePoints(currentQuestion, isCorrect);
-
-                MessageBox.Show($"Correct. {pointsForCorrectAnswer} points have been awarded.", "Independent Quiz Review");
-                totalPoints = totalPoints + pointsForCorrectAnswer;
-
-                // Calls the IndependentReviewQuizService which uses an UPDATE command to update whether a question is correct 
-                // And how many points were gained.
-                _independentReviewQuizService.UpdateQuizFeedback(currentQuestion.FeedbackID, CalculateAnswerStreak(currentQuestion, isCorrect), isCorrect, pointsForCorrectAnswer);
-                return ("Correct!", totalPoints);
-            }
-            // If the answer provided by the user is not correct. 
             else 
             {
-                isCorrect = false;
-                int pointsForIncorrectAnswer = CalculatePoints(currentQuestion, isCorrect);
+                CorrectAnswer = currentQuestion.Answer;
 
-                // Subtracts the number of points for the question from the total number of points gained. 
-                totalPoints = totalPoints - pointsForIncorrectAnswer;
+                bool isCorrect = true;
 
-                _independentReviewQuizService.UpdateQuizFeedback(currentQuestion.FeedbackID, CalculateAnswerStreak(currentQuestion, isCorrect), isCorrect, -pointsForIncorrectAnswer);
-
-                // Used as the total number of points cannot be negative. 
-                if (totalPoints <= 0) 
+                if (CorrectAnswer == AnswerInput)
                 {
-                    totalPoints = 0; 
-                    // Displays a message to the user indicating that the answer was wrong. 
-                    MessageBox.Show($"Incorrect. 0 points have been awarded.", "Independent Quiz Review");
+                    // Calls a function which calculates the number of points gained for the correct answer.
+                    int pointsForCorrectAnswer = CalculatePoints(currentQuestion, isCorrect);
 
-                    return (correctAnswer, totalPoints);
+                    MessageBox.Show($"Correct. {pointsForCorrectAnswer} points have been awarded.", "Independent Quiz Review");
+                    PointsGained = PointsGained + pointsForCorrectAnswer;
+
+                    // Calls the IndependentReviewQuizService which uses an UPDATE command to update whether a question is correct 
+                    // And how many points were gained.
+                    _independentReviewQuizService.UpdateQuizFeedback(currentQuestion.FeedbackID, CalculateAnswerStreak(currentQuestion, isCorrect), isCorrect, pointsForCorrectAnswer);
                 }
-
-                if (totalPoints > 0)
+                // If the answer provided by the user is not correct. 
+                else
                 {
-                    MessageBox.Show($"Incorrect. {pointsForIncorrectAnswer} points have been deducted.", "Independent Quiz Review");
-                    return (correctAnswer, totalPoints);
-                }
+                    isCorrect = false;
+                    int pointsForIncorrectAnswer = CalculatePoints(currentQuestion, isCorrect);
 
-                return (correctAnswer, totalPoints);
+                    // Subtracts the number of points for the question from the total number of points gained. 
+                    PointsGained = PointsGained - pointsForIncorrectAnswer;
+
+                    _independentReviewQuizService.UpdateQuizFeedback(currentQuestion.FeedbackID, CalculateAnswerStreak(currentQuestion, isCorrect), isCorrect, -pointsForIncorrectAnswer);
+
+                    // Used as the total number of points cannot be negative. 
+                    if (PointsGained <= 0)
+                    {
+                        PointsGained = 0;
+                        // Displays a message to the user indicating that the answer was wrong. 
+                        MessageBox.Show($"Incorrect. 0 points have been awarded.", "Independent Quiz Review");
+
+                        //return (correctAnswer, totalPoints);
+                    }
+                    if (PointsGained > 0)
+                    {
+                        MessageBox.Show($"Incorrect. {pointsForIncorrectAnswer} points have been deducted.", "Independent Quiz Review");
+                    }
+                }
             }
         }
         // Used to calculate the number of points which should be awarded to users. 
