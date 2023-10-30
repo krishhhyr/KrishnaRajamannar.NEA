@@ -28,20 +28,20 @@
                   VerticalAlignment="Center" FontFamily="Segoe UI Light"></Label>
 
             <TextBlock x:Name="pointsTxtBlock" Text="{Binding TotalPoints}" FontSize="18" Grid.Column="2" Grid.Row="1" 
-                   HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10" FontFamily="Segoe UI Light"></TextBlock>
+                   HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,10,0" FontFamily="Segoe UI Light"></TextBlock>
 
             <Label x:Name="userIDLabel" Content="User ID:" FontSize="18" Grid.Column="2" Grid.Row="1" 
                   VerticalAlignment="Center" FontFamily="Segoe UI Light"></Label>
 
             <TextBlock x:Name="userIDTxtBlock" Text= "{Binding UserID}" Grid.Column="2" Grid.Row="1" 
-                   FontSize="18" HorizontalAlignment="Left" Margin="10" FontFamily="Segoe UI Light"
+                   FontSize="18" HorizontalAlignment="Left" Margin="0,0,10,0" FontFamily="Segoe UI Light"
                        VerticalAlignment="Center"></TextBlock>
 
         </StackPanel>
 
         <StackPanel Grid.Row="1" Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Center" Width="250">
-            <Label x:Name="usernameLabel" Content="Username:" FontSize="18" Grid.Column="2" Grid.Row="1" 
-                  HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Segoe UI Light"></Label>
+            <Label x:Name="usernameLabel" Content="Username:" FontSize="18" Margin="10,0,0,0" Grid.Column="2" Grid.Row="1"
+                   VerticalAlignment="Center" FontFamily="Segoe UI Light"></Label>
 
             <TextBlock x:Name="usernameTxtBlock" Text="{Binding Username}" FontSize="18" HorizontalAlignment="Center"
                    VerticalAlignment="Center" FontFamily="Segoe UI Light"></TextBlock>
