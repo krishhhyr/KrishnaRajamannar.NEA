@@ -43,7 +43,6 @@ namespace KrishnaRajamannar.NEA.ViewModels
         public IndependentReviewQuizFeedbackViewModel IndependentReviewFeedbackViewModel;
 
         public int UserID;
-
         public int QuizID;
 
         public ViewQuizzesViewModel(IQuizService quizService, IQuestionService questionService, QuizModel quizModel, UserModel questionModel)
@@ -107,6 +106,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
             ShowQuizParameterWindowEventArgs args = new ShowQuizParameterWindowEventArgs();
             args.IsShown = true;
             args.QuizID = SelectedQuiz.QuizID;
+            args.UserID = UserID;
             OnShowIndependentReviewQuizWindow(args);
         }
         private void ShowIndependentReviewFeedback()

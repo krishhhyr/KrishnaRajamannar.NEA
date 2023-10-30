@@ -29,19 +29,21 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
         private readonly IIndependentReviewQuizService _independentReviewQuizService;
 
+        private readonly IUserService _userService;
+
         public IndependentReviewQuizFeedbackViewModel independentReviewQuizFeedbackViewModel;
 
-
         public int QuizID;
-
+        public int UserID;
         private int questionNumber = 0;
-        private int totalPoints = 0;
 
-        public IndependentReviewViewModel(IIndependentReviewQuizService independentReviewQuizService)
+        public IndependentReviewViewModel(IIndependentReviewQuizService independentReviewQuizService, IUserService userService)
         {
             _independentReviewQuizService = independentReviewQuizService;
+            _userService = userService;
 
             independentReviewQuizFeedbackViewModel = App.ServiceProvider.GetService(typeof(IndependentReviewQuizFeedbackViewModel)) as IndependentReviewQuizFeedbackViewModel;
+            _userService = userService;
         }
 
         private string _question;
@@ -196,7 +198,6 @@ namespace KrishnaRajamannar.NEA.ViewModels
             return sortedquestions;
         }
 
-        #region MergeSort
         // Breaks down each element in the points list into individual elements. 
         public static List<int> MSort(List<int> points)
         {
@@ -275,7 +276,6 @@ namespace KrishnaRajamannar.NEA.ViewModels
             }
             return result;
         }
-        #endregion
 
         // Function which checks if a question has already been added to the list of sorted questions. 
         public bool IsQuestionAdded(string question, IList<IndependentReviewQuizModel> sortedQuestions) 
@@ -291,7 +291,6 @@ namespace KrishnaRajamannar.NEA.ViewModels
         }
         #endregion
 
-        #region SendDataToUI
         // Used to send the current question being answered to the user interface.
         // If all the questions have been answered, the review session ends. 
         public void SendQuestion(IList<IndependentReviewQuizModel> questions) 
@@ -299,8 +298,12 @@ namespace KrishnaRajamannar.NEA.ViewModels
             if (questionNumber >= questions.Count)
             {
                 ShowMessageDialog("No more questions to review.");
-                HideIndependentReviewQuiz();
+                ShowMessageDialog($"You have gained {PointsGained} points in this review session.");
+
+                _userService.UpdatePoints(UserID, PointsGained);
+
                 ShowIndependentReviewFeedback();
+                HideIndependentReviewQuiz();
             }
             else 
             {
@@ -341,9 +344,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
             return options;
         }
-        #endregion
 
-        #region ValidationAndUpdatingFeedback
         // This function checks whether the user has inputted an answer to a question.
         // Also checks if the answer is correct or not.
         // Also calculates the total number of points gained for the review session. 
@@ -467,6 +468,5 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 return currentQuestion.AnswerStreak + 1;
             }
         }
-        #endregion
     }
 }

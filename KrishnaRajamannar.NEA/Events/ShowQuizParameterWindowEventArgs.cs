@@ -10,6 +10,8 @@ namespace KrishnaRajamannar.NEA.Events
     {
         public bool IsShown { get; set; }
         public int QuizID { get; set; }
+
+        public int UserID { get; set; }
     }
     public delegate void ShowQuizParameterWindowEventHandler(Object sender, ShowQuizParameterWindowEventArgs e);
 }

@@ -62,6 +62,7 @@ namespace KrishnaRajamannar.NEA.Views
         private void ViewQuizzesViewModel_ShowIndependentReviewQuizWindow(object sender, Events.ShowQuizParameterWindowEventArgs e)
         {
             _viewQuizzesViewModel.IndependentReviewViewModel.QuizID = e.QuizID;
+            _viewQuizzesViewModel.IndependentReviewViewModel.UserID = e.UserID;
             independentReviewQuiz = new IndependentReviewQuiz(_viewQuizzesViewModel.IndependentReviewViewModel);
 
             independentReviewQuiz.Show();

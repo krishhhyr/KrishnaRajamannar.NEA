@@ -20,8 +20,51 @@ namespace KrishnaRajamannar.NEA.Services
 
         }
 
-        // This region deals with recieving data from the database to valid an account login.
-        #region AccountLogin
+        public IList<UserModel> GetUserDetails(string _username)
+        {
+            IList<UserModel> userDetails = new List<UserModel>();
+
+            const string sqlQuery =
+                @"
+                    SELECT * 
+                    FROM UserDetails
+                    WHERE username = @Username
+                ";
+
+            using SqlConnection connection = new SqlConnection(connectionString);
+
+            connection.Open();
+
+            var command = connection.CreateCommand();
+            command.CommandText = sqlQuery;
+
+            command.Parameters.AddWithValue("@Username", _username);
+
+            var data = command.ExecuteReader();
+
+            if (data.Read() == false)
+            {
+                userDetails.Add(new UserModel()
+                {
+                    UserID = null,
+                    Username = null,
+                    HashedPassword = null,
+                    TotalPoints = null
+                });
+            }
+            else
+            {
+                userDetails.Add(new UserModel()
+                {
+                    UserID = data.GetInt32(0),
+                    Username = data.GetString(1),
+                    HashedPassword = data.GetString(2),
+                    TotalPoints = data.GetInt32(3)
+                });
+            }
+            return userDetails;
+        }
+
         // This subroutine checks if a username that a user has inputted when creating an account exists.
         // It does this by searching the database for the username that has been inputted.
         // If no username already exists, the function returns false. 
@@ -59,37 +102,28 @@ namespace KrishnaRajamannar.NEA.Services
             return false;
 
         }
-        // Function which gets the hashed password for a username.
-        // Searches the database with the username inputted by the user. 
-        public string GetPassword(string username)
+
+        // This function uses a SHA256 encryption algorithm to hash passwords before they are inserted into the database. 
+        // Created with reference to: https://www.c-sharpcorner.com/article/compute-sha256-hash-in-c-sharp
+        public string HashPassword(string password)
         {
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            string hashedPassword;
+
+            // This is used to append each byte to one string. 
+            StringBuilder stringBuilder = new StringBuilder();
+
+            SHA256 sha256 = SHA256.Create();
+            byte[] byteArray = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+
+            // Used to convert the byte array into a singular string. 
+            for (int i = 0; i < byteArray.Length; i++)
             {
-                connection.Open();
-                var command = connection.CreateCommand();
-                command.CommandText =
-                    @"
-                    SELECT Password 
-                    FROM UserDetails
-                    WHERE Username = @username
-                ";
-                command.Parameters.AddWithValue("@username", username);
-
-                var data = command.ExecuteReader();
-                while (data.Read())
-                {
-                    var password = data.GetString(0);
-
-                    return password;
-                }
+                stringBuilder.Append(byteArray[i].ToString("x2"));
             }
-            // If no password has been found with the given username, the function returns null. 
-            return null;
+            hashedPassword = stringBuilder.ToString();
+            return hashedPassword;
         }
-        #endregion
 
-        // This region deals with the creation of account by sending account information to the database to create an account. 
-        #region AccountCreation
         // This subroutine uses an INSERT to create a new account based on the username and password that the user has provided. 
         public void CreateUser(string username, string password)
         {
@@ -113,93 +147,16 @@ namespace KrishnaRajamannar.NEA.Services
             connection.Close();
         }
 
-        // I don't think I need this subroutine...?
-        public int GetNumberOfRows()
-        {
-            SqlConnection connection = new SqlConnection(connectionString);
-
-            connection.Open();
-
-            var command = connection.CreateCommand();
-            command.CommandText =
-                @"
-                    SELECT COUNT(*) AS NumberOfRows
-                    FROM UserDetails
-                ";
-
-            var result = command.ExecuteScalar();
-            if (result == null)
-            {
-                return -1;
-            }
-            return Convert.ToInt32(result);
-
-        }
-        // This function uses a SHA256 encryption algorithm to hash passwords before they are inserted into the database. 
-        // Created with reference to: https://www.c-sharpcorner.com/article/compute-sha256-hash-in-c-sharp
-        public string HashPassword(string password)
-        {
-            string hashedPassword;
-
-            // This is used to append each byte to one string. 
-            StringBuilder stringBuilder = new StringBuilder();
-
-            SHA256 sha256 = SHA256.Create();
-            byte[] byteArray = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
-
-            // Used to convert the byte array into a singular string. 
-            for (int i = 0; i < byteArray.Length; i++)
-            {
-                stringBuilder.Append(byteArray[i].ToString("x2"));
-            }
-            hashedPassword = stringBuilder.ToString();
-            return hashedPassword;
-        }
-        #endregion
-
-        // This region focuses on functions which don't directly relate to creating an account 
-        // or logging into an account. 
-        #region AccountServices
         // Function uses SQL gets the user ID for a username which is passed as a parameter. 
-        public int GetUserID(string username)
-        {
-            if (username == null)
-            {
-                return -1;
-            } 
-
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                connection.Open();
-                var command = connection.CreateCommand();
-                command.CommandText =
-                    @"
-                    SELECT UserID 
-                    FROM UserDetails
-                    WHERE Username = @username
-                ";
-                command.Parameters.AddWithValue("@username", username);
-
-                var data = command.ExecuteReader();
-                while (data.Read())
-                {
-                    var userID = data.GetInt32(0);
-
-                    return userID;
-                }
-            }
-            return -1;
-        }
 
         // Function gets the number of points that a user has gained. 
-        public int GetPoints(string username)
+        public void UpdatePoints(int userID, int pointsGained)
         {
-            int numberOfPoints = 0;
-
             const string sqlQuery =
                 @"
-                    SELECT numberOfPoints FROM UserDetails
-                    Where username = @Username
+                    UPDATE UserDetails
+                    SET numberOfPoints = @PointsGained
+                    WHERE userID = @UserID
                 ";
 
             using SqlConnection connection = new SqlConnection(connectionString);
@@ -208,70 +165,10 @@ namespace KrishnaRajamannar.NEA.Services
             var command = connection.CreateCommand();
             command.CommandText = sqlQuery;
 
-            command.Parameters.AddWithValue("@Username", username);
+            command.Parameters.AddWithValue("@UserID", userID);
+            command.Parameters.AddWithValue("@PointsGained", pointsGained);
 
-            var data = command.ExecuteReader();
-
-            while (data.Read())
-            {
-                numberOfPoints = data.GetInt32(0);
-
-                return numberOfPoints;
-            }
-
-            return numberOfPoints;
+            command.ExecuteNonQuery();
         }
-        #endregion
-
-        public IList<UserModel> GetUserDetails(string _username) 
-        {
-            IList<UserModel> userDetails = new List<UserModel>();
-
-            //int userID;
-            //string username; 
-            //string hashedPassword;
-            //int totalPoints;
-
-            const string sqlQuery =
-                @"
-                    SELECT * 
-                    FROM UserDetails
-                    WHERE username = @Username
-                ";
-
-            using SqlConnection connection = new SqlConnection(connectionString);
-
-            connection.Open();
-
-            var command = connection.CreateCommand();
-            command.CommandText = sqlQuery;
-
-            command.Parameters.AddWithValue("@Username", _username);
-
-            var data = command.ExecuteReader();
-
-            if (data.Read() == false)
-            {
-                userDetails.Add(new UserModel()
-                {
-                    UserID = null,
-                    Username = null,
-                    HashedPassword = null,
-                    TotalPoints = null
-                });
-            }
-            else 
-            {
-                userDetails.Add(new UserModel()
-                {
-                    UserID = data.GetInt32(0),
-                    Username = data.GetString(1),
-                    HashedPassword = data.GetString(2),
-                    TotalPoints = data.GetInt32(3)
-                });
-            }
-            return userDetails; 
-        }
-
     }
 }
