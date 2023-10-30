@@ -27,6 +27,12 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
         private readonly UserModel _userModel;
 
+        public AccountCreationViewModel accountCreationViewModel;
+
+        public MainMenuViewModel mainMenuViewModel;
+
+        public ViewQuizzesViewModel viewQuizzesViewModel;
+
         public int UserID;
         public int TotalPoints;
 
@@ -34,6 +40,10 @@ namespace KrishnaRajamannar.NEA.ViewModels
         {
             _userService = userService;
             _userModel = userModel;
+
+            accountCreationViewModel = App.ServiceProvider.GetService(typeof(AccountCreationViewModel)) as AccountCreationViewModel;
+            mainMenuViewModel = App.ServiceProvider.GetService(typeof(MainMenuViewModel)) as MainMenuViewModel;
+            viewQuizzesViewModel = App.ServiceProvider.GetService(typeof(ViewQuizzesViewModel)) as ViewQuizzesViewModel;
         }
 
 
@@ -165,9 +175,9 @@ namespace KrishnaRajamannar.NEA.ViewModels
                     TotalPoints = (int)_userModel.TotalPoints;
 
                     ShowMessageDialog("Account Login successful");
-
-                    HideAccountLogin();
+                    
                     ShowMainMenu();
+                    HideAccountLogin();
                 }
             }
         }

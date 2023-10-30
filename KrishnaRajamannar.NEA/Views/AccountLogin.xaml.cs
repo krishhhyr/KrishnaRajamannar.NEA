@@ -23,37 +23,25 @@ namespace KrishnaRajamannar.NEA.Views
     /// </summary>
     public partial class AccountLogin : Window
     {
-        // Used to link with the UserViewModel class
-
-        //private readonly UserViewModel _userViewModel;
-
-        private readonly AccountCreation accountCreation;
+        private AccountCreation accountCreation;
         private MainMenu mainMenu;
 
-        private readonly AccountCreationViewModel _accountCreationViewModel;
         private readonly AccountLoginViewModel _accountLoginViewModel;
         private readonly MainMenuViewModel _mainMenuViewModel;
-        private readonly ViewQuizzesViewModel _viewQuizzesViewModel;
 
-        public AccountLogin(AccountLoginViewModel accountLoginViewModel, AccountCreationViewModel accountCreationViewModel, MainMenuViewModel mainMenuViewModel, ViewQuizzesViewModel viewQuizzesViewModel)
+        public AccountLogin(AccountLoginViewModel accountLoginViewModel)
         {
             InitializeComponent();
 
             _accountLoginViewModel = accountLoginViewModel;
-            _accountCreationViewModel = accountCreationViewModel;
-            _mainMenuViewModel = mainMenuViewModel;
-            _viewQuizzesViewModel = viewQuizzesViewModel;
 
             this.DataContext = _accountLoginViewModel;
-
-            accountCreation = new AccountCreation(accountCreationViewModel);
 
             _accountLoginViewModel.ShowMessage += _accountLoginViewModel_ShowMessage;
 
             accountLoginViewModel.ShowAccountCreationWindow += AccountLoginViewModel_ShowAccountCreationWindow;
             accountLoginViewModel.ShowMainMenuWindow += AccountLoginViewModel_ShowMainMenuWindow;
             accountLoginViewModel.HideAccountLoginWindow += AccountLoginViewModel_HideAccountLoginWindow;
-            //accountLoginViewModel.ShowParameterMainMenuWindow += AccountLoginViewModel_ShowParameterMainMenuWindow;
         }
 
         private void AccountLoginViewModel_HideAccountLoginWindow(object sender, Events.HideWindowEventArgs e)
@@ -63,17 +51,19 @@ namespace KrishnaRajamannar.NEA.Views
 
         private void AccountLoginViewModel_ShowMainMenuWindow(object sender, Events.ShowAccountParameterWindowEventArgs e)
         {
-            _mainMenuViewModel.UserID = e.UserID;
-            _mainMenuViewModel.Username = e.Username;
-            _mainMenuViewModel.TotalPoints = e.TotalPoints;
+            _accountLoginViewModel.mainMenuViewModel.UserID = e.UserID;
+            _accountLoginViewModel.mainMenuViewModel.Username = e.Username;
+            _accountLoginViewModel.mainMenuViewModel.TotalPoints = e.TotalPoints;
 
-            mainMenu = new MainMenu(_mainMenuViewModel, _viewQuizzesViewModel);
+            mainMenu = new MainMenu(_accountLoginViewModel.mainMenuViewModel, _accountLoginViewModel.viewQuizzesViewModel);
 
             mainMenu.ShowDialog();
         }
 
         private void AccountLoginViewModel_ShowAccountCreationWindow(object sender, Events.ShowWindowEventArgs e)
         {
+           accountCreation = new AccountCreation(_accountLoginViewModel.accountCreationViewModel);
+
            accountCreation.ShowDialog();
         }
 

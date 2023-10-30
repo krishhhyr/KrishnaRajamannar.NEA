@@ -30,10 +30,6 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
         private readonly IQuestionService _questionService;
 
-        private readonly QuizModel _quizModel;
-
-        private readonly UserModel _questionModel;
-
         public CreateQuizViewModel CreateQuizViewModel;
 
         public CreateQuestionViewModel CreateQuestionViewModel;
@@ -45,12 +41,10 @@ namespace KrishnaRajamannar.NEA.ViewModels
         public int UserID;
         public int QuizID;
 
-        public ViewQuizzesViewModel(IQuizService quizService, IQuestionService questionService, QuizModel quizModel, UserModel questionModel)
+        public ViewQuizzesViewModel(IQuizService quizService, IQuestionService questionService)
         {
             _quizService = quizService;
             _questionService = questionService;
-            _quizModel = quizModel;
-            _questionModel = questionModel;
 
             CreateQuizViewModel = App.ServiceProvider.GetService(typeof(CreateQuizViewModel)) as CreateQuizViewModel;
             CreateQuestionViewModel = App.ServiceProvider.GetService(typeof(CreateQuestionViewModel)) as CreateQuestionViewModel;
