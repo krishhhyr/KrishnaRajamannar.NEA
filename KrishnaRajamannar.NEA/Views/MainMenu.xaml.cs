@@ -53,7 +53,6 @@ namespace KrishnaRajamannar.NEA.Views
         private void MainMenuViewModel_ShowViewQuizzesWindow(object sender, Events.ShowAccountParameterWindowEventArgs e)
         {
             _viewQuizzesViewModel.UserID = e.UserID;
-
             viewQuizzes = new ViewQuizzes(_viewQuizzesViewModel);
 
             viewQuizzes.Show();

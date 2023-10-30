@@ -25,9 +25,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
         public event HideWindowEventHandler HideMainMenuWindow;
 
-        //public int? UserID;
-        //public string? Username;
-        //public int? TotalPoints;
+        public int test;
 
         public MainMenuViewModel()
         {
@@ -80,6 +78,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
         {
             ShowAccountParameterWindowEventArgs args = new ShowAccountParameterWindowEventArgs();
             args.IsShown = true;
+            args.UserID = _userid;
             OnShowViewQuizzesWindow(args);
 
         }
