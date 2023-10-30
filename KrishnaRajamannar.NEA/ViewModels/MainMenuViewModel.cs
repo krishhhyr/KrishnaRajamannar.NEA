@@ -29,14 +29,14 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
         // need to add other view models - leaderboardVM, hostsessionVM and joinsessionVM
 
-        public AccountLoginViewModel accountLoginViewModel;
+        public AccountLoginViewModel AccountLoginViewModel;
 
-        public ViewQuizzesViewModel viewQuizzesViewModel;
+        public ViewQuizzesViewModel ViewQuizzesViewModel;
 
         public MainMenuViewModel()
         {
-            accountLoginViewModel = App.ServiceProvider.GetService(typeof(AccountLoginViewModel)) as AccountLoginViewModel;
-            viewQuizzesViewModel = App.ServiceProvider.GetService(typeof(ViewQuizzesViewModel)) as ViewQuizzesViewModel;
+            AccountLoginViewModel = App.ServiceProvider.GetService(typeof(AccountLoginViewModel)) as AccountLoginViewModel;
+            ViewQuizzesViewModel = App.ServiceProvider.GetService(typeof(ViewQuizzesViewModel)) as ViewQuizzesViewModel;
         }
         private int _userid;
         public int UserID

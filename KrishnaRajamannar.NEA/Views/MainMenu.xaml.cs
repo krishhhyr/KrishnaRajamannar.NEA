@@ -49,20 +49,12 @@ namespace KrishnaRajamannar.NEA.Views
             mainMenuViewModel.ShowLeaderboardWindow += MainMenuViewModel_ShowLeaderboardWindow;
             mainMenuViewModel.ShowHostSessionWindow += MainMenuViewModel_ShowHostSessionWindow;
             mainMenuViewModel.ShowJoinSessionWindow += MainMenuViewModel_ShowJoinSessionWindow;
-            mainMenuViewModel.ShowAccountLoginWindow += MainMenuViewModel_ShowAccountLoginWindow;
-        }
-
-        private void MainMenuViewModel_ShowAccountLoginWindow(object sender, Events.ShowWindowEventArgs e)
-        {
-            accountLogin = new AccountLogin(_mainMenuViewModel.accountLoginViewModel);
-
-            //accountLogin.ShowDialog();
         }
 
         private void MainMenuViewModel_ShowViewQuizzesWindow(object sender, Events.ShowAccountParameterWindowEventArgs e)
         {
-            _mainMenuViewModel.viewQuizzesViewModel.UserID = e.UserID;
-            viewQuizzes = new ViewQuizzes(_mainMenuViewModel.viewQuizzesViewModel);
+            _mainMenuViewModel.ViewQuizzesViewModel.UserID = e.UserID;
+            viewQuizzes = new ViewQuizzes(_mainMenuViewModel.ViewQuizzesViewModel);
 
             viewQuizzes.ShowDialog();
         }

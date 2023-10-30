@@ -35,6 +35,7 @@ namespace KrishnaRajamannar.NEA
             //Register all UI windows
             services.AddTransient(typeof(AccountLogin));
             services.AddTransient(typeof(AccountCreation));
+            services.AddTransient(typeof(MainMenu));
             services.AddTransient(typeof(IndependentReviewQuiz));
             services.AddTransient(typeof(IndependentReviewFeedback));
 
@@ -58,7 +59,8 @@ namespace KrishnaRajamannar.NEA
             ServiceCollection services = new ServiceCollection();
             ConfigureServices(services);
             ServiceProvider = services.BuildServiceProvider();
-            //Show the login screen 
+            //Show the login screen
+
             var accountLogin = ServiceProvider.GetService<AccountLogin>();
             accountLogin.Show();
 
@@ -68,6 +70,9 @@ namespace KrishnaRajamannar.NEA
 
             //var test = ServiceProvider.GetService<IndependentReviewFeedback>();
             //test.Show();
+
+            //var mainMenu = ServiceProvider.GetService<MainMenu>();
+            //mainMenu.Show();
         }
 
 
