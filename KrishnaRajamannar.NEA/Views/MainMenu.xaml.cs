@@ -23,7 +23,7 @@ namespace KrishnaRajamannar.NEA.Views
     /// </summary>
     public partial class MainMenu : Window
     {
-        private readonly ViewLeaderboard viewLeaderboard;
+        private ViewLeaderboard viewLeaderboard;
         private readonly HostSession hostSession;
         private readonly JoinSession joinSession;
         private AccountLogin accountLogin;
@@ -39,7 +39,7 @@ namespace KrishnaRajamannar.NEA.Views
             this.DataContext = _mainMenuViewModel;
 
             // need to fix this later
-            viewLeaderboard = new ViewLeaderboard();
+            //viewLeaderboard = new ViewLeaderboard();
             hostSession = new HostSession();
             joinSession = new JoinSession();
 
@@ -71,6 +71,7 @@ namespace KrishnaRajamannar.NEA.Views
 
         private void MainMenuViewModel_ShowLeaderboardWindow(object sender, Events.ShowWindowEventArgs e)
         {
+            viewLeaderboard = new ViewLeaderboard(_mainMenuViewModel.ViewLeaderboardViewModel);
             viewLeaderboard.ShowDialog();
         }
 

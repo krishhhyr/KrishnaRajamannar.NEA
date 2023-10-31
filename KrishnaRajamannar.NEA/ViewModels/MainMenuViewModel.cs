@@ -33,10 +33,13 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
         public ViewQuizzesViewModel ViewQuizzesViewModel;
 
+        public ViewLeaderboardViewModel ViewLeaderboardViewModel;
+
         public MainMenuViewModel()
         {
             AccountLoginViewModel = App.ServiceProvider.GetService(typeof(AccountLoginViewModel)) as AccountLoginViewModel;
             ViewQuizzesViewModel = App.ServiceProvider.GetService(typeof(ViewQuizzesViewModel)) as ViewQuizzesViewModel;
+            ViewLeaderboardViewModel = App.ServiceProvider.GetService(typeof(ViewLeaderboardViewModel)) as ViewLeaderboardViewModel;
         }
         private int _userid;
         public int UserID

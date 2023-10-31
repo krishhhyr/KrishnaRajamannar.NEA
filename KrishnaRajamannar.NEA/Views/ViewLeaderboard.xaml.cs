@@ -1,4 +1,5 @@
 ﻿using KrishnaRajamannar.NEA.Services;
+using KrishnaRajamannar.NEA.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,12 +21,31 @@ namespace KrishnaRajamannar.NEA.Views
     /// </summary>
     public partial class ViewLeaderboard : Window
     {
-        public LeaderboardService _leaderboardService = new LeaderboardService();
+        private readonly ViewLeaderboardViewModel _viewLeaderboardViewModel;
 
-        public ViewLeaderboard()
+        public ViewLeaderboard(ViewLeaderboardViewModel viewLeaderboardViewModel)
         {
             InitializeComponent();
-            leaderboardDataGrid.ItemsSource = _leaderboardService.GetLeaderboard();
+
+            _viewLeaderboardViewModel = viewLeaderboardViewModel;
+            viewLeaderboardViewModel.HideViewLeaderboardWindow += ViewLeaderboardViewModel_HideViewLeaderboardWindow;
+
+            leaderboardDataGrid.ItemsSource = _viewLeaderboardViewModel.GetUserLeaderboard();
+        }
+
+        private void ViewLeaderboardViewModel_HideViewLeaderboardWindow(object sender, Events.HideWindowEventArgs e)
+        {
+            this.Close();
+        }
+
+        private void backBtn_Click(object sender, RoutedEventArgs e)
+        {
+            _viewLeaderboardViewModel.CloseViewLeaderboardWindow();
+        }
+
+        private void refreshBtn_Click(object sender, RoutedEventArgs e)
+        {
+            leaderboardDataGrid.ItemsSource = _viewLeaderboardViewModel.GetUserLeaderboard();
         }
     }
 }
