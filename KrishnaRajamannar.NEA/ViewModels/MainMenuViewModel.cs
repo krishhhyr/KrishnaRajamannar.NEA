@@ -2,6 +2,7 @@
 using KrishnaRajamannar.NEA.Models;
 using KrishnaRajamannar.NEA.Views;
 using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -19,9 +20,9 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
         public event ShowWindowEventHandler ShowLeaderboardWindow;
 
-        public event ShowWindowEventHandler ShowHostSessionWindow;
+        public event ShowAccountParameterWindowEventHandler ShowHostSessionWindow;
 
-        public event ShowWindowEventHandler ShowJoinSessionWindow;
+        public event ShowAccountParameterWindowEventHandler ShowJoinSessionWindow;
 
         public event ShowWindowEventHandler ShowAccountLoginWindow;
 
@@ -35,11 +36,17 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
         public ViewLeaderboardViewModel ViewLeaderboardViewModel;
 
+        public HostSessionViewModel HostSessionViewModel;
+
+        public JoinSessionViewModel JoinSessionViewModel;
         public MainMenuViewModel()
         {
             AccountLoginViewModel = App.ServiceProvider.GetService(typeof(AccountLoginViewModel)) as AccountLoginViewModel;
             ViewQuizzesViewModel = App.ServiceProvider.GetService(typeof(ViewQuizzesViewModel)) as ViewQuizzesViewModel;
             ViewLeaderboardViewModel = App.ServiceProvider.GetService(typeof(ViewLeaderboardViewModel)) as ViewLeaderboardViewModel;
+            HostSessionViewModel = App.ServiceProvider.GetService(typeof(HostSessionViewModel)) as HostSessionViewModel;
+            JoinSessionViewModel = App.ServiceProvider.GetService(typeof(JoinSessionViewModel)) as JoinSessionViewModel;
+
         }
         private int _userid;
         public int UserID
@@ -108,15 +115,18 @@ namespace KrishnaRajamannar.NEA.ViewModels
         }
         private void ShowHostSession()
         {
-            ShowWindowEventArgs args = new ShowWindowEventArgs();
+            ShowAccountParameterWindowEventArgs args = new ShowAccountParameterWindowEventArgs();
             args.IsShown = true;
+            args.UserID = _userid;
             OnShowHostSessionWindow(args);
 
         }
         private void ShowJoinSession()
         {
-            ShowWindowEventArgs args = new ShowWindowEventArgs();
+            ShowAccountParameterWindowEventArgs args = new ShowAccountParameterWindowEventArgs();
             args.IsShown = true;
+            args.UserID = _userid;
+            args.Username = _username;
             OnShowJoinSessionWindow(args);
 
         }
@@ -144,17 +154,17 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 handler(this, e);
             }
         }
-        protected virtual void OnShowHostSessionWindow(ShowWindowEventArgs e)
+        protected virtual void OnShowHostSessionWindow(ShowAccountParameterWindowEventArgs e)
         {
-            ShowWindowEventHandler handler = ShowHostSessionWindow;
+            ShowAccountParameterWindowEventHandler handler = ShowHostSessionWindow;
             if (handler != null)
             {
                 handler(this, e);
             }
         }
-        protected virtual void OnShowJoinSessionWindow(ShowWindowEventArgs e)
+        protected virtual void OnShowJoinSessionWindow(ShowAccountParameterWindowEventArgs e)
         {
-            ShowWindowEventHandler handler = ShowJoinSessionWindow;
+            ShowAccountParameterWindowEventHandler handler = ShowJoinSessionWindow;
             if (handler != null)
             {
                 handler(this, e);

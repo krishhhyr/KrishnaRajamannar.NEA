@@ -24,8 +24,8 @@ namespace KrishnaRajamannar.NEA.Views
     public partial class MainMenu : Window
     {
         private ViewLeaderboard viewLeaderboard;
-        private readonly HostSession hostSession;
-        private readonly JoinSession joinSession;
+        private HostSession hostSession;
+        private JoinSession joinSession;
         private AccountLogin accountLogin;
         private ViewQuizzes viewQuizzes;
 
@@ -40,8 +40,6 @@ namespace KrishnaRajamannar.NEA.Views
 
             // need to fix this later
             //viewLeaderboard = new ViewLeaderboard();
-            hostSession = new HostSession();
-            joinSession = new JoinSession();
 
             mainMenuViewModel.HideMainMenuWindow += MainMenuViewModel_HideMainMenuWindow;
 
@@ -49,6 +47,23 @@ namespace KrishnaRajamannar.NEA.Views
             mainMenuViewModel.ShowLeaderboardWindow += MainMenuViewModel_ShowLeaderboardWindow;
             mainMenuViewModel.ShowHostSessionWindow += MainMenuViewModel_ShowHostSessionWindow;
             mainMenuViewModel.ShowJoinSessionWindow += MainMenuViewModel_ShowJoinSessionWindow;
+        }
+
+        private void MainMenuViewModel_ShowJoinSessionWindow(object sender, Events.ShowAccountParameterWindowEventArgs e)
+        {
+            _mainMenuViewModel.JoinSessionViewModel.UserID = e.UserID;
+            _mainMenuViewModel.JoinSessionViewModel.Username = e.Username;
+            joinSession = new JoinSession(_mainMenuViewModel.JoinSessionViewModel);
+
+            joinSession.ShowDialog();
+        }
+
+        private void MainMenuViewModel_ShowHostSessionWindow(object sender, Events.ShowAccountParameterWindowEventArgs e)
+        {
+            _mainMenuViewModel.HostSessionViewModel.UserID = e.UserID;
+            hostSession = new HostSession(_mainMenuViewModel.HostSessionViewModel);
+
+            hostSession.ShowDialog();
         }
 
         private void MainMenuViewModel_ShowViewQuizzesWindow(object sender, Events.ShowAccountParameterWindowEventArgs e)
@@ -59,15 +74,6 @@ namespace KrishnaRajamannar.NEA.Views
             viewQuizzes.ShowDialog();
         }
 
-        private void MainMenuViewModel_ShowJoinSessionWindow(object sender, Events.ShowWindowEventArgs e)
-        {
-            joinSession.ShowDialog();
-        }
-
-        private void MainMenuViewModel_ShowHostSessionWindow(object sender, Events.ShowWindowEventArgs e)
-        {
-            hostSession.ShowDialog();
-        }
 
         private void MainMenuViewModel_ShowLeaderboardWindow(object sender, Events.ShowWindowEventArgs e)
         {

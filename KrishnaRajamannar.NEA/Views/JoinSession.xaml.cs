@@ -1,4 +1,5 @@
-﻿using System;
+﻿using KrishnaRajamannar.NEA.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,9 +20,12 @@ namespace KrishnaRajamannar.NEA.Views
     /// </summary>
     public partial class JoinSession : Window
     {
-        public JoinSession()
+        private JoinSessionViewModel _joinSessionViewModel;
+
+        public JoinSession(JoinSessionViewModel joinSessionViewModel)
         {
             InitializeComponent();
+            _joinSessionViewModel = joinSessionViewModel;
         }
     }
 }
