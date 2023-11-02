@@ -30,5 +30,18 @@ namespace KrishnaRajamannar.NEA.Views
 
             _hostSessionViewModel.GetQuizzes();
         }
+
+        private void startSessionBtn_Click(object sender, RoutedEventArgs e)
+        {
+            quizSelectionComboBox.IsReadOnly = true;
+            quizConditionComboBox.IsReadOnly = true;
+
+            string temp = quizConditionComboBox.SelectedItem.ToString();
+
+            if (quizConditionComboBox.SelectedItem.ToString() == "Number Of Questions") 
+            {
+                _hostSessionViewModel.ValidateNumberOfQuestionsInput();
+            }
+        }
     }
 }

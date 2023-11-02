@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,6 +17,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
         private readonly IQuizService _quizService;
 
         public int UserID;
+        IList<QuizModel> quizzes = new List<QuizModel>();
 
         public HostSessionViewModel(IQuizService quizService)
         {
@@ -38,18 +40,38 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyname));
             }
         }
-
-        public void GetQuizzes() 
+        public IPAddress? GetIPAddress() 
         {
-            IList<QuizModel> quizzes = new List<QuizModel>();
-            quizzes = _quizService.GetQuiz(UserID);
-
-            foreach (var quiz in quizzes) 
-            {
-                QuizTitles.Add(quiz.QuizTitle);
-            }
+            return null;
+        }
+        public int? GetPortNumber() 
+        {
+            return null;
         }
 
+        public void GetQuizzes()
+        {
+            List<string> titlesOfQuizzes = new List<string>();
 
-    }
+            quizzes = _quizService.GetQuiz(UserID);
+
+            foreach (var quiz in quizzes)
+            {
+                titlesOfQuizzes.Add(quiz.QuizTitle);
+            }
+            _quizTitles = titlesOfQuizzes;
+        }
+        public IList<QuizModel>? GetQuestions(string quizTitle) 
+        {
+            return null;
+        }
+        public void ValidateNumberOfQuestionsInput() 
+        {
+            
+        }
+        public void ValidateTimeInput()
+        {
+
+        }
+    } 
 }
