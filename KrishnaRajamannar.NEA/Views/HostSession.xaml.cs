@@ -26,6 +26,9 @@ namespace KrishnaRajamannar.NEA.Views
         {
             InitializeComponent();
             _hostSessionViewModel = hostSessionViewModel;
+            this.DataContext = _hostSessionViewModel;
+
+            _hostSessionViewModel.GetQuizzes();
         }
     }
 }

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:KrishnaRajamannar.NEA.Views"
         mc:Ignorable="d"
-        Title="HostSession" Height="500" Width="750" FontFamily="Segoe UI Light">
+        Title="HostSession" Height="650" Width="850" FontFamily="Segoe UI Light">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"></ColumnDefinition>
@@ -17,33 +17,29 @@
             <RowDefinition Height="10*"></RowDefinition>
             <RowDefinition Height="1*"></RowDefinition>
         </Grid.RowDefinitions>
-        <Button x:Name="backBtn" Content="Back" Height="30" Width="75" Margin="10" FontSize="16"></Button>
+        <Button x:Name="backBtn" Content="Back" Height="30" Width="75" Margin="10" FontSize="16"
+                Background="White" Foreground="Black" BorderBrush="Black"></Button>
 
-        <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Horizontal">
-            
-            <ComboBox x:Name="quizSelectionComboBox" Grid.Column="1" Height="30" Width="300" 
-                      HorizontalAlignment="Left" Margin="10"></ComboBox>
+        <StackPanel x:Name="quizConditionStackPanel"  Orientation="Vertical" Grid.Column="1" Grid.Row="1" Height="550" VerticalAlignment="Top">
 
-            <Border BorderThickness="2" BorderBrush="Gainsboro" Margin="10">
-                <TextBlock Text="Game PIN: 182722" Margin="10" HorizontalAlignment="Left" FontSize="20" 
-                           Height="30" Width="180" VerticalAlignment="Top" TextAlignment="Center"></TextBlock>
-            </Border>
-        </StackPanel>
+            <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Horizontal" >
 
-        <StackPanel x:Name="quizConditionStackPanel"  Orientation="Vertical" Grid.Column="1" Grid.Row="1" Height="350" VerticalAlignment="Top">
+                <Label x:Name="selectQuizLbl" Content="Select a Quiz:" FontSize="20" Margin="10" VerticalAlignment="Center"></Label>
 
-            <StackPanel Orientation="Vertical">
-                <TextBlock x:Name="numberOfParticipantsTxtBlock" Text="No Participants have joined the Session" FontSize="20" HorizontalAlignment="Center"></TextBlock>
+                <ComboBox x:Name="quizSelectionComboBox" Grid.Column="1" Height="30" Width="300" 
+                      HorizontalAlignment="Right" Margin="10" ItemsSource="{Binding QuizTitles}">
+                    
+                </ComboBox>
 
-                <ListBox x:Name="usernamesOfParticpants" Height="150" Margin="10"></ListBox>
             </StackPanel>
-
-
 
             <StackPanel x:Name="conditionTypeStackPanel" Orientation="Horizontal" Grid.Column="1" Grid.Row="1">
                 <TextBlock Text="Condition to End Quiz:" Height="30" Margin="10" FontSize="20" HorizontalAlignment="Left" VerticalAlignment="Top"></TextBlock>
 
-                <ComboBox x:Name="quizConditionComboBox" Grid.Column="1" Height="30" Margin="10" Width="300" HorizontalAlignment="Left" VerticalAlignment="Top"></ComboBox>
+                <ComboBox x:Name="quizConditionComboBox" Grid.Column="1" Height="30" Margin="10" Width="300" HorizontalAlignment="Left" VerticalAlignment="Top">
+                    <ComboBoxItem Content="Number of Questions"></ComboBoxItem>
+                    <ComboBoxItem Content="Time Limit"></ComboBoxItem>
+                </ComboBox>
             </StackPanel>
 
             <StackPanel x:Name="conditionInputStackPanel" Orientation="Horizontal" Grid.Column="1" Grid.Row="1">
@@ -53,7 +49,26 @@
                          TextAlignment="Center" VerticalAlignment="Top" Margin="10" FontSize="20" MaxLength="4"></TextBox>
             </StackPanel>
 
-            <Button x:Name="startBtn" Content="Start the Quiz" Height="30" Width="150" FontSize="20" Margin="10"></Button>
+            <Button x:Name="startSessionBtn" Content="Start Session" FontSize="20" VerticalAlignment="Center" 
+                    Height="30" Width="150" Margin="10" Background="#FFABADB3" Foreground="White" BorderBrush="Black"></Button>
+
+            <StackPanel Orientation="Vertical">
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center"> 
+
+                    <Label x:Name="displaySessionIDLbl" Content="Session ID:" FontSize="20" VerticalAlignment="Center" Margin="10,0,0,10"></Label>
+
+                    <Label x:Name="sessionIDLbl" Content="121345" FontSize="20" VerticalAlignment="Center" Margin="0,0,0,10"></Label>
+
+                </StackPanel>
+
+                <TextBlock x:Name="numberOfParticipantsTxtBlock" Text="(0 Participants have joined.)" FontSize="20" HorizontalAlignment="Center" ></TextBlock>
+
+                <ListBox x:Name="usernamesOfParticpants" Height="150" Margin="10"></ListBox>
+            </StackPanel>
+
+            <Button x:Name="startQuizBtn" Content="Start Quiz" Height="30" Width="150" 
+                    FontSize="20" Margin="10" Background="#FFABADB3" Foreground="White" BorderBrush="Black"></Button>
         </StackPanel>
     </Grid>
 </Window>

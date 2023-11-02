@@ -37,7 +37,7 @@
 
         <DataGrid  x:Name ="quizDataGrid" SelectionMode="Single" IsReadOnly="True" SelectedItem="{Binding SelectedQuiz}" 
                        AutoGenerateColumns="True" Height="475" VerticalAlignment="Top" CanUserAddRows="False" Grid.Column="0" Grid.Row="1" FontSize="20" 
-                       FontFamily="Segoe UI Light" Margin="10,0,5,10" ColumnWidth="*" AlternatingRowBackground="AliceBlue"
+                       FontFamily="Segoe UI Light" Margin="10,0,5,10" ColumnWidth="*" AlternatingRowBackground="AliceBlue" Background="#FFABADB3" 
                        MouseDoubleClick="quizDataGrid_MouseDoubleClick">
 
                 <DataGrid.ContextMenu>
@@ -55,7 +55,7 @@
 
         <DataGrid x:Name="questionDataGrid" Grid.Column="1" Grid.Row="1" AutoGenerateColumns="True" Margin="10,0,5,10" 
                    FontSize="20" Height="475" VerticalAlignment="Top" FontFamily="Segoe UI Light" CanUserAddRows="False" 
-                  IsReadOnly="True" SelectedItem="{Binding SelectedQuestion}" AlternatingRowBackground="AliceBlue" ColumnWidth="Auto">
+                  IsReadOnly="True" SelectedItem="{Binding SelectedQuestion}" AlternatingRowBackground="AliceBlue" Background="#FFABADB3" ColumnWidth="Auto">
 
             <DataGrid.ContextMenu>
                 
