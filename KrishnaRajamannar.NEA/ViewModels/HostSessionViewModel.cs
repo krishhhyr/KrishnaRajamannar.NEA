@@ -33,6 +33,16 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 RaisePropertyChange("QuizTitles");
             }
         }
+        private string _endQuizConditionInput;
+        public string EndQuizConditionInput
+        {
+            get { return _endQuizConditionInput; }
+            set
+            {
+                _endQuizConditionInput = value;
+                RaisePropertyChange("ConditionInput");
+            }
+        }
         public void RaisePropertyChange(string propertyname)
         {
             if (PropertyChanged != null)
@@ -61,17 +71,43 @@ namespace KrishnaRajamannar.NEA.ViewModels
             }
             _quizTitles = titlesOfQuizzes;
         }
-        public IList<QuizModel>? GetQuestions(string quizTitle) 
+        public IList<QuizModel>? GetQuestions(int quizID) 
         {
             return null;
         }
-        public void ValidateNumberOfQuestionsInput() 
+        public void ValidateNumberOfQuestionsInput(string quizTitle) 
         {
-            
-        }
-        public void ValidateTimeInput()
-        {
+            bool valid = false;
 
+            foreach (var quiz in quizzes) 
+            {
+                if ((quizTitle == quiz.QuizTitle) && (int.Parse(EndQuizConditionInput) <= quiz.NumberOfQuestions)) 
+                {
+                    GetQuestions(quiz.QuizID);
+                    valid = true;
+                }
+            }
+            if (valid == false) 
+            {
+                //Show a message...
+            }
+        }
+        public void ValidateTimeInput(string quizTitle)
+        {
+            if ((int.Parse(EndQuizConditionInput) >= 5) && (int.Parse(EndQuizConditionInput) <= 60))
+            {
+                foreach (var quiz in quizzes)
+                {
+                    if (quizTitle == quiz.QuizTitle)
+                    {
+                        GetQuestions(quiz.QuizID);
+                    }
+                }
+            }
+            else 
+            {
+                //Show a message...
+            }
         }
     } 
 }

@@ -38,7 +38,7 @@ namespace KrishnaRajamannar.NEA.Views
 
             string temp = quizConditionComboBox.SelectedItem.ToString();
 
-            if (quizConditionComboBox.SelectedItem.ToString() == "Number Of Questions") 
+            if (quizConditionComboBox.SelectedItem == quizConditionComboBox.Items[0]) 
             {
                 _hostSessionViewModel.ValidateNumberOfQuestionsInput();
             }
