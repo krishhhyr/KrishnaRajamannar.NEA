@@ -1,4 +1,5 @@
-﻿using KrishnaRajamannar.NEA.Models;
+﻿using Azure;
+using KrishnaRajamannar.NEA.Models;
 using KrishnaRajamannar.NEA.Services;
 using System;
 using System.Collections.Generic;
@@ -43,11 +44,31 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 RaisePropertyChange("ConditionInput");
             }
         }
+        private int _sessionID;
+        public int SessionID
+        {
+            get { return _sessionID; }
+            set
+            {
+                _endQuizConditionInput = value;
+                RaisePropertyChange("ConditionInput");
+            }
+        }
         public void RaisePropertyChange(string propertyname)
         {
             if (PropertyChanged != null)
             {
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyname));
+            }
+        }
+        public void CreateSessionID() 
+        {
+            Random random = new Random();
+            int sessionID = 0;
+            bool valid = false;
+            while (valid == false) 
+            {
+                sessionID = random.Next(100000, 10000000);
             }
         }
         public IPAddress? GetIPAddress() 
