@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:KrishnaRajamannar.NEA.Views"
         mc:Ignorable="d"
-        Title="HostSession" Height="650" Width="850" FontFamily="Segoe UI Light">
+        Title="HostSession" Height="350" Width="850" FontFamily="Segoe UI Light">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"></ColumnDefinition>
@@ -27,7 +27,7 @@
                 <Label x:Name="selectQuizLbl" Content="Select a Quiz:" FontSize="20" Margin="10" VerticalAlignment="Center"></Label>
 
                 <ComboBox x:Name="quizSelectionComboBox" Grid.Column="1" Height="30" Width="300" 
-                      HorizontalAlignment="Right" Margin="10" FontSize="20" ItemsSource="{Binding QuizTitles}">
+                      HorizontalAlignment="Right" Margin="10" FontSize="20" ItemsSource="{Binding QuizTitles}" SelectedIndex="0"> 
                 </ComboBox>
 
             </StackPanel>
@@ -45,7 +45,7 @@
             <StackPanel x:Name="conditionInputStackPanel" Orientation="Horizontal" Grid.Column="1" Grid.Row="1">
                 <TextBlock Text="Enter the Number of Questions/Time Limit:" Height="30" Margin="10" FontSize="20" HorizontalAlignment="Left" VerticalAlignment="Top"></TextBlock>
 
-                <TextBox x:Name="conditionTxtBox" Height="30" Width="100" HorizontalAlignment="Left" 
+                <TextBox x:Name="conditionTxtBox" Text="{Binding ConditionInput}" Height="30" Width="100" HorizontalAlignment="Left" 
                          TextAlignment="Center" VerticalAlignment="Top" Margin="10" FontSize="20" MaxLength="4"></TextBox>
             </StackPanel>
 
@@ -53,7 +53,7 @@
                     Height="30" Width="150" Margin="10" Background="#FFABADB3" Foreground="White" BorderBrush="Black"
                     Click="startSessionBtn_Click"></Button>
 
-            <StackPanel Orientation="Vertical">
+            <StackPanel x:Name="sessionInformationStackPanel" Orientation="Vertical" Visibility="Hidden">
 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center"> 
 
@@ -69,7 +69,8 @@
             </StackPanel>
 
             <Button x:Name="startQuizBtn" Content="Start Quiz" Height="30" Width="150" 
-                    FontSize="20" Margin="10" Background="#FFABADB3" Foreground="White" BorderBrush="Black"></Button>
+                    FontSize="20" Margin="10" Background="#FFABADB3" Foreground="White" BorderBrush="Black"
+                    Visibility="Hidden"></Button>
         </StackPanel>
     </Grid>
 </Window>

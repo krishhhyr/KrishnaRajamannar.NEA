@@ -33,15 +33,32 @@ namespace KrishnaRajamannar.NEA.Views
 
         private void startSessionBtn_Click(object sender, RoutedEventArgs e)
         {
-            quizSelectionComboBox.IsReadOnly = true;
-            quizConditionComboBox.IsReadOnly = true;
+            // need to do a check to see if the given input is not a string or a letter, like e for example.
+            // and a check for if it is null
+            bool valid;
+            _hostSessionViewModel.EndQuizConditionInput = int.Parse(conditionTxtBox.Text);
 
-            string temp = quizConditionComboBox.SelectedItem.ToString();
-
-            if (quizConditionComboBox.SelectedItem == quizConditionComboBox.Items[0]) 
+            if (quizConditionComboBox.SelectedItem == quizConditionComboBox.Items[0])
             {
-                _hostSessionViewModel.ValidateNumberOfQuestionsInput();
+              valid = _hostSessionViewModel.ValidateNumberOfQuestionsInput(quizSelectionComboBox.SelectedValue.ToString());
             }
+            else 
+            {
+                valid = _hostSessionViewModel.ValidateTimeInput(quizSelectionComboBox.SelectedValue.ToString());
+            }
+
+            if (valid != false) 
+            {
+                quizSelectionComboBox.IsEnabled = false;
+                quizConditionComboBox.IsEnabled = false;
+                conditionTxtBox.IsEnabled = false;
+                startSessionBtn.IsEnabled = false;
+                Height = 650;
+                sessionInformationStackPanel.Visibility = Visibility.Visible;
+                startQuizBtn.Visibility = Visibility.Visible;
+            }
+
+
         }
     }
 }

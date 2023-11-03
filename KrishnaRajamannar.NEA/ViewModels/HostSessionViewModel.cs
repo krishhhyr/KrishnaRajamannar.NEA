@@ -33,8 +33,8 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 RaisePropertyChange("QuizTitles");
             }
         }
-        private string _endQuizConditionInput;
-        public string EndQuizConditionInput
+        private int _endQuizConditionInput;
+        public int EndQuizConditionInput
         {
             get { return _endQuizConditionInput; }
             set
@@ -75,39 +75,53 @@ namespace KrishnaRajamannar.NEA.ViewModels
         {
             return null;
         }
-        public void ValidateNumberOfQuestionsInput(string quizTitle) 
+        public bool ValidateNumberOfQuestionsInput(string quizTitle) 
         {
             bool valid = false;
 
-            foreach (var quiz in quizzes) 
+            if (EndQuizConditionInput is int)
             {
-                if ((quizTitle == quiz.QuizTitle) && (int.Parse(EndQuizConditionInput) <= quiz.NumberOfQuestions)) 
+                foreach (var quiz in quizzes)
                 {
-                    GetQuestions(quiz.QuizID);
-                    valid = true;
+                    if ((quizTitle == quiz.QuizTitle) && (EndQuizConditionInput <= quiz.NumberOfQuestions))
+                    {
+                        GetQuestions(quiz.QuizID);
+                        valid = true;
+                        return true;
+                    }
+                }
+                if (valid == false)
+                {
+                    //Show a message...This quiz only has 4 questions, input a lower number of questions
+                    return false;
                 }
             }
-            if (valid == false) 
+            else 
             {
-                //Show a message...
+                //show a message saying that the condition input was not in the correct format
+                return false;
             }
+            return false;
         }
-        public void ValidateTimeInput(string quizTitle)
+        public bool ValidateTimeInput(string quizTitle)
         {
-            if ((int.Parse(EndQuizConditionInput) >= 5) && (int.Parse(EndQuizConditionInput) <= 60))
+            if ((EndQuizConditionInput >= 5) && (EndQuizConditionInput <= 60))
             {
                 foreach (var quiz in quizzes)
                 {
                     if (quizTitle == quiz.QuizTitle)
                     {
                         GetQuestions(quiz.QuizID);
+                        return true;
                     }
                 }
             }
             else 
             {
                 //Show a message...
+                return false;
             }
+            return false;
         }
     } 
 }
