@@ -69,6 +69,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
             while (valid == false) 
             {
                 sessionID = random.Next(100000, 10000000);
+                if ()
             }
         }
         public IPAddress? GetIPAddress() 
