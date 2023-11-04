@@ -15,13 +15,17 @@ namespace KrishnaRajamannar.NEA.ViewModels
     {
         public event PropertyChangedEventHandler? PropertyChanged;
 
+        private readonly ISessionService _sessionService;
+
         private readonly IQuizService _quizService;
 
         public int UserID;
         IList<QuizModel> quizzes = new List<QuizModel>();
 
-        public HostSessionViewModel(IQuizService quizService)
+        public HostSessionViewModel(ISessionService sessionService, IQuizService quizService)
         {
+            _sessionService = sessionService;
+
             _quizService = quizService;
         }
         private List<string> _quizTitles;
@@ -61,7 +65,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyname));
             }
         }
-        public void CreateSessionID() 
+        public int CreateSessionID() 
         {
             Random random = new Random();
             int sessionID = 0;
@@ -69,8 +73,12 @@ namespace KrishnaRajamannar.NEA.ViewModels
             while (valid == false) 
             {
                 sessionID = random.Next(100000, 10000000);
-                if ()
+                if (_sessionService.IsSessionIDExist(sessionID) == false) 
+                {
+                    valid = true;
+                }
             }
+            return sessionID;
         }
         public IPAddress? GetIPAddress() 
         {
@@ -78,7 +86,18 @@ namespace KrishnaRajamannar.NEA.ViewModels
         }
         public int? GetPortNumber() 
         {
-            return null;
+            Random random = new Random();
+            int portNumber = 0;
+            bool valid = false;
+            while (valid == false)
+            {
+                portNumber = random.Next(49152, 65536);
+                if (_sessionService.IsPortNumberExist(portNumber) == false)
+                {
+                    valid = true;
+                }
+            }
+            return sessionID;
         }
 
         public void GetQuizzes()
