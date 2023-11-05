@@ -28,6 +28,7 @@ namespace KrishnaRajamannar.NEA
             services.AddSingleton<IQuizService, QuizService>();
             services.AddSingleton<IQuestionService, QuestionService>();
             services.AddSingleton<IIndependentReviewQuizService, IndependentReviewQuizService>();
+            services.AddSingleton<ISessionService, SessionService>();
             services.AddSingleton(typeof(UserModel));
             services.AddSingleton(typeof(QuestionModel));
             services.AddSingleton(typeof(QuizModel));

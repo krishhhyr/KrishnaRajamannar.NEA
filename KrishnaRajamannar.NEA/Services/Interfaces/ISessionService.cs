@@ -6,8 +6,8 @@
 
         public bool IsPortNumberExist(int portNumberInput);
 
-        public bool InsertSessionData(int sessionID, string IPAddress, int portNumber, int quizID);
+        public void InsertSessionData(int sessionID, string IPAddress, int portNumber, int quizID);
 
-        public (string, int) GetConnectionData(int sessionID);
+        public (string?, int?) GetConnectionData(int sessionID);
     }
 }

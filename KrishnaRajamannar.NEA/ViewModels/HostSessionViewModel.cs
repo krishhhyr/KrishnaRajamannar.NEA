@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Net;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -80,11 +81,20 @@ namespace KrishnaRajamannar.NEA.ViewModels
             }
             return sessionID;
         }
-        public IPAddress? GetIPAddress() 
+        public void CreateSession(int quizID) 
         {
-            return null;
+            int sessionID = CreateSessionID();
+            string IPAddress = GetIPAddress();
+            int portNumber = GetPortNumber();
+            ;
+            //_sessionService.InsertSessionData(CreateSessionID(), GetIPAddress(), GetPortNumber(), quizID);
         }
-        public int? GetPortNumber() 
+        public string GetIPAddress() 
+        {
+            var IPAddress = Dns.GetHostEntry(Dns.GetHostName()).AddressList[1].ToString();
+            return IPAddress;
+        }
+        public int GetPortNumber() 
         {
             Random random = new Random();
             int portNumber = 0;
@@ -97,7 +107,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
                     valid = true;
                 }
             }
-            return sessionID;
+            return portNumber;
         }
 
         public void GetQuizzes()

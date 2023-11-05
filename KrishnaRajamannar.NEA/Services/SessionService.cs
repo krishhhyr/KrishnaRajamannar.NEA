@@ -19,9 +19,9 @@ namespace KrishnaRajamannar.NEA.Services
 
         public bool IsSessionIDExist(int sessionIDInput)
         {
-            //int sessionID = 0;
+            int sessionID = 0;
 
-            Tuple<string,int> tuple = new Tuple<string,int>(connectionString, sessionIDInput);
+            //Tuple<string,int> tuple = new Tuple<string,int>(connectionString, sessionIDInput);
 
             const string sqlQuery =
                 @"
@@ -85,18 +85,37 @@ namespace KrishnaRajamannar.NEA.Services
                 return true;
             }
         }
-        public bool InsertSessionData(int sessionID, string IPAddress, int portNumber, int quizID) 
+        public void InsertSessionData(int sessionID, string IPAddress, int portNumber, int quizID) 
         {
-            
+            const string sqlQuery =
+                @"
+                    INSERT INTO Session (SessionID, IPAddress, PortNumber, QuizID)
+                    VALUES (@SessionID, @IPAdress, @PortNumber, @QuizID)
+                ";
+
+            using SqlConnection connection = new SqlConnection(connectionString);
+            connection.Open();
+
+            var command = connection.CreateCommand();
+            command.CommandText = sqlQuery;
+
+            command.Parameters.AddWithValue("@SessionID", sessionID);
+            command.Parameters.AddWithValue("@IPAddress", IPAddress);
+            command.Parameters.AddWithValue("@PortNumber", portNumber);
+            command.Parameters.AddWithValue("@QuizID", quizID);
+
+            command.ExecuteNonQuery();
+
+            connection.Close();
         }
-        public ConnectionData GetConnectionData(int sessionID) 
+        public (string?, int?) GetConnectionData(int sessionID) 
         {
-            //(string, int) connectionData;
+            (string?, int?) connectionData;
+            connectionData.Item1 = null;
+            connectionData.Item2 = null;
 
-            //ConnectionData connectionData = new ConnectionData()
-
-            string ipAddress= string.Empty;
-            int portNumber= 0;
+            // Could use a record as well, would have to declare outside of the class. 
+            //ConnectionData connectionData = new ConnectionData
 
             const string sqlQuery =
                 @"
@@ -114,17 +133,12 @@ namespace KrishnaRajamannar.NEA.Services
 
             var data = command.ExecuteReader();
 
-            //while (data.Read())
-            //{
-            //    sessionID = data.GetInt16(0);
-            //}
-
             while (data.Read()) 
             {
-                ipAddress = data.GetString(0);
-                portNumber = data.GetInt32(1);
+                connectionData.Item1 = data.GetString(0);
+                connectionData.Item2 = data.GetInt32(1);
             }
-            return new ConnectionData(ipAddress,portNumber);
+            return connectionData;
         }
     }
 }
