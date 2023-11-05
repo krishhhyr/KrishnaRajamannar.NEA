@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace KrishnaRajamannar.NEA.Services
 {
+    public record ConnectionData(string ipadress, int port);
     public class SessionService : ISessionService 
     {
         const string connectionString = $"Data Source=KRISHNASXPS\\SQLEXPRESS;Initial Catalog=quizApp;Persist Security Info=True;User ID=sa;Password=passw0rd;TrustServerCertificate=True";
@@ -19,6 +20,8 @@ namespace KrishnaRajamannar.NEA.Services
         public bool IsSessionIDExist(int sessionIDInput)
         {
             //int sessionID = 0;
+
+            Tuple<string,int> tuple = new Tuple<string,int>(connectionString, sessionIDInput);
 
             const string sqlQuery =
                 @"
@@ -86,9 +89,14 @@ namespace KrishnaRajamannar.NEA.Services
         {
             
         }
-        public (string, int) GetConnectionData(int sessionID) 
+        public ConnectionData GetConnectionData(int sessionID) 
         {
-            (string, int) connectionData;
+            //(string, int) connectionData;
+
+            //ConnectionData connectionData = new ConnectionData()
+
+            string ipAddress= string.Empty;
+            int portNumber= 0;
 
             const string sqlQuery =
                 @"
@@ -113,10 +121,10 @@ namespace KrishnaRajamannar.NEA.Services
 
             while (data.Read()) 
             {
-                connectionData.Item1 = data.GetString(0);
-                connectionData.Item2 = data.GetInt32(1);
+                ipAddress = data.GetString(0);
+                portNumber = data.GetInt32(1);
             }
-            return connectionData;
+            return new ConnectionData(ipAddress,portNumber);
         }
     }
 }
