@@ -56,7 +56,7 @@ namespace KrishnaRajamannar.NEA.Views
                 Height = 650;
                 sessionInformationStackPanel.Visibility = Visibility.Visible;
                 startQuizBtn.Visibility = Visibility.Visible;
-
+                //temp
                 _hostSessionViewModel.CreateSession(36);
             }
 

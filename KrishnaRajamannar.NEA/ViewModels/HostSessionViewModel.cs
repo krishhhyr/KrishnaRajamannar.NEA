@@ -73,7 +73,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
             bool valid = false;
             while (valid == false) 
             {
-                sessionID = random.Next(100000, 10000000);
+                sessionID = random.Next(100000, 1000000);
                 if (_sessionService.IsSessionIDExist(sessionID) == false) 
                 {
                     valid = true;
