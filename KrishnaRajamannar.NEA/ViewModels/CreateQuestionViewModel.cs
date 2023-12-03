@@ -141,6 +141,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
         {
             if (Question == null)
             {
+                MessageBox.Show("A question must be inputted.");
                 return false;
             }
             return true;
@@ -149,37 +150,47 @@ namespace KrishnaRajamannar.NEA.ViewModels
         {
             if (Answer == null)
             {
+                MessageBox.Show("An answer must be inputted.");
                 return false;
             }
             return true;
         }
         public bool ValidateOptions() 
         {
-            if ((Option1 != null) || (Option2 != null))
+            if (!(Option1 != null) || (Option2 != null))
             {
-                return true;
-            }
-            else 
-            {
-                return true;
-            }
-        }
-        public bool ValidateNumberOfPoints()
-        {
-            if ((NumberOfPoints >= 1) && (NumberOfPoints <= 5))
-            {
-                return true;
-            }
-            return false;
-        }
-        public bool ValidateDuration() 
-        {
-            if (Duration == 0) 
-            {
+                MessageBox.Show("Options 1 and 2 must have an answer"); 
                 return false;
             }
             return true;
         }
+        public bool ValidateNumberOfPoints()
+        {
+            if (!(NumberOfPoints >= 1) && (NumberOfPoints <= 5))
+            {
+                MessageBox.Show("The number of points must be between 1 and 5.");
+                return false;
+            }
+            return true;
+        }
+        public bool ValidateDuration() 
+        {
+            if (!(Duration > 10) && (Duration <= 300)) 
+            {
+                MessageBox.Show("The time duration must be between 10 seconds and 5 minutes.");
+                return false;
+            }
+            return true;
+        }
+
+        public bool ValidateStandardInputs() 
+        {
+            
+        }
+
+
+
+
 
         public void CreateTextQuestion(int quizID) 
         {
