@@ -53,8 +53,6 @@ namespace KrishnaRajamannar.NEA.ViewModels
         // Otherwise, the method in QuizService is called which takes in the userID and QuizTitle to insert the quiz in the database. 
         public void CreateQuiz() 
         {
-            int test = UserID;
-
             if ((QuizTitle != null) || (QuizTitle == ""))
             {
                 _quizService.CreateQuiz(UserID, QuizTitle);
