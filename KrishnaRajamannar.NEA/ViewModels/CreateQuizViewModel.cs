@@ -10,7 +10,7 @@ using System.Windows;
 
 namespace KrishnaRajamannar.NEA.ViewModels
 {
-    public class CreateQuizViewModel:INotifyPropertyChanged
+    public class CreateQuizViewModel : INotifyPropertyChanged
     {
 
         // This instantiates the class which handles the data being sent and recieved from the database for the Quiz table.
@@ -51,11 +51,13 @@ namespace KrishnaRajamannar.NEA.ViewModels
         // This function takes in the userID as a parameter. 
         // When creating a quiz, if no title has been inputted, an error message is displayed.
         // Otherwise, the method in QuizService is called which takes in the userID and QuizTitle to insert the quiz in the database. 
-        public void CreateQuiz(int? userID) 
+        public void CreateQuiz() 
         {
-            if (QuizTitle != null)
+            int test = UserID;
+
+            if ((QuizTitle != null) || (QuizTitle == ""))
             {
-                _quizService.CreateQuiz(userID, QuizTitle);
+                _quizService.CreateQuiz(UserID, QuizTitle);
                 MessageBox.Show("Quiz created.");
             }
             else  

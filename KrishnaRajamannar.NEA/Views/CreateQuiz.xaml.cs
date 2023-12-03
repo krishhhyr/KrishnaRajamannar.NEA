@@ -23,12 +23,15 @@ namespace KrishnaRajamannar.NEA.Views
         // Instantiates the CreateQuizViewModel which handles the backend logic for the CreateQuiz window. 
         CreateQuizViewModel _createQuizViewModel = new CreateQuizViewModel();
 
-        int? userID;
+        //int? userID;
 
         // This constructor passes the userID which is used to recognise which user is creating a new quiz into the database.
         public CreateQuiz(CreateQuizViewModel createQuizViewModel)
         {
             InitializeComponent();
+
+            _createQuizViewModel = createQuizViewModel;
+
             this.DataContext = _createQuizViewModel;
             
             // Assignment of userID from constructor to the userID variable in this class.
@@ -39,9 +42,9 @@ namespace KrishnaRajamannar.NEA.Views
         // The CreateQuiz window is then closed.  
         private void createBtn_Click(object sender, RoutedEventArgs e)
         {
-            _createQuizViewModel.QuizTitle = quizTitleTxtBox.Text;
+            //_createQuizViewModel.QuizTitle = quizTitleTxtBox.Text;
 
-            _createQuizViewModel.CreateQuiz(userID);
+            _createQuizViewModel.CreateQuiz();
             this.Close();
         }
         // Pressing the cancel button means that the CreateQuiz window is closed.
