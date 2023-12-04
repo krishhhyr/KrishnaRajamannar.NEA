@@ -185,10 +185,48 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
         public bool ValidateStandardInputs() 
         {
-            
+            if ((ValidateQuestion() == false) || (ValidateAnswer() == false) || (ValidateNumberOfPoints() == false) || (ValidateDuration() == false)) 
+            {
+                return false;
+            }
+            return true;
         }
 
+        public void _CreateTextQuestion(int quizID) 
+        {
+            if (ValidateStandardInputs() == true)
+            {
+                _questionService.CreateTextQuestion(Question, Answer, Duration, NumberOfPoints, quizID);
 
+                _quizService.UpdateNumberOfQuestions(_questionService.GetNumberOfQuestions(quizID), quizID);
+
+                int textQuestionID = _questionService.GetTextQuestionID(Question, Answer, quizID);
+
+                _independentReviewQuizService.InsertTextQuestionQuizFeedback(textQuestionID, NumberOfPoints, quizID);
+
+                MessageBox.Show("Successful Text Question Creation.", "Question Creation");
+            }
+        }
+
+        public void _CreateMultipleChoiceQuestion(int quizID) 
+        {
+            if ((ValidateStandardInputs() == true) && (ValidateOptions() == true)) 
+            {
+                Dictionary<string, string> options = new Dictionary<string, string>();
+
+                options = _questionService.GetOptions(Option1, Option2, Option3, Option4, Option5, Option6);
+
+                _questionService.CreateMultipleChoiceQuestion(Question, Answer, Duration, NumberOfPoints, quizID, options);
+
+                _quizService.UpdateNumberOfQuestions(_questionService.GetNumberOfQuestions(quizID), quizID);
+
+                int MCQuestionID = _questionService.GetMultipleChoiceQuestionID(Question, Answer, quizID);
+
+                _independentReviewQuizService.InsertMultipleChoiceQuestionQuizFeedback(MCQuestionID, NumberOfPoints, quizID);
+
+                MessageBox.Show("Successful Multiple Choice Question Creation.", "Question Creation");
+            }
+        }
 
 
 
