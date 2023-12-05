@@ -55,8 +55,8 @@ namespace KrishnaRajamannar.NEA.ViewModels
             get { return _sessionID; }
             set
             {
-                _endQuizConditionInput = value;
-                RaisePropertyChange("ConditionInput");
+                _sessionID = value;
+                RaisePropertyChange("SessionID");
             }
         }
         public void RaisePropertyChange(string propertyname)
@@ -84,6 +84,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
         public void CreateSession(int quizID) 
         {
             int sessionID = CreateSessionID();
+            SessionID = sessionID;
             string IPAddress = GetIPAddress();
             int portNumber = GetPortNumber();
             ;

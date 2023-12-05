@@ -59,7 +59,7 @@
 
                     <Label x:Name="displaySessionIDLbl" Content="Session ID:" FontSize="20" VerticalAlignment="Center" Margin="10,0,0,10"></Label>
 
-                    <Label x:Name="sessionIDLbl" Content="121345" FontSize="20" VerticalAlignment="Center" Margin="0,0,0,10"></Label>
+                    <Label x:Name="sessionIDLbl" Content="{Binding SessionID}"  FontSize="20" VerticalAlignment="Center" Margin="0,0,0,10"></Label>
 
                 </StackPanel>
 
