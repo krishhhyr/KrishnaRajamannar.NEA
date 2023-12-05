@@ -65,13 +65,13 @@ namespace KrishnaRajamannar.NEA.Views
 
         private void createTextQuestionBtn_Click(object sender, RoutedEventArgs e)
         {
-            _createQuestionviewModel.CreateTextQuestion(quizID);
+            _createQuestionviewModel._CreateTextQuestion(quizID);
             this.Close();  
         }
 
         private void mcCreateQuestion_Click(object sender, RoutedEventArgs e)
         {
-            _createQuestionviewModel.CreateMultipleChoiceQuestion(quizID);
+            _createQuestionviewModel._CreateMultipleChoiceQuestion(quizID);
             this.Close();
         }
     }
