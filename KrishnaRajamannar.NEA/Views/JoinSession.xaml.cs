@@ -26,6 +26,20 @@ namespace KrishnaRajamannar.NEA.Views
         {
             InitializeComponent();
             _joinSessionViewModel = joinSessionViewModel;
+
+            this.DataContext = _joinSessionViewModel;
+
+            joinSessionViewModel.ShowMessage += JoinSessionViewModel_ShowMessage; ;
+        }
+
+        private void JoinSessionViewModel_ShowMessage(object sender, Events.ShowMessageEventArgs e)
+        {
+            MessageBox.Show(e.Message);
+        }
+
+        private void joinBtn_Click(object sender, RoutedEventArgs e)
+        {
+            _joinSessionViewModel.IsSessionIDInputExist();
         }
     }
 }
