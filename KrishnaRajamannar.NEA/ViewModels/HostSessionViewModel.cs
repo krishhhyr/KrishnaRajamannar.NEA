@@ -1,6 +1,7 @@
 ﻿using Azure;
 using KrishnaRajamannar.NEA.Models;
 using KrishnaRajamannar.NEA.Services;
+using KrishnaRajamannar.NEA.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,18 +16,17 @@ namespace KrishnaRajamannar.NEA.ViewModels
     public class HostSessionViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
-
+        private readonly IServerService _serverService;
         private readonly ISessionService _sessionService;
-
         private readonly IQuizService _quizService;
 
         public int UserID;
         IList<QuizModel> quizzes = new List<QuizModel>();
 
-        public HostSessionViewModel(ISessionService sessionService, IQuizService quizService)
+        public HostSessionViewModel(ISessionService sessionService, IQuizService quizService, IServerService serverService)
         {
+            _serverService = serverService;
             _sessionService = sessionService;
-
             _quizService = quizService;
         }
         private List<string> _quizTitles;
@@ -69,6 +69,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
         public int CreateSessionID() 
         {
             Random random = new Random();
+
             int sessionID = 0;
             bool valid = false;
             while (valid == false) 
@@ -76,6 +77,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 sessionID = random.Next(100000, 1000000);
                 if (_sessionService.IsSessionIDExist(sessionID) == false) 
                 {
+                    SessionID = sessionID;
                     valid = true;
                 }
             }
@@ -84,20 +86,29 @@ namespace KrishnaRajamannar.NEA.ViewModels
         public void CreateSession(int quizID) 
         {
             int sessionID = CreateSessionID();
-            SessionID = sessionID;
-            string IPAddress = GetIPAddress();
-            int portNumber = GetPortNumber();
-            ;
-            //_sessionService.InsertSessionData(CreateSessionID(), GetIPAddress(), GetPortNumber(), quizID);
+            //SessionID = sessionID;
+            //string IPAddress = GetIPAddress();
+            //int portNumber = GetPortNumber();
+
+            //string ipAddress = GetIPAddress();
+            //int portNumber = GetPortNumber();
+
+            string ipAddress = "192.168.0.65";
+            int portNumber = 60631;
+
+
+            //_sessionService.InsertSessionData(CreateSessionID(), ipAddress, portNumber, quizID);
+            _serverService.StartServer(ipAddress, portNumber);
         }
         public string GetIPAddress() 
         {
-            var IPAddress = Dns.GetHostEntry(Dns.GetHostName()).AddressList[1].ToString();
+            string IPAddress = Dns.GetHostEntry(Dns.GetHostName()).AddressList[1].ToString();
             return IPAddress;
         }
         public int GetPortNumber() 
         {
             Random random = new Random();
+
             int portNumber = 0;
             bool valid = false;
             while (valid == false)
@@ -110,7 +121,6 @@ namespace KrishnaRajamannar.NEA.ViewModels
             }
             return portNumber;
         }
-
         public void GetQuizzes()
         {
             List<string> titlesOfQuizzes = new List<string>();

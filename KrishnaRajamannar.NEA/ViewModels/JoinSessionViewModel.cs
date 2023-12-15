@@ -94,7 +94,5 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 ShowMessageDialog("Connecting...");
             }
         }
-
-        public void 
     }
 }

@@ -90,7 +90,7 @@ namespace KrishnaRajamannar.NEA.Services
             const string sqlQuery =
                 @"
                     INSERT INTO Session (SessionID, IPAddress, PortNumber, QuizID)
-                    VALUES (@SessionID, @IPAdress, @PortNumber, @QuizID)
+                    VALUES (@SessionID, @IPAddress, @PortNumber, @QuizID)
                 ";
 
             using SqlConnection connection = new SqlConnection(connectionString);

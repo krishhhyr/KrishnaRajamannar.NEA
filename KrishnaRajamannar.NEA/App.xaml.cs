@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using KrishnaRajamannar.NEA.Models;
 using KrishnaRajamannar.NEA.Services;
+using KrishnaRajamannar.NEA.Services.Interfaces;
 using KrishnaRajamannar.NEA.ViewModels;
 using KrishnaRajamannar.NEA.Views;
 using Microsoft.Extensions.DependencyInjection;
@@ -29,6 +30,8 @@ namespace KrishnaRajamannar.NEA
             services.AddSingleton<IQuestionService, QuestionService>();
             services.AddSingleton<IIndependentReviewQuizService, IndependentReviewQuizService>();
             services.AddSingleton<ISessionService, SessionService>();
+            services.AddSingleton<IClientService, ClientService>();
+            services.AddSingleton<IServerService, ServerService>();
             services.AddSingleton(typeof(UserModel));
             services.AddSingleton(typeof(QuestionModel));
             services.AddSingleton(typeof(QuizModel));
