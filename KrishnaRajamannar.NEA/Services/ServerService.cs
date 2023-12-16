@@ -6,6 +6,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using KrishnaRajamannar.NEA.Services.Interfaces;
 using Microsoft.Identity.Client;
 
@@ -31,13 +32,6 @@ namespace KrishnaRajamannar.NEA.Services
         }
         public void ListeningForConnections(string ipAddress, int portNumber) 
         {
-            // Temporary (lines 33 - 39)
-
-            IPAddress iPAddress = IPAddress.Parse("127.0.0.1");
-            IPEndPoint _endPoint = new IPEndPoint(iPAddress, 13);
-
-            //non temp
-
             IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse(ipAddress), portNumber);
 
             server = new TcpListener(endPoint);
@@ -56,8 +50,14 @@ namespace KrishnaRajamannar.NEA.Services
             using TcpClient client = server.AcceptTcpClient();
             NetworkStream stream = client.GetStream();
 
+            MessageBox.Show("test");
+
             stream.Read(buffer, 0, buffer.Length);
             var username = Encoding.UTF8.GetString(buffer);
+            string message = username + " has joined the session";
+            //MessageBox.Show($"{username} has joined the session");
+            var test = "hey";
+            string mes = "hey" + "123";
         }
         public void StopServer() 
         {

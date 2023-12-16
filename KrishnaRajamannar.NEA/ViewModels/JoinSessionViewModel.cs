@@ -1,5 +1,6 @@
 ﻿using KrishnaRajamannar.NEA.Events;
 using KrishnaRajamannar.NEA.Services;
+using KrishnaRajamannar.NEA.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -12,19 +13,18 @@ namespace KrishnaRajamannar.NEA.ViewModels
     public class JoinSessionViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
-
         public event ShowMessageEventHandler ShowMessage;
-
         public event HideWindowEventHandler HideJoinSessionWindow;
-
+        private readonly IClientService _clientService;
         private readonly ISessionService _sessionService;
 
         public int UserID;
         public string Username;
 
-        public JoinSessionViewModel(ISessionService sessionService)
+        public JoinSessionViewModel(ISessionService sessionService, IClientService clientService)
         {
             _sessionService = sessionService;
+            _clientService = clientService;
         }
 
         public void RaisePropertyChange(string propertyname)
@@ -84,15 +84,17 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
         public void IsSessionIDInputExist()
         {
-            if (_sessionService.IsSessionIDExist(SessionIDInput) != true)
-            {
-                ShowMessageDialog("Session ID not found.");
-            }
-            else 
-            {
-                ShowMessageDialog("Session ID found.");
-                ShowMessageDialog("Connecting...");
-            }
+            _clientService.ConnectToServer(Username);
+
+            //if (_sessionService.IsSessionIDExist(SessionIDInput) != true)
+            //{
+            //    ShowMessageDialog("Session ID not found.");
+            //}
+            //else 
+            //{
+            //    ShowMessageDialog("Session ID found.");
+            //    ShowMessageDialog("Connecting...");
+            //}
         }
     }
 }

@@ -17,13 +17,13 @@ namespace KrishnaRajamannar.NEA.Services
             
         }
 
-        public void ConnectToServer() 
+        public void ConnectToServer(string username) 
         {
             try 
             {
                 Task task = Task.Factory.StartNew(() =>
                 {
-                    HandleClientRequests();
+                    HandleClientRequests(username);
                 });
             } 
             catch  
@@ -31,24 +31,24 @@ namespace KrishnaRajamannar.NEA.Services
                 
             }
         }
-        public void HandleClientRequests() 
+        public void HandleClientRequests(string username) 
         {
-            // Temporary lines of code...
+            // Temporary lines of code
 
-            IPAddress iPAddress = IPAddress.Parse("127.0.0.1");
-            IPEndPoint endPoint = new IPEndPoint(iPAddress, 13);
+            IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse("192.168.0.65"), 60631);
 
             using var client = new TcpClient();
             client.Connect(endPoint);
 
             using NetworkStream stream = client.GetStream();
-            var messageBytes = Encoding.UTF8.GetBytes("hey");
+            var messageBytes = Encoding.UTF8.GetBytes(username);
+
             stream.Write(messageBytes, 0, messageBytes.Length);
 
             var buffer = new byte[1024];
             stream.Read(buffer, 0, buffer.Length);
             var messageFromServer = Encoding.UTF8.GetString(buffer);
-            MessageBox.Show(messageFromServer);
+            //MessageBox.Show(messageFromServer);
 
             stream.Flush();
         }
