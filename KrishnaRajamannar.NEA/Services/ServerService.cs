@@ -50,7 +50,7 @@ namespace KrishnaRajamannar.NEA.Services
             using TcpClient client = server.AcceptTcpClient();
             NetworkStream stream = client.GetStream();
 
-            MessageBox.Show("test");
+            MessageBox.Show("Found a user...");
 
             stream.Read(buffer, 0, buffer.Length);
             var username = Encoding.UTF8.GetString(buffer);
