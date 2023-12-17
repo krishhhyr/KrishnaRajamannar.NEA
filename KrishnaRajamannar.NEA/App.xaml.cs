@@ -11,6 +11,8 @@ using KrishnaRajamannar.NEA.Services;
 using KrishnaRajamannar.NEA.Services.Interfaces;
 using KrishnaRajamannar.NEA.ViewModels;
 using KrishnaRajamannar.NEA.Views;
+using log4net;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace KrishnaRajamannar.NEA
@@ -20,7 +22,10 @@ namespace KrishnaRajamannar.NEA
     /// </summary>
     public partial class App : Application
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(App));
         public static IServiceProvider ServiceProvider { get; private set; }
+        public static IConfiguration Configuration { get; private set; }
+
         private void ConfigureServices(ServiceCollection services)
         {
             //Registering All the services to the DI Container
@@ -62,24 +67,25 @@ namespace KrishnaRajamannar.NEA
         }
 
         protected override void OnStartup(StartupEventArgs e)
-        {     
+        {
+            var builder = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+            Configuration = builder.Build();           
+
+            log4net.Config.XmlConfigurator.Configure();
+            log.Info("        =============  Started Logging  =============        ");
+            log.Info($"Runtime:{Configuration.GetSection("Runtime").Value}");
+
             ServiceCollection services = new ServiceCollection();
             ConfigureServices(services);
             ServiceProvider = services.BuildServiceProvider();
             //Show the login screen
-
+            log.Info("Showing Account login Screen");
             var accountLogin = ServiceProvider.GetService<AccountLogin>();
             accountLogin.Show();
-
-            //Show the independent 
-            //var independent = ServiceProvider.GetService<IndependentReviewQuiz>();
-            //independent.Show();
-
-            //var test = ServiceProvider.GetService<IndependentReviewFeedback>();
-            //test.Show();
-
-            //var mainMenu = ServiceProvider.GetService<MainMenu>();
-            //mainMenu.Show();
+                        
+            base.OnStartup(e);
         }
 
 

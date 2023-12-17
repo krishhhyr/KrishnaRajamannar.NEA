@@ -1,5 +1,6 @@
 ﻿using KrishnaRajamannar.NEA.Services;
 using KrishnaRajamannar.NEA.ViewModels;
+using log4net;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -23,6 +24,8 @@ namespace KrishnaRajamannar.NEA.Views
     /// </summary>
     public partial class AccountLogin : Window
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(AccountLogin));
+
         private AccountCreation accountCreation;
         private MainMenu mainMenu;
 
@@ -43,6 +46,7 @@ namespace KrishnaRajamannar.NEA.Views
             accountLoginViewModel.ShowAccountCreationWindow += AccountLoginViewModel_ShowAccountCreationWindow;
             accountLoginViewModel.ShowMainMenuWindow += AccountLoginViewModel_ShowMainMenuWindow;
             accountLoginViewModel.HideAccountLoginWindow += AccountLoginViewModel_HideAccountLoginWindow;
+            this.Title = $"Account Login ({App.Configuration.GetSection("Runtime").Value})";  
         }
 
         private void AccountLoginViewModel_HideAccountLoginWindow(object sender, Events.HideWindowEventArgs e)
@@ -55,7 +59,7 @@ namespace KrishnaRajamannar.NEA.Views
             _mainMenuViewModel.UserID = e.UserID;
             _mainMenuViewModel.Username = e.Username;
             _mainMenuViewModel.TotalPoints = e.TotalPoints;
-
+            log.Info("Showing MainMenu");
             mainMenu = new MainMenu(_mainMenuViewModel);
 
             mainMenu.ShowDialog();
