@@ -53,11 +53,9 @@ namespace KrishnaRajamannar.NEA.Services
             MessageBox.Show("Found a user...");
 
             stream.Read(buffer, 0, buffer.Length);
-            var username = Encoding.UTF8.GetString(buffer);
-            string message = username + " has joined the session";
-            //MessageBox.Show($"{username} has joined the session");
-            var test = "hey";
-            string mes = "hey" + "123";
+            string username = Encoding.UTF8.GetString(buffer);
+            string message = $"{username} has joined the session";
+            MessageBox.Show(message);
         }
         public void StopServer() 
         {

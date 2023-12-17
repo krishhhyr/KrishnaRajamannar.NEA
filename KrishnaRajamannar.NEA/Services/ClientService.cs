@@ -33,7 +33,6 @@ namespace KrishnaRajamannar.NEA.Services
         }
         public void HandleClientRequests(string username) 
         {
-            // Temporary lines of code
 
             IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse("192.168.0.65"), 60631);
 
