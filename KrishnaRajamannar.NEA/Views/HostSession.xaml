@@ -65,7 +65,14 @@
 
                 <TextBlock x:Name="numberOfParticipantsTxtBlock" Text="(0 Participants have joined.)" FontSize="20" HorizontalAlignment="Center" ></TextBlock>
 
-                <ListBox x:Name="usernamesOfParticpants" Height="150" Margin="10"></ListBox>
+                <ListBox x:Name="usernamesOfParticpants" Height="150" Margin="10" FontSize="15">
+                    <ListBoxItem>
+                        <Label Content="Krishhyr"></Label>
+                    </ListBoxItem>
+                    <ListBoxItem>
+                        <Label Content="KiranSoman002"></Label>
+                    </ListBoxItem>
+                </ListBox>
             </StackPanel>
 
             <Button x:Name="startQuizBtn" Content="Start Quiz" Height="30" Width="150" 

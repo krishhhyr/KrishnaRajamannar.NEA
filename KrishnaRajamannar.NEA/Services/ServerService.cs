@@ -8,12 +8,16 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using KrishnaRajamannar.NEA.Services.Interfaces;
+using KrishnaRajamannar.NEA.Views;
+using log4net;
 using Microsoft.Identity.Client;
 
 namespace KrishnaRajamannar.NEA.Services
 {
     public class ServerService : IServerService 
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(ServerService));
+
         TcpListener server;
 
         CancellationTokenSource source = new CancellationTokenSource();
@@ -54,8 +58,9 @@ namespace KrishnaRajamannar.NEA.Services
 
             stream.Read(buffer, 0, buffer.Length);
             string username = Encoding.UTF8.GetString(buffer);
-            string message = $"{username} has joined the session";
-            MessageBox.Show(message);
+            log.Info("test");
+            //string message = $"{username} has joined the session";
+            //MessageBox.Show(message);
         }
         public void StopServer() 
         {
