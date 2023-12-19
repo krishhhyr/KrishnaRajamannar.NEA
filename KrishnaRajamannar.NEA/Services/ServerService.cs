@@ -59,6 +59,7 @@ namespace KrishnaRajamannar.NEA.Services
             stream.Read(buffer, 0, buffer.Length);
             string username = Encoding.UTF8.GetString(buffer);
             log.Info("test-server");
+            log.Info("I found a bug");
             //string message = $"{username} has joined the session";
             //MessageBox.Show(message);
         }
