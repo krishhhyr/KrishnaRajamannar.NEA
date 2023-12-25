@@ -26,9 +26,17 @@ namespace KrishnaRajamannar.NEA.Views
         {
             InitializeComponent();
             _hostSessionViewModel = hostSessionViewModel;
+
             this.DataContext = _hostSessionViewModel;
 
             _hostSessionViewModel.GetQuizzes();
+
+            _hostSessionViewModel.ShowMessage += _hostSessionViewModel_ShowMessage;
+        }
+
+        private void _hostSessionViewModel_ShowMessage(object sender, Events.ShowMessageEventArgs e)
+        {
+            MessageBox.Show(e.Message);
         }
 
         private void startSessionBtn_Click(object sender, RoutedEventArgs e)

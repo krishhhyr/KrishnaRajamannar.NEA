@@ -22,6 +22,8 @@ namespace KrishnaRajamannar.NEA.Services
 
         CancellationTokenSource source = new CancellationTokenSource();
 
+        UserConnectionService UserConnectionService = new UserConnectionService();
+
         public ServerService() 
         {
             
@@ -59,6 +61,7 @@ namespace KrishnaRajamannar.NEA.Services
             var reading = stream.Read(buffer, 0, buffer.Length);
             string username = Encoding.UTF8.GetString(buffer, 0, reading);
             MessageBox.Show($"{username} has joined the session");
+            UserConnectionService.JoiningSession(username);
         }
         public void StopServer() 
         {
