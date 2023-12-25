@@ -25,6 +25,12 @@ namespace KrishnaRajamannar.NEA.ViewModels
         {
             _sessionService = sessionService;
             _clientService = clientService;
+            _clientService.ClientConnected += _clientService_ClientConnected;
+        }
+
+        private void _clientService_ClientConnected(object sender, ClientConnectedEventArgs e)
+        {
+            ;
         }
 
         public void RaisePropertyChange(string propertyname)
@@ -84,7 +90,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
         public void IsSessionIDInputExist()
         {
-            _clientService.ConnectToServer(Username);
+            _clientService.ConnectToServer(Username,SessionIDInput.ToString());
 
             //if (_sessionService.IsSessionIDExist(SessionIDInput) != true)
             //{

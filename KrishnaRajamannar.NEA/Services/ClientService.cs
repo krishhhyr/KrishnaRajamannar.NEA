@@ -7,23 +7,28 @@ using System.Text;
 using System.Threading.Tasks;
 using KrishnaRajamannar.NEA.Services.Interfaces;
 using System.Windows;
+using KrishnaRajamannar.NEA.Events;
 
 namespace KrishnaRajamannar.NEA.Services
 {
     public class ClientService : IClientService
     {
+        //Create a event handler 
+        public event ClientConnectedEventHandler ClientConnected;
+        private readonly string sessionId;
+
         public ClientService()
         {
             
         }
 
-        public void ConnectToServer(string username) 
+        public void ConnectToServer(string username, string sessionId) 
         {
             try 
             {
                 Task task = Task.Factory.StartNew(() =>
                 {
-                    HandleClientRequests(username);
+                    HandleClientRequests(username,sessionId);
                 });
             } 
             catch  
@@ -31,7 +36,7 @@ namespace KrishnaRajamannar.NEA.Services
                 
             }
         }
-        public void HandleClientRequests(string username) 
+        public void HandleClientRequests(string username, string sessionId) 
         {
 
             IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse("192.168.0.65"), 60631);
@@ -47,9 +52,19 @@ namespace KrishnaRajamannar.NEA.Services
             var buffer = new byte[1024];
             stream.Read(buffer, 0, buffer.Length);
             var messageFromServer = Encoding.UTF8.GetString(buffer);
-            //MessageBox.Show(messageFromServer);
-
             stream.Flush();
+
+            //Raise the Event 
+            OnClientConnected(new ClientConnectedEventArgs() { SessionId =sessionId });
+        }
+
+        protected virtual void OnClientConnected(ClientConnectedEventArgs e)
+        {
+            ClientConnectedEventHandler handler = ClientConnected;
+            if (handler != null)
+            {
+                handler(this, e);
+            }
         }
     }
 }

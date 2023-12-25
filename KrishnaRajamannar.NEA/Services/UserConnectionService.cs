@@ -20,6 +20,8 @@ namespace KrishnaRajamannar.NEA.Services
             
         }
 
+        public ObservableCollection<string> Users { get => users; private set => users = value; }
+
         public void JoiningSession(string username) 
         {
             joiningUsers.Enqueue(username);
