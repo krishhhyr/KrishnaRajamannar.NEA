@@ -22,7 +22,7 @@ namespace KrishnaRajamannar.NEA.Services
             
         }
 
-        public void ConnectToServer(string username, string ipAddressConnect, int portNumberConnect, string sessionId) 
+        public string ConnectToServer(string username, string ipAddressConnect, int portNumberConnect, string sessionId) 
         {
             string messageFromServer = "";
 
@@ -33,12 +33,13 @@ namespace KrishnaRajamannar.NEA.Services
                    messageFromServer = HandleClientRequests(username, ipAddressConnect, portNumberConnect, sessionId);
                 });
 
-                return messageFromServer;
             } 
             catch  
             {
                 
             }
+
+            return messageFromServer;
         }
         public string HandleClientRequests(string username, string ipAddressConnect, int portNumberConnect, string sessionId) 
         {
