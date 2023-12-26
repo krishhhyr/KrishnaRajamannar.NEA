@@ -88,18 +88,18 @@ namespace KrishnaRajamannar.NEA.ViewModels
             HideJoinSession();
         }
 
-        public void IsSessionIDInputExist()
+        public bool JoinSession()
         {        
 
             if (_sessionService.IsSessionIDExist(SessionIDInput) != true)
             {
                 ShowMessageDialog("Session ID not found.");
+                return false;
             }
             else
             {
-                ShowMessageDialog("Session ID found.");
-                ShowMessageDialog("Connecting...");
                 _clientService.ConnectToServer(Username, SessionIDInput.ToString());
+                return true;
             }
         }
     }
