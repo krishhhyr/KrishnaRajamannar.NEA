@@ -106,11 +106,11 @@ namespace KrishnaRajamannar.NEA.Services
 
             connection.Close();
         }
-        public (string?, int?) GetConnectionData(int sessionID) 
+        public (string, int) GetConnectionData(int sessionID) 
         {
-            (string?, int?) connectionData;
-            connectionData.Item1 = null;
-            connectionData.Item2 = null;
+            (string, int) connectionData;
+            connectionData.Item1 = "";
+            connectionData.Item2 = 0;
 
             // Could use a record as well, would have to declare outside of the class. 
             //ConnectionData connectionData = new ConnectionData

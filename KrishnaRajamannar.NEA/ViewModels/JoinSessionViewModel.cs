@@ -103,12 +103,17 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
             if (_sessionService.IsSessionIDExist(SessionIDInput) != true)
             {
-                _connectionStatus = "Session ID not found";
+                ConnectionStatus = "Session ID not found";
                 return false;
             }
             else
             {
-                _clientService.ConnectToServer(Username, SessionIDInput.ToString());
+                (string, int) connectionInfo = _sessionService.GetConnectionData(SessionIDInput);
+
+                string ipAddressConnect = connectionInfo.Item1;
+                int portNumberConnect = connectionInfo.Item2;
+
+                ConnectionStatus = _clientService.ConnectToServer(Username, ipAddressConnect, portNumberConnect, SessionIDInput.ToString());
                 return true;
             }
         }

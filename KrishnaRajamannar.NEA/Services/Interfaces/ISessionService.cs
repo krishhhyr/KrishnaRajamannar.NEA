@@ -9,6 +9,6 @@
         public void InsertSessionData(int sessionID, string quiz, string endQuizCondition, string endQuizValue, 
             string IPAddress, int portNumber, int quizID);
 
-        public (string?, int?) GetConnectionData(int sessionID);
+        public (string, int) GetConnectionData(int sessionID);
     }
 }

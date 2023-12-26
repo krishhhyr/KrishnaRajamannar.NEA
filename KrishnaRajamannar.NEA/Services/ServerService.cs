@@ -53,15 +53,17 @@ namespace KrishnaRajamannar.NEA.Services
         public void HandleClientRequests(TcpListener server) 
         {
             byte[] buffer = new byte[1024];
+
             using TcpClient client = server.AcceptTcpClient();
             NetworkStream stream = client.GetStream();
-
-            MessageBox.Show("Found a user...");
 
             var reading = stream.Read(buffer, 0, buffer.Length);
             string username = Encoding.UTF8.GetString(buffer, 0, reading);
             MessageBox.Show($"{username} has joined the session");
             UserConnectionService.JoiningSession(username);
+
+            var messageBytes = Encoding.UTF8.GetBytes("Connected To Session");
+            stream.Write(messageBytes, 0, messageBytes.Length);
         }
         public void StopServer() 
         {
