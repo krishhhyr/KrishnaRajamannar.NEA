@@ -89,18 +89,18 @@ namespace KrishnaRajamannar.NEA.ViewModels
         }
 
         public void IsSessionIDInputExist()
-        {
-            _clientService.ConnectToServer(Username,SessionIDInput.ToString());
+        {        
 
-            //if (_sessionService.IsSessionIDExist(SessionIDInput) != true)
-            //{
-            //    ShowMessageDialog("Session ID not found.");
-            //}
-            //else 
-            //{
-            //    ShowMessageDialog("Session ID found.");
-            //    ShowMessageDialog("Connecting...");
-            //}
+            if (_sessionService.IsSessionIDExist(SessionIDInput) != true)
+            {
+                ShowMessageDialog("Session ID not found.");
+            }
+            else
+            {
+                ShowMessageDialog("Session ID found.");
+                ShowMessageDialog("Connecting...");
+                _clientService.ConnectToServer(Username, SessionIDInput.ToString());
+            }
         }
     }
 }

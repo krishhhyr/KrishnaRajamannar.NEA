@@ -30,6 +30,7 @@ namespace KrishnaRajamannar.NEA.Views
             this.DataContext = _hostSessionViewModel;
 
             _hostSessionViewModel.GetQuizzes();
+            _hostSessionViewModel.AssignQuizConditions();
 
             _hostSessionViewModel.ShowMessage += _hostSessionViewModel_ShowMessage;
         }
@@ -41,34 +42,17 @@ namespace KrishnaRajamannar.NEA.Views
 
         private void startSessionBtn_Click(object sender, RoutedEventArgs e)
         {
-            // need to do a check to see if the given input is not a string or a letter, like e for example.
-            // and a check for if it is null
-            bool valid;
-            _hostSessionViewModel.EndQuizConditionInput = int.Parse(conditionTxtBox.Text);
-
-            if (quizConditionComboBox.SelectedItem == quizConditionComboBox.Items[0])
-            {
-              valid = _hostSessionViewModel.ValidateNumberOfQuestionsInput(quizSelectionComboBox.SelectedValue.ToString());
-            }
-            else 
-            {
-                valid = _hostSessionViewModel.ValidateTimeInput(quizSelectionComboBox.SelectedValue.ToString());
-            }
-
-            if (valid != false) 
+            if (_hostSessionViewModel.CreateSession() == true) 
             {
                 quizSelectionComboBox.IsEnabled = false;
                 quizConditionComboBox.IsEnabled = false;
                 conditionTxtBox.IsEnabled = false;
                 startSessionBtn.IsEnabled = false;
+
                 Height = 650;
                 sessionInformationStackPanel.Visibility = Visibility.Visible;
                 startQuizBtn.Visibility = Visibility.Visible;
-                //temp quiz id 
-                _hostSessionViewModel.CreateSession(36);
             }
-
-
         }
     }
 }
