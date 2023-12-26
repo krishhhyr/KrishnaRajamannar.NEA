@@ -22,26 +22,30 @@ namespace KrishnaRajamannar.NEA.Services
             
         }
 
-        public void ConnectToServer(string username, string sessionId) 
+        public string ConnectToServer(string username, string ipAddressConnect, int portNumberConnect, string sessionId) 
         {
+            string messageFromServer = "";
+
             try 
             {
                 Task task = Task.Factory.StartNew(() =>
                 {
-                    HandleClientRequests(username,sessionId);
+                   messageFromServer = HandleClientRequests(username, ipAddressConnect, portNumberConnect, sessionId);
                 });
+
             } 
             catch  
             {
                 
             }
+
+            return messageFromServer;
         }
-        public void HandleClientRequests(string username, string sessionId) 
+        public string HandleClientRequests(string username, string ipAddressConnect, int portNumberConnect, string sessionId) 
         {
-            //
+            var buffer = new byte[1024];
 
-
-            IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse("192.168.0.65"), 60631);
+            IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse(ipAddressConnect), portNumberConnect);
 
             using var client = new TcpClient();
             client.Connect(endPoint);
@@ -51,14 +55,15 @@ namespace KrishnaRajamannar.NEA.Services
 
             stream.Write(messageBytes, 0, messageBytes.Length);
 
-            var buffer = new byte[1024];
-            stream.Read(buffer, 0, buffer.Length);
-            var messageFromServer = Encoding.UTF8.GetString(buffer);
+            var reading = stream.Read(buffer, 0, buffer.Length);
+            string messageFromServer = Encoding.UTF8.GetString(buffer, 0, reading);
             stream.Flush();
            
 
             //Raise the Event 
             OnClientConnected(new ClientConnectedEventArgs() { SessionId =sessionId });
+
+            return messageFromServer;
         }
 
         protected virtual void OnClientConnected(ClientConnectedEventArgs e)
