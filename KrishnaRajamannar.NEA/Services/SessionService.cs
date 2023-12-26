@@ -39,11 +39,6 @@ namespace KrishnaRajamannar.NEA.Services
 
             var data = command.ExecuteReader();
 
-            //while (data.Read())
-            //{
-            //    sessionID = data.GetInt16(0);
-            //}
-
             if (data.Read() == false)
             {
                 return false;
