@@ -5,6 +5,7 @@ using KrishnaRajamannar.NEA.Services;
 using KrishnaRajamannar.NEA.Services.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Net;
@@ -89,6 +90,16 @@ namespace KrishnaRajamannar.NEA.ViewModels
             {
                 _sessionID = value;
                 RaisePropertyChange("SessionID");
+            }
+        }
+        private ObservableCollection<string> usersConnected;
+        public ObservableCollection<string> UsersConnected
+        {
+            get { return usersConnected; }
+            set 
+            {
+                usersConnected = value;
+                RaisePropertyChange("UsersConnected");
             }
         }
         public void RaisePropertyChange(string propertyname)

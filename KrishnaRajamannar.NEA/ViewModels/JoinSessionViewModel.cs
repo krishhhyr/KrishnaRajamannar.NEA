@@ -51,6 +51,16 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 RaisePropertyChange("SessionID");
             }
         }
+        private string _connectionStatus;
+        public string ConnectionStatus
+        {
+            get { return _connectionStatus; }
+            set
+            {
+                _connectionStatus = value;
+                RaisePropertyChange("ConnectionStatus");
+            }
+        }
 
         private void ShowMessageDialog(string message)
         {
@@ -93,7 +103,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
             if (_sessionService.IsSessionIDExist(SessionIDInput) != true)
             {
-                ShowMessageDialog("Session ID not found.");
+                _connectionStatus = "Session ID not found";
                 return false;
             }
             else
