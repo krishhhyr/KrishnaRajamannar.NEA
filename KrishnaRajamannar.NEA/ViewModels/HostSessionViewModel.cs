@@ -157,13 +157,13 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 //int portNumber = 60631;
 
                 //real
-                int sessionID = CreateSessionID();
+                //int sessionID = CreateSessionID();
                 string ipAddress = GetIPAddress();
-                int portNumber = GetPortNumber();
+                //int portNumber = GetPortNumber();
 
-                _sessionService.InsertSessionData(sessionID, SelectedQuiz, SelectedCondition, ConditionValue
-                ,ipAddress, portNumber, 36);
-                //_serverService.StartServer(ipAddress, portNumber);
+                //_sessionService.InsertSessionData(sessionID, SelectedQuiz, SelectedCondition, ConditionValue
+                //,ipAddress, portNumber, 36);
+                _serverService.StartServer(ipAddress, 63398);
                 return true;
             }
             return false;

@@ -39,7 +39,11 @@ namespace KrishnaRajamannar.NEA.Views
 
         private void joinBtn_Click(object sender, RoutedEventArgs e)
         {
-            _joinSessionViewModel.IsSessionIDInputExist();
+            if (_joinSessionViewModel.JoinSession() == true) 
+            {
+                sessionIDTxtBox.IsEnabled = false;
+                joinBtn.IsEnabled = false;
+            }
         }
     }
 }
