@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:KrishnaRajamannar.NEA.Views"
+        xmlns:local="clr-namespace:KrishnaRajamannar.NEA.Views" xmlns:viewmodels="clr-namespace:KrishnaRajamannar.NEA.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:HostSessionViewModel}"
         mc:Ignorable="d"
         Title="HostSession" Height="350" Width="850" FontFamily="Segoe UI Light">
     <Grid>
@@ -26,7 +26,7 @@
 
                 <Label x:Name="selectQuizLbl" Content="Select a Quiz:" FontSize="20" Margin="10" VerticalAlignment="Center"></Label>
 
-                <ComboBox x:Name="quizSelectionComboBox" Grid.Column="1" Height="30" Width="300" 
+                <ComboBox x:Name="quizSelectionComboBox" SelectedItem= "{Binding SelectedQuiz}" Grid.Column="1" Height="30" Width="300" 
                       HorizontalAlignment="Right" Margin="10" FontSize="20" ItemsSource="{Binding QuizTitles}" SelectedIndex="0"> 
                 </ComboBox>
 
@@ -35,17 +35,15 @@
             <StackPanel x:Name="conditionTypeStackPanel" Orientation="Horizontal" Grid.Column="1" Grid.Row="1">
                 <TextBlock Text="Condition to End Quiz:" Height="30" Margin="10" FontSize="20" HorizontalAlignment="Left" VerticalAlignment="Top"></TextBlock>
 
-                <ComboBox x:Name="quizConditionComboBox" Grid.Column="1" Height="30" Margin="10" FontSize="20" Width="300" 
-                          HorizontalAlignment="Left" VerticalAlignment="Top">
-                    <ComboBoxItem Content="Number of Questions" IsSelected="True"></ComboBoxItem>
-                    <ComboBoxItem Content="Time Limit"></ComboBoxItem>
+                <ComboBox x:Name="quizConditionComboBox" SelectedItem="{Binding SelectedCondition}" Grid.Column="1" Height="30" Margin="10" FontSize="20" 
+                          Width="300" ItemsSource="{Binding EndQuizConditions}" HorizontalAlignment="Left" VerticalAlignment="Top" SelectedIndex="0">
                 </ComboBox>
             </StackPanel>
 
             <StackPanel x:Name="conditionInputStackPanel" Orientation="Horizontal" Grid.Column="1" Grid.Row="1">
                 <TextBlock Text="Enter the Number of Questions/Time Limit:" Height="30" Margin="10" FontSize="20" HorizontalAlignment="Left" VerticalAlignment="Top"></TextBlock>
 
-                <TextBox x:Name="conditionTxtBox" Text="{Binding ConditionInput}" Height="30" Width="100" HorizontalAlignment="Left" 
+                <TextBox x:Name="conditionTxtBox"  Text= "{Binding ConditionValue}" Height="30" Width="100" HorizontalAlignment="Left" 
                          TextAlignment="Center" VerticalAlignment="Top" Margin="10" FontSize="20" MaxLength="4"></TextBox>
             </StackPanel>
 

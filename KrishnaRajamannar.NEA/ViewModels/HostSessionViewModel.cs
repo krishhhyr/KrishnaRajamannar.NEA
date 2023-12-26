@@ -41,14 +41,44 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 RaisePropertyChange("QuizTitles");
             }
         }
-        private int _endQuizConditionInput;
-        public int EndQuizConditionInput
+        private List<string> _endQuizConditions;
+        public List<string> EndQuizConditions
         {
-            get { return _endQuizConditionInput; }
+            get { return _endQuizConditions; }
             set
             {
-                _endQuizConditionInput = value;
-                RaisePropertyChange("ConditionInput");
+                _endQuizConditions = value;
+                RaisePropertyChange("EndQuizConditions");
+            }
+        }
+        private string _selectedQuiz;
+        public string SelectedQuiz 
+        {
+            get { return _selectedQuiz; }
+            set 
+            {
+                _selectedQuiz = value;
+                RaisePropertyChange("SelectedQuiz");
+            }
+        }
+        private string _selectedCondition;
+        public string SelectedCondition 
+        {
+            get { return _selectedCondition; }
+            set 
+            {
+                _selectedCondition = value;
+                RaisePropertyChange("SelectedCondition");
+            }
+        }
+        private string _conditionValue;
+        public string ConditionValue
+        {
+            get { return _conditionValue; }
+            set
+            {
+                _conditionValue = value;
+                RaisePropertyChange("ConditionValue");
             }
         }
         private int _sessionID;
@@ -86,7 +116,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
         }
 
         // Used to generate a random six digit session ID in which users will enter to join to.
-        public int CreateSessionID() 
+        private int CreateSessionID() 
         {
             Random random = new Random();
 
@@ -105,34 +135,49 @@ namespace KrishnaRajamannar.NEA.ViewModels
             }
             return sessionID;
         }
+
         // Used to insert the session data into the Session table in the database. 
         // This also calls a function to start the server for the TCP/IP connection.
-        public void CreateSession(int quizID) 
+        public bool CreateSession() 
         {
-            int sessionID = CreateSessionID();
-            //SessionID = sessionID;
-            //string IPAddress = GetIPAddress();
-            //int portNumber = GetPortNumber();
+            bool valid = false;
 
-            //string ipAddress = GetIPAddress();
-            //int portNumber = GetPortNumber();
+            if (SelectedCondition == "Number of Questions")
+            {
+                valid = ValidateNumberOfQuestionsInput();
+            }
+            else
+            {
+                valid = ValidateTimeInput();
+            }
 
-            string ipAddress = "192.168.0.65";
-            int portNumber = 60631;
+            if (valid == true) 
+            {
+                //string ipAddress = "192.168.0.65";
+                //int portNumber = 60631;
 
+                //real
+                int sessionID = CreateSessionID();
+                string ipAddress = GetIPAddress();
+                int portNumber = GetPortNumber();
 
-            //_sessionService.InsertSessionData(CreateSessionID(), ipAddress, portNumber, quizID);
-            _serverService.StartServer(ipAddress, portNumber);
+                _sessionService.InsertSessionData(sessionID, SelectedQuiz, SelectedCondition, ConditionValue
+                ,ipAddress, portNumber, 36);
+                //_serverService.StartServer(ipAddress, portNumber);
+                return true;
+            }
+            return false;
         }
+
         // This retrieves the IP address of the host's machine 
         // Used to know which IP address other users should connect to for the multiplayer quiz. 
-        public string GetIPAddress() 
+        private string GetIPAddress() 
         {
             string IPAddress = Dns.GetHostEntry(Dns.GetHostName()).AddressList[1].ToString();
             return IPAddress;
         }
         // Generates a random port number which is where the server will start on.
-        public int GetPortNumber() 
+        private int GetPortNumber() 
         {
             Random random = new Random();
 
@@ -170,66 +215,58 @@ namespace KrishnaRajamannar.NEA.ViewModels
             // Binds the combo box with the list of quiz titles.
             _quizTitles = titlesOfQuizzes;
         }
-        public IList<QuizModel>? GetQuestions(int quizID) 
+
+        // Used to assign the methods which the host can select to end a multiplayer quiz.
+        // This is assigned to the property of the class which is binded to the UI.
+        public void AssignQuizConditions() 
         {
-            return null;
+            List<string> endQuizConditions = new List<string>();
+            endQuizConditions.Add("Number of Questions");
+            endQuizConditions.Add("Time Limit");
+
+            _endQuizConditions = endQuizConditions;
         }
 
         // This validates the input in which the quiz ends if a certain number of 
         // questions has been answered.
         // This checks if the input is below or equal to the number of questions
         // in the quiz selected by the host.
-        public bool ValidateNumberOfQuestionsInput(string quizTitle) 
+        private bool ValidateNumberOfQuestionsInput() 
         {
             bool valid = false;
 
-            if (EndQuizConditionInput is int)
+            foreach (var quiz in quizzes)
             {
-                foreach (var quiz in quizzes)
+                if ((SelectedQuiz == quiz.QuizTitle) && (int.Parse(ConditionValue) <= quiz.NumberOfQuestions))
                 {
-                    if ((quizTitle == quiz.QuizTitle) && (EndQuizConditionInput <= quiz.NumberOfQuestions))
-                    {
-                        GetQuestions(quiz.QuizID);
-                        valid = true;
-                        return true;
-                    }
-                }
-                if (valid == false)
-                {
-                    ShowMessageDialog("Invalid input.");
-                    return false;
+                    valid = true;
+                    return valid;
                 }
             }
-            else 
+            if (valid == false)
             {
-                ShowMessageDialog("Invalid data format.");
-                return false;
+                ShowMessageDialog("Number of Questions entered must be smaller or equal " +
+                    "to the number of questions in the quiz selected");
+                return valid;
             }
-            return false;
+
+            return valid;
         }
 
         // This validates the input in which the quiz ends if a certain amount of 
         // time has passed.
         // This checks if the input is between 5 and 60 minutes.
-        public bool ValidateTimeInput(string quizTitle)
+        private bool ValidateTimeInput()
         {
-            if ((EndQuizConditionInput >= 5) && (EndQuizConditionInput <= 60))
+            if ((int.Parse(ConditionValue) >= 5) && (int.Parse(ConditionValue) <= 60))
             {
-                foreach (var quiz in quizzes)
-                {
-                    if (quizTitle == quiz.QuizTitle)
-                    {
-                        GetQuestions(quiz.QuizID);
-                        return true;
-                    }
-                }
+                return true;
             }
-            else 
+            else
             {
                 ShowMessageDialog("Invalid input. Enter a value between 5 and 60 minutes.");
                 return false;
             }
-            return false;
         }
     } 
 }

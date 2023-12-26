@@ -85,12 +85,12 @@ namespace KrishnaRajamannar.NEA.Services
                 return true;
             }
         }
-        public void InsertSessionData(int sessionID, string IPAddress, int portNumber, int quizID) 
+        public void InsertSessionData(int sessionID, string quiz, string endQuizCondition, string endQuizValue, string IPAddress, int portNumber, int quizID) 
         {
             const string sqlQuery =
                 @"
-                    INSERT INTO Session (SessionID, IPAddress, PortNumber, QuizID)
-                    VALUES (@SessionID, @IPAddress, @PortNumber, @QuizID)
+                    INSERT INTO Session (SessionID, Quiz, EndQuizCondition, EndQuizValue, IPAddress, PortNumber, QuizID)
+                    VALUES (@SessionID, @Quiz, @EndQuizCondition, @EndQuizValue, @IPAddress, @PortNumber, @QuizID)
                 ";
 
             using SqlConnection connection = new SqlConnection(connectionString);
@@ -100,6 +100,9 @@ namespace KrishnaRajamannar.NEA.Services
             command.CommandText = sqlQuery;
 
             command.Parameters.AddWithValue("@SessionID", sessionID);
+            command.Parameters.AddWithValue("Quiz", quiz);
+            command.Parameters.AddWithValue("EndQuizCondition", endQuizCondition);
+            command.Parameters.AddWithValue("EndQuizValue", endQuizValue);
             command.Parameters.AddWithValue("@IPAddress", IPAddress);
             command.Parameters.AddWithValue("@PortNumber", portNumber);
             command.Parameters.AddWithValue("@QuizID", quizID);

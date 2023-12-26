@@ -38,6 +38,8 @@ namespace KrishnaRajamannar.NEA.Services
         }
         public void HandleClientRequests(string username, string sessionId) 
         {
+            //
+
 
             IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse("192.168.0.65"), 60631);
 
@@ -53,6 +55,7 @@ namespace KrishnaRajamannar.NEA.Services
             stream.Read(buffer, 0, buffer.Length);
             var messageFromServer = Encoding.UTF8.GetString(buffer);
             stream.Flush();
+           
 
             //Raise the Event 
             OnClientConnected(new ClientConnectedEventArgs() { SessionId =sessionId });
