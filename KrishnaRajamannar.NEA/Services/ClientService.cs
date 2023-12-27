@@ -55,8 +55,14 @@ namespace KrishnaRajamannar.NEA.Services
 
             stream.Write(messageBytes, 0, messageBytes.Length);
 
-            var reading = stream.Read(buffer, 0, buffer.Length);
-            string messageFromServer = Encoding.UTF8.GetString(buffer, 0, reading);
+            string messageFromServer = "";
+
+            if (stream.DataAvailable == true) 
+            {
+                var reading = stream.Read(buffer, 0, buffer.Length);
+                messageFromServer = Encoding.UTF8.GetString(buffer, 0, reading);
+            }
+
             stream.Flush();
            
 

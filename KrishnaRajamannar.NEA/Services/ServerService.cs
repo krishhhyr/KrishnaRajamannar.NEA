@@ -22,11 +22,11 @@ namespace KrishnaRajamannar.NEA.Services
 
         CancellationTokenSource source = new CancellationTokenSource();
 
-        UserConnectionService UserConnectionService = new UserConnectionService();
+        UserConnectionService _userConnectionService;
 
-        public ServerService() 
+        public ServerService(UserConnectionService userConnectionService) 
         {
-            
+            _userConnectionService = userConnectionService;
         }
 
         public void StartServer(string ipAddress, int portNumber) 
@@ -60,7 +60,7 @@ namespace KrishnaRajamannar.NEA.Services
             var reading = stream.Read(buffer, 0, buffer.Length);
             string username = Encoding.UTF8.GetString(buffer, 0, reading);
             MessageBox.Show($"{username} has joined the session");
-            UserConnectionService.JoiningSession(username);
+            _userConnectionService.JoiningSession(username);
 
             var messageBytes = Encoding.UTF8.GetBytes("Connected To Session");
             stream.Write(messageBytes, 0, messageBytes.Length);
