@@ -12,6 +12,8 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Threading;
 
 namespace KrishnaRajamannar.NEA.ViewModels
 {
@@ -21,17 +23,44 @@ namespace KrishnaRajamannar.NEA.ViewModels
         public event ShowMessageEventHandler ShowMessage;
         private readonly IServerService _serverService;
         private readonly ISessionService _sessionService;
+        private readonly UserConnectionService _userConnectionService;
         private readonly IQuizService _quizService;
 
         public int UserID;
         IList<QuizModel> quizzes = new List<QuizModel>();
 
-        public HostSessionViewModel(ISessionService sessionService, IQuizService quizService, IServerService serverService)
+        public HostSessionViewModel(ISessionService sessionService, IQuizService quizService, IServerService serverService, UserConnectionService userConnectionService)
         {
             _serverService = serverService;
             _sessionService = sessionService;
             _quizService = quizService;
+            _userConnectionService = userConnectionService;
+
+            _users = new ObservableCollection<string>();
+            _users.Add("Raja");
+            _userConnectionService.UserJoined += OnUserJoined;
+            _userConnectionService.UserLeft += OnUserLeft;
+
         }
+
+        private void OnUserLeft(object sender, UserLeftEventArgs e)
+        {
+            // Used to go back onto the UI thread
+            System.Windows.Application.Current.Dispatcher.Invoke(System.Windows.Threading.DispatcherPriority.Normal, (Action)delegate ()
+            {
+                _users.Add(e.UserName);
+            });
+
+        }
+
+        private void OnUserJoined(object sender, UserJoinedEventArgs e)
+        {
+            System.Windows.Application.Current.Dispatcher.Invoke(System.Windows.Threading.DispatcherPriority.Normal, (Action)delegate ()
+            {
+                _users.Add(e.Username);
+            });
+        }
+
         private List<string> _quizTitles;
         public List<string> QuizTitles 
         {
@@ -92,16 +121,18 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 RaisePropertyChange("SessionID");
             }
         }
-        private ObservableCollection<string> usersConnected;
-        public ObservableCollection<string> UsersConnected
+
+        private ObservableCollection<string> _users;
+        public ObservableCollection<string> Users 
         {
-            get { return usersConnected; }
+            get { return _users; }
             set 
             {
-                usersConnected = value;
-                RaisePropertyChange("UsersConnected");
+                _users = value;
+                RaisePropertyChange("Users");
             }
         }
+
         public void RaisePropertyChange(string propertyname)
         {
             if (PropertyChanged != null)
