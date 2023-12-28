@@ -3,12 +3,14 @@
 namespace KrishnaRajamannar.NEA.ViewModels.Dto
 {
     [Serializable]
-    public class SessionAcknowledement
+    public class ServerResponse
     {
         public string SessionId { get; set; }
 
-        public string QuizSelected { get; set; }
-        
-        UserSessionDto[] UserSessions { get; set; }
+        public string DataType { get; set; }
+
+        public string Data { get; set; }
     }
+
+    
 }
