@@ -89,7 +89,7 @@ namespace KrishnaRajamannar.NEA.Services
 
         public void SendAcknowledgement(TcpClient client, UserSessionDto dto)
         {
-            SessionAcknowledement sessionAcknowledement = new SessionAcknowledement();
+            ServerResponse sessionAcknowledement = new ServerResponse();
             sessionAcknowledement.SessionId = dto.SessionId;
 
             var quizSelected = _sessionService.GetQuizSelectedForSession(Convert.ToInt32(dto.SessionId));
@@ -97,11 +97,12 @@ namespace KrishnaRajamannar.NEA.Services
             // Get users for the session
             _userSessionService.GetUserSessionDetails(dto);
 
-            sessionAcknowledement.QuizSelected = quizSelected;
+            sessionAcknowledement.DataType = "Acknowledgement";
+            sessionAcknowledement.Data = quizSelected;
 
             NetworkStream stream = client.GetStream();
 
-            var payload = JsonSerializer.Serialize<SessionAcknowledement>(sessionAcknowledement);
+            var payload = JsonSerializer.Serialize<ServerResponse>(sessionAcknowledement);
 
             var messageBytes = Encoding.UTF8.GetBytes(payload);
             
