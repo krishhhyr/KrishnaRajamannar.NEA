@@ -29,10 +29,14 @@ namespace KrishnaRajamannar.NEA.Services
         CancellationTokenSource source = new CancellationTokenSource();
 
         UserConnectionService _userConnectionService;
+        IUserSessionService _userSessionService;
+        ISessionService _sessionService;
 
-        public ServerService(UserConnectionService userConnectionService) 
+        public ServerService(UserConnectionService userConnectionService, IUserSessionService userSessionService, ISessionService sessionService)
         {
             _userConnectionService = userConnectionService;
+            _userSessionService = userSessionService;
+            _sessionService = sessionService;
         }
 
         public void StartServer(string ipAddress, int portNumber) 
@@ -63,8 +67,10 @@ namespace KrishnaRajamannar.NEA.Services
             var reading = stream.Read(buffer, 0, buffer.Length);
             string usersession = Encoding.UTF8.GetString(buffer, 0, reading);
             UserSessionDto userSessionDto = JsonSerializer.Deserialize<UserSessionDto>(usersession);
-            _userConnectionService.UserJoinedSession(userSessionDto);           
+            _userConnectionService.UserJoinedSession(userSessionDto);
+            SendAcknowledgement(client, userSessionDto);
         }
+
         public void StopServer() 
         {
             server.Stop();
@@ -79,6 +85,28 @@ namespace KrishnaRajamannar.NEA.Services
                 var messageBytes = Encoding.UTF8.GetBytes(command);
                 stream.Write(messageBytes, 0, messageBytes.Length);
             }
+        }
+
+        public void SendAcknowledgement(TcpClient client, UserSessionDto dto)
+        {
+            SessionAcknowledement sessionAcknowledement = new SessionAcknowledement();
+            sessionAcknowledement.SessionId = dto.SessionId;
+
+            var quizSelected = _sessionService.GetQuizSelectedForSession(Convert.ToInt32(dto.SessionId));
+
+            // Get users for the session
+            _userSessionService.GetUserSessionDetails(dto);
+
+            sessionAcknowledement.QuizSelected = quizSelected;
+
+            NetworkStream stream = client.GetStream();
+
+            var payload = JsonSerializer.Serialize<SessionAcknowledement>(sessionAcknowledement);
+
+            var messageBytes = Encoding.UTF8.GetBytes(payload);
+            
+            stream.Write(messageBytes, 0, messageBytes.Length);
+           
         }
     }
 }

@@ -224,7 +224,8 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
                 //_sessionService.InsertSessionData(sessionID, SelectedQuiz, SelectedCondition, ConditionValue
                 //,ipAddress, portNumber, 36);
-                _serverService.StartServer(ipAddress, 63398);
+                _serverService.StartServer(ipAddress, 63398);  
+                
                 return true;
             }
             return false;
