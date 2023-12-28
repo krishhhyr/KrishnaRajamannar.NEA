@@ -17,9 +17,16 @@ namespace KrishnaRajamannar.NEA.Services
 
         public event UserJoinedEventHandler UserJoined;
         public event UserLeftEventHandler UserLeft;
+        public IUserSessionService UserSessionService;
+
+        public UserConnectionService(IUserSessionService userSessionService)
+        {
+            UserSessionService = userSessionService;
+        }
 
         public void UserJoinedSession(UserSessionDto dto) 
         {           
+            UserSessionService.InsertUserSessionDetails(dto);
             ShowUsernameJoinedSession(dto);
         }
 
@@ -28,6 +35,7 @@ namespace KrishnaRajamannar.NEA.Services
             UserJoinedEventArgs args = new UserJoinedEventArgs();
             args.UserSession = dto;
             OnShowUsernameJoinedSession(args);
+           
         }
 
         protected virtual void OnShowUsernameJoinedSession(UserJoinedEventArgs e)

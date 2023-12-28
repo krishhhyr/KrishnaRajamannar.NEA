@@ -10,5 +10,7 @@
             string IPAddress, int portNumber, int quizID);
 
         public (string, int) GetConnectionData(int sessionID);
+
+        public string GetQuizSelectedForSession(int sessionID);
     }
 }

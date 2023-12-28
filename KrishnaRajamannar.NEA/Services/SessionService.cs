@@ -11,11 +11,7 @@ namespace KrishnaRajamannar.NEA.Services
     public class SessionService : ISessionService 
     {
         const string connectionString = $"Data Source=KRISHNASXPS\\SQLEXPRESS;Initial Catalog=quizApp;Persist Security Info=True;User ID=sa;Password=passw0rd;TrustServerCertificate=True";
-
-        public SessionService()
-        {
-            
-        }
+             
 
         public bool IsSessionIDExist(int sessionIDInput)
         {
@@ -137,6 +133,11 @@ namespace KrishnaRajamannar.NEA.Services
                 connectionData.Item2 = data.GetInt32(1);
             }
             return connectionData;
+        }
+
+        public string GetQuizSelectedForSession(int sessionID)
+        {
+            return "A-Quiz";
         }
     }
 }

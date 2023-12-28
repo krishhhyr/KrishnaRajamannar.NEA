@@ -37,6 +37,7 @@ namespace KrishnaRajamannar.NEA
             services.AddSingleton<ISessionService, SessionService>();
             services.AddSingleton<IClientService, ClientService>();
             services.AddSingleton<IServerService, ServerService>();
+            services.AddSingleton<IUserSessionService, UserSessionService>();
             services.AddSingleton<UserConnectionService>();
             services.AddSingleton(typeof(UserModel));
             services.AddSingleton(typeof(QuestionModel));
