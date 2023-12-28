@@ -10,6 +10,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Net;
 using System.Net.Http.Headers;
+using System.Security.RightsManagement;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -36,29 +37,9 @@ namespace KrishnaRajamannar.NEA.ViewModels
             _quizService = quizService;
             _userConnectionService = userConnectionService;
 
-            _users = new ObservableCollection<string>();
-            _users.Add("Raja");
             _userConnectionService.UserJoined += OnUserJoined;
             _userConnectionService.UserLeft += OnUserLeft;
 
-        }
-
-        private void OnUserLeft(object sender, UserLeftEventArgs e)
-        {
-            // Used to go back onto the UI thread
-            System.Windows.Application.Current.Dispatcher.Invoke(System.Windows.Threading.DispatcherPriority.Normal, (Action)delegate ()
-            {
-                _users.Add(e.UserName);
-            });
-
-        }
-
-        private void OnUserJoined(object sender, UserJoinedEventArgs e)
-        {
-            System.Windows.Application.Current.Dispatcher.Invoke(System.Windows.Threading.DispatcherPriority.Normal, (Action)delegate ()
-            {
-                _users.Add(e.Username);
-            });
         }
 
         private List<string> _quizTitles;
@@ -122,7 +103,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
             }
         }
 
-        private ObservableCollection<string> _users;
+        private ObservableCollection<string> _users = new ObservableCollection<string>();
         public ObservableCollection<string> Users 
         {
             get { return _users; }
@@ -130,6 +111,17 @@ namespace KrishnaRajamannar.NEA.ViewModels
             {
                 _users = value;
                 RaisePropertyChange("Users");
+            }
+        }
+
+        private string _numberOfUsersJoined;
+        public string NumberOfUsersJoined 
+        {
+            get { return _numberOfUsersJoined; }
+            set 
+            {
+                _numberOfUsersJoined = value;
+                RaisePropertyChange("NumberOfUsersJoined");
             }
         }
 
@@ -155,6 +147,30 @@ namespace KrishnaRajamannar.NEA.ViewModels
             {
                 handler(this, e);
             }
+        }
+
+        private void OnUserJoined(object sender, UserJoinedEventArgs e)
+        {
+            // Used to go back onto the UI thread
+            System.Windows.Application.Current.Dispatcher.Invoke(System.Windows.Threading.DispatcherPriority.Normal, (Action)delegate ()
+            {
+                _users.Add(e.Username);
+
+            });
+
+            UpdateNumberOfUsersJoined();
+        }
+
+        private void OnUserLeft(object sender, UserLeftEventArgs e)
+        {
+            // Used to go back onto the UI thread
+            System.Windows.Application.Current.Dispatcher.Invoke(System.Windows.Threading.DispatcherPriority.Normal, (Action)delegate ()
+            {
+                _users.Remove(e.Username);
+            });
+
+            UpdateNumberOfUsersJoined();
+
         }
 
         // Used to generate a random six digit session ID in which users will enter to join to.
@@ -309,6 +325,21 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 ShowMessageDialog("Invalid input. Enter a value between 5 and 60 minutes.");
                 return false;
             }
+        }
+
+        private void UpdateNumberOfUsersJoined() 
+        {
+            int numberOfUsers = _users.Count;
+
+            if (numberOfUsers == 1)
+            {
+                NumberOfUsersJoined = $"({numberOfUsers} user have joined.)";
+            }
+            else 
+            {
+                NumberOfUsersJoined = $"({numberOfUsers} users have joined.)";
+            }
+            
         }
     } 
 }

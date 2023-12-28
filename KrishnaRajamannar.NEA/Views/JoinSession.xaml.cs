@@ -29,7 +29,14 @@ namespace KrishnaRajamannar.NEA.Views
 
             this.DataContext = _joinSessionViewModel;
 
-            joinSessionViewModel.ShowMessage += JoinSessionViewModel_ShowMessage; ;
+            _joinSessionViewModel.ShowMessage += JoinSessionViewModel_ShowMessage;
+            _joinSessionViewModel.HideJoinSessionWindow += _joinSessionViewModel_HideJoinSessionWindow;
+
+        }
+
+        private void _joinSessionViewModel_HideJoinSessionWindow(object sender, Events.HideWindowEventArgs e)
+        {
+            this.Close();
         }
 
         private void JoinSessionViewModel_ShowMessage(object sender, Events.ShowMessageEventArgs e)
@@ -44,6 +51,11 @@ namespace KrishnaRajamannar.NEA.Views
                 sessionIDTxtBox.IsEnabled = false;
                 joinBtn.IsEnabled = false;
             }
+        }
+
+        private void backBtn_Click(object sender, RoutedEventArgs e)
+        {
+            _joinSessionViewModel.CloseJoinSessionWindow();
         }
     }
 }

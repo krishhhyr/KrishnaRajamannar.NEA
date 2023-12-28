@@ -60,7 +60,8 @@ namespace KrishnaRajamannar.NEA.Services
             var reading = stream.Read(buffer, 0, buffer.Length);
             string username = Encoding.UTF8.GetString(buffer, 0, reading);
             MessageBox.Show($"{username} has joined the session");
-            _userConnectionService.JoiningSession(username);
+
+            _userConnectionService.UserJoinedSession(username);
 
             var messageBytes = Encoding.UTF8.GetBytes("Connected To Session");
             stream.Write(messageBytes, 0, messageBytes.Length);
