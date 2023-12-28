@@ -119,7 +119,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 string ipAddressConnect = connectionInfo.Item1;
                 int portNumberConnect = connectionInfo.Item2;
 
-                ConnectionStatus = _clientService.ConnectToServer(Username, ipAddressConnect, portNumberConnect, SessionIDInput.ToString());
+                ConnectionStatus = _clientService.ConnectToServer(Username, UserID, ipAddressConnect, portNumberConnect, SessionIDInput.ToString());
                 return true;
             }
         }

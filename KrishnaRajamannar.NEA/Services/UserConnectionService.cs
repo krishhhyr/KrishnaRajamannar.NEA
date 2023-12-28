@@ -8,29 +8,25 @@ using System.Threading.Tasks;
 using System.Windows.Navigation;
 using KrishnaRajamannar.NEA.Events;
 using KrishnaRajamannar.NEA.Services.Interfaces;
+using KrishnaRajamannar.NEA.ViewModels.Dto;
 
 namespace KrishnaRajamannar.NEA.Services
 {
-    public class UserConnectionService //: IUserConnectionService
+    public class UserConnectionService  
     {
-        private Queue<string> joiningUsers = new Queue<string>();
-
-        private Queue<string> leavingUsers = new Queue<string>();
 
         public event UserJoinedEventHandler UserJoined;
         public event UserLeftEventHandler UserLeft;
 
-        public void UserJoinedSession(string username) 
-        {
-            joiningUsers.Enqueue(username);
-            ShowUsernameJoinedSession(username);
+        public void UserJoinedSession(UserSessionDto dto) 
+        {           
+            ShowUsernameJoinedSession(dto);
         }
 
-        private void ShowUsernameJoinedSession(string username) 
+        private void ShowUsernameJoinedSession(UserSessionDto dto) 
         {
             UserJoinedEventArgs args = new UserJoinedEventArgs();
-            args.Username = username;
-
+            args.UserSession = dto;
             OnShowUsernameJoinedSession(args);
         }
 
@@ -46,9 +42,6 @@ namespace KrishnaRajamannar.NEA.Services
 
         public void UserLeftSession(string username)
         {
-            //joiningUsers.Dequeue();
-            leavingUsers.Enqueue(username);
-
             ShowUsernameLeftSession(username);
         }
 
