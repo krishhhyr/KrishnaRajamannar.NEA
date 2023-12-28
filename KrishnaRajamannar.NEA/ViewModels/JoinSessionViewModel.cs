@@ -18,13 +18,17 @@ namespace KrishnaRajamannar.NEA.ViewModels
         private readonly IClientService _clientService;
         private readonly ISessionService _sessionService;
 
+        private readonly UserConnectionService _userConnectionService;
+
         public int UserID;
         public string Username;
 
-        public JoinSessionViewModel(ISessionService sessionService, IClientService clientService)
+        public JoinSessionViewModel(ISessionService sessionService, IClientService clientService, UserConnectionService userConnectionService)
         {
             _sessionService = sessionService;
             _clientService = clientService;
+            _userConnectionService = userConnectionService;
+
             _clientService.ClientConnected += _clientService_ClientConnected;
         }
 
@@ -96,6 +100,8 @@ namespace KrishnaRajamannar.NEA.ViewModels
         public void CloseJoinSessionWindow()
         {
             HideJoinSession();
+
+            _userConnectionService.UserLeftSession(Username);
         }
 
         public bool JoinSession()

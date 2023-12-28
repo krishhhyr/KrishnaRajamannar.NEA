@@ -14,37 +14,27 @@ namespace KrishnaRajamannar.NEA.Services
     public class UserConnectionService //: IUserConnectionService
     {
         private Queue<string> joiningUsers = new Queue<string>();
+
         private Queue<string> leavingUsers = new Queue<string>();
 
         public event UserJoinedEventHandler UserJoined;
         public event UserLeftEventHandler UserLeft;
 
-        public void JoiningSession(string username) 
+        public void UserJoinedSession(string username) 
         {
             joiningUsers.Enqueue(username);
-
-            //var args = new UserJoinedEventArgs() { UserName = username };
-            //OnUserJoinSession(args);
-
-            //new code - k
-            RetrieveUsernameJoined(username);
-        }
-        public void LeavingSession(string username) 
-        {
-            leavingUsers.Enqueue(username);
-            OnLeft(new UserLeftEventArgs() { UserName = username });
+            ShowUsernameJoinedSession(username);
         }
 
-        //new code - k
-        private void RetrieveUsernameJoined(string username) 
+        private void ShowUsernameJoinedSession(string username) 
         {
             UserJoinedEventArgs args = new UserJoinedEventArgs();
             args.Username = username;
 
-            OnUserJoinSession(args);
+            OnShowUsernameJoinedSession(args);
         }
 
-        protected virtual void OnUserJoinSession(UserJoinedEventArgs e)
+        protected virtual void OnShowUsernameJoinedSession(UserJoinedEventArgs e)
         {
             UserJoinedEventHandler handler = UserJoined;
 
@@ -54,7 +44,23 @@ namespace KrishnaRajamannar.NEA.Services
             }
         }
 
-        protected virtual void OnLeft(UserLeftEventArgs e)
+        public void UserLeftSession(string username)
+        {
+            joiningUsers.Dequeue();
+            leavingUsers.Enqueue(username);
+
+            ShowUsernameLeftSession(username);
+        }
+
+        private void ShowUsernameLeftSession(string username)
+        {
+            UserLeftEventArgs args = new UserLeftEventArgs();
+            args.Username = username;
+
+            OnShowUsernameLeftSession(args);
+        }
+
+        protected virtual void OnShowUsernameLeftSession(UserLeftEventArgs e)
         {
             UserLeftEventHandler handler = UserLeft;
             if (handler != null)

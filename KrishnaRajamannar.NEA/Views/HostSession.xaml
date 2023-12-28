@@ -61,9 +61,9 @@
 
                 </StackPanel>
 
-                <TextBlock x:Name="numberOfParticipantsTxtBlock" Text="(0 Participants have joined.)" FontSize="20" HorizontalAlignment="Center" ></TextBlock>
+                <TextBlock x:Name="numberOfUsersTxtBlock" Text="{Binding NumberOfUsersJoined}" FontSize="20" HorizontalAlignment="Center" ></TextBlock>
 
-                <ListBox x:Name="usernamesOfParticpants" ItemsSource="{Binding Users}" Height="150" Margin="10" FontSize="15">
+                <ListBox x:Name="usernamesOfUsers" ItemsSource="{Binding Users}" Height="150" Margin="10" FontSize="15">
                 </ListBox>
             </StackPanel>
 

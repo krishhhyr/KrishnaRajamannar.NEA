@@ -19,7 +19,7 @@
 
         <Button x:Name="backBtn" Content="Back" Grid.Column="0" Grid.Row="0" 
                 Height="30" Width="75" FontSize="16" Margin="10"
-                Background="White" Foreground="Black" BorderBrush="Black"></Button>
+                Background="White" Foreground="Black" BorderBrush="Black" Click="backBtn_Click"></Button>
 
         <TextBlock Text="Enter Session ID to join a session" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center"
                    VerticalAlignment="Top" FontSize="25"></TextBlock>
