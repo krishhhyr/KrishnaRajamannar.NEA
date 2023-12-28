@@ -3,6 +3,7 @@ using KrishnaRajamannar.NEA.Events;
 using KrishnaRajamannar.NEA.Models;
 using KrishnaRajamannar.NEA.Services;
 using KrishnaRajamannar.NEA.Services.Interfaces;
+using KrishnaRajamannar.NEA.ViewModels.Dto;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -103,8 +104,8 @@ namespace KrishnaRajamannar.NEA.ViewModels
             }
         }
 
-        private ObservableCollection<string> _users = new ObservableCollection<string>();
-        public ObservableCollection<string> Users 
+        private ObservableCollection<UserSessionDto> _users = new ObservableCollection<UserSessionDto>();
+        public ObservableCollection<UserSessionDto> Users 
         {
             get { return _users; }
             set 
@@ -154,7 +155,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
             // Used to go back onto the UI thread
             System.Windows.Application.Current.Dispatcher.Invoke(System.Windows.Threading.DispatcherPriority.Normal, (Action)delegate ()
             {
-                _users.Add(e.Username);
+                _users.Add(e.UserSession);
 
             });
 
@@ -167,7 +168,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
             // Used to go back onto the UI thread
             System.Windows.Application.Current.Dispatcher.Invoke(System.Windows.Threading.DispatcherPriority.Normal, (Action)delegate ()
             {
-                _users.Remove(e.Username);
+                //_users.Remove();
                 ;
             });
 
@@ -227,6 +228,11 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 return true;
             }
             return false;
+        }
+
+        public void SendSessionStartedCommand()
+        {
+            _serverService.SendCommandToClients("Start Quiz");
         }
 
         // This retrieves the IP address of the host's machine 
