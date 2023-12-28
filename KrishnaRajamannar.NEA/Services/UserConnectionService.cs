@@ -46,7 +46,7 @@ namespace KrishnaRajamannar.NEA.Services
 
         public void UserLeftSession(string username)
         {
-            joiningUsers.Dequeue();
+            //joiningUsers.Dequeue();
             leavingUsers.Enqueue(username);
 
             ShowUsernameLeftSession(username);

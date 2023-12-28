@@ -161,12 +161,14 @@ namespace KrishnaRajamannar.NEA.ViewModels
             UpdateNumberOfUsersJoined();
         }
 
+        // this is not working for some reason?
         private void OnUserLeft(object sender, UserLeftEventArgs e)
         {
             // Used to go back onto the UI thread
             System.Windows.Application.Current.Dispatcher.Invoke(System.Windows.Threading.DispatcherPriority.Normal, (Action)delegate ()
             {
                 _users.Remove(e.Username);
+                ;
             });
 
             UpdateNumberOfUsersJoined();
@@ -333,7 +335,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
             if (numberOfUsers == 1)
             {
-                NumberOfUsersJoined = $"({numberOfUsers} user have joined.)";
+                NumberOfUsersJoined = $"({numberOfUsers} user has joined.)";
             }
             else 
             {
