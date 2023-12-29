@@ -178,7 +178,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
         }
 
         // Used to generate a random six digit session ID in which users will enter to join to.
-        private int CreateSessionID() 
+        public int CreateSessionID() 
         {
             Random random = new Random();
 
