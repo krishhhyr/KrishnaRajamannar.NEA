@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KrishnaRajamannar.NEA.Services
+namespace KrishnaRajamannar.NEA.Services.Database
 {
     // A class which represents all the functions/procedures that the Quiz table has in the database
     public class QuizService : IQuizService
@@ -17,7 +17,7 @@ namespace KrishnaRajamannar.NEA.Services
 
         public QuizService()
         {
-            
+
         }
 
         // Function which returns a list of quizzes for a particular user by passing the userID as a parameter. 
@@ -62,11 +62,11 @@ namespace KrishnaRajamannar.NEA.Services
                 // This is used to combine the variables in which data was retrieved as one element in the list using the QuizModel. 
                 quizzes.Add(new QuizModel() { QuizID = quizID, QuizTitle = quizTitle, NumberOfQuestions = numberOfQuestions, UserID = userID });
             }
-        
+
             return quizzes;
         }
         //Procedure which creates a quiz for a user based on a quiz title which has been inputted.
-        public void CreateQuiz(int? userID, string quizTitle) 
+        public void CreateQuiz(int? userID, string quizTitle)
         {
             const string sqlQuery =
                 @"
@@ -119,7 +119,7 @@ namespace KrishnaRajamannar.NEA.Services
             connection.Close();
         }
         // Function which checks if a quiz already exists for a particular user..
-        public bool IsQuizExists(int userID, string quizTitleInput) 
+        public bool IsQuizExists(int userID, string quizTitleInput)
         {
             // Variable which represents the quiz title taken from the database.
             // If the quizTitleInput matches the quizTitleDB, the quiz already exists.
@@ -163,7 +163,7 @@ namespace KrishnaRajamannar.NEA.Services
             return false;
         }
         // Function which gets the Quiz ID for a quiz 
-        public int? GetQuizID(int userID, string quizTitle) 
+        public int? GetQuizID(int userID, string quizTitle)
         {
             int quizID;
 
@@ -194,7 +194,7 @@ namespace KrishnaRajamannar.NEA.Services
         }
 
         // This procedure is used to update the number of questions that have in created within a quiz.
-        public void UpdateNumberOfQuestions(int numberOfQuestions, int quizID) 
+        public void UpdateNumberOfQuestions(int numberOfQuestions, int quizID)
         {
             const string sqlQuery =
                 @"

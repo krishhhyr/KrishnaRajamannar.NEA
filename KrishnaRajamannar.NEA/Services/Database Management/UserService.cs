@@ -8,7 +8,7 @@ using System.Security.Cryptography;
 using Microsoft.Data.SqlClient;
 using KrishnaRajamannar.NEA.Models;
 
-namespace KrishnaRajamannar.NEA.Services
+namespace KrishnaRajamannar.NEA.Services.Database
 {
 
     public class UserService : IUserService
@@ -18,6 +18,29 @@ namespace KrishnaRajamannar.NEA.Services
         public UserService()
         {
 
+        }
+
+        public string GetUsername(int userID)
+        {
+            string username = "";
+            const string sqlQuery =
+                @"
+                    SELECT username
+                    FROM UserDetails
+                    WHERE userID = @UserID
+                ";
+            using SqlConnection connection = new SqlConnection(connectionString);
+            connection.Open();
+            var command = connection.CreateCommand();
+            command.CommandText = sqlQuery;
+            command.Parameters.AddWithValue("@UserID", userID);
+            var data = command.ExecuteReader();
+            while (data.Read())
+            {
+                username = data.GetString(0);
+                return username;
+            }
+            return username;
         }
 
         public IList<UserModel> GetUserDetails(string _username)

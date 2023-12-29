@@ -1,13 +1,13 @@
 ﻿using KrishnaRajamannar.NEA.ViewModels.Dto;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace KrishnaRajamannar.NEA.Services.Interfaces
 {
     public interface IUserSessionService
     {
-        void GetUserSessionDetails(UserSessionDto dto);
-        void InsertUserSessionDetails(UserSessionDto dto);
-        void RemoveUserSessionDetails(UserSessionDto dto);
-
-
+        void InsertUserSessionDetails(UserSessionData dto);
+        void RemoveUserSessionDetails(UserSessionData dto);
+        IList<UserSessionData> GetUserSessionDetails(UserSessionData dto);
     }
 }

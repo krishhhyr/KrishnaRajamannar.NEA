@@ -7,12 +7,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Navigation;
 using KrishnaRajamannar.NEA.Events;
+using KrishnaRajamannar.NEA.Models.Dto;
 using KrishnaRajamannar.NEA.Services.Interfaces;
-using KrishnaRajamannar.NEA.ViewModels.Dto;
 
-namespace KrishnaRajamannar.NEA.Services
+namespace KrishnaRajamannar.NEA.Services.Connection
 {
-    public class UserConnectionService  
+    public class UserConnectionService
     {
 
         public event UserJoinedEventHandler UserJoined;
@@ -24,18 +24,18 @@ namespace KrishnaRajamannar.NEA.Services
             UserSessionService = userSessionService;
         }
 
-        public void UserJoinedSession(UserSessionDto dto) 
-        {           
+        public void UserJoinedSession(UserSessionData dto)
+        {
             UserSessionService.InsertUserSessionDetails(dto);
             ShowUsernameJoinedSession(dto);
         }
 
-        private void ShowUsernameJoinedSession(UserSessionDto dto) 
+        private void ShowUsernameJoinedSession(UserSessionData dto)
         {
             UserJoinedEventArgs args = new UserJoinedEventArgs();
             args.UserSession = dto;
             OnShowUsernameJoinedSession(args);
-           
+
         }
 
         protected virtual void OnShowUsernameJoinedSession(UserJoinedEventArgs e)

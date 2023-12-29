@@ -5,6 +5,7 @@ namespace KrishnaRajamannar.NEA.Services
 {
     public interface IUserService
     {
+        public string GetUsername(int userID);
         public IList<UserModel> GetUserDetails(string _username);
         bool IsUserExists(string username);
         string HashPassword(string password);
