@@ -31,6 +31,7 @@ namespace KrishnaRajamannar.NEA.Views
 
             _hostSessionViewModel.GetQuizzes();
             _hostSessionViewModel.AssignQuizConditions();
+            _hostSessionViewModel.CreateSessionID();
 
             _hostSessionViewModel.ShowMessage += _hostSessionViewModel_ShowMessage;
         }
@@ -48,10 +49,9 @@ namespace KrishnaRajamannar.NEA.Views
                 quizConditionComboBox.IsEnabled = false;
                 conditionTxtBox.IsEnabled = false;
                 startSessionBtn.IsEnabled = false;
-
-                Height = 650;
-                sessionInformationStackPanel.Visibility = Visibility.Visible;
-                startQuizBtn.Visibility = Visibility.Visible;                
+                
+                joinedUsersDataGrid.IsEnabled = true;
+                startQuizBtn.IsEnabled = true;
             }
             
         }
