@@ -1,0 +1,58 @@
+﻿<Window x:Class="KrishnaRajamannar.NEA.Views.ViewSessionInformation"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:KrishnaRajamannar.NEA.Views"
+        mc:Ignorable="d"
+        Title="ViewSessionInformation" Height="450" Width="850" FontFamily="Segoe UI Light">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"></ColumnDefinition>
+            <ColumnDefinition Width="10*"></ColumnDefinition>
+            <ColumnDefinition Width="95"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="10*"></RowDefinition>
+            <RowDefinition Height="1*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Button x:Name="mainMenuButton" Content="Back" Grid.Row="0" Grid.Column="0"  Height="30" 
+                Width="75" Margin="10" FontSize="16" Background="White" Foreground="Black" BorderBrush="Black">
+        </Button>
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="0" Grid.Column="1">
+
+            <Label x:Name="displaySessionIDLbl" Content="Session ID: " FontSize="20" VerticalAlignment="Center" Margin="10,10,0,10"></Label>
+
+            <Label x:Name="sessionIDLbl" Content="{Binding SessionID}"  FontSize="20" VerticalAlignment="Center" Margin="0,10,0,10"></Label>
+
+        </StackPanel>
+
+        <StackPanel x:Name="quizSelectedStackPanel"  Orientation="Vertical" Grid.Column="1" Grid.Row="1" Height="350" VerticalAlignment="Top">
+
+            <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Horizontal" >
+
+                <Label Content="Quiz Selected:" FontSize="20" Margin="10" VerticalAlignment="Center"></Label>
+
+                <Label x:Name="quizSelectedLbl" Content="A-Level Econ" FontSize="20" Margin="0,10,10,10"></Label>
+
+            </StackPanel>
+
+            <StackPanel x:Name="hostNameStackPanel" Orientation="Horizontal" Grid.Column="1" Grid.Row="1">
+                <Label Content="Host Name:" FontSize="20" Margin="10"></Label>
+                
+                <Label x:Name="hostNameLbl" Content="Krishna001" FontSize="20" VerticalAlignment="Center" Margin="0,10,0,10"></Label>
+            </StackPanel>
+
+            <StackPanel x:Name="sessionInformationStackPanel" Orientation="Vertical" Height="250" Visibility="Visible" Margin="10">
+
+                <TextBlock x:Name="numberOfUsersTxtBlock" Text="{Binding NumberOfUsersJoined}" FontSize="20" HorizontalAlignment="Center" ></TextBlock>
+
+                <DataGrid x:Name="joinedUsersDataGrid" ItemsSource="{Binding Users}" ColumnWidth="*" Margin="10" Height="175" CanUserSortColumns="True" 
+                  IsReadOnly="True" FontSize="20" AlternatingRowBackground="AliceBlue" IsEnabled="False">
+
+                </DataGrid>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Window>

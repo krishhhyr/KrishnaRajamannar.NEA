@@ -30,6 +30,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
         private readonly IQuizService _quizService;
 
         public int UserID;
+        public string Username;
         IList<QuizModel> quizzes = new List<QuizModel>();
 
         public HostSessionViewModel(ISessionService sessionService, IQuizService quizService, IServerService serverService, UserConnectionService userConnectionService)
@@ -225,7 +226,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
                 //_sessionService.InsertSessionData(sessionID, SelectedQuiz, SelectedCondition, ConditionValue
                 //,ipAddress, portNumber, 36);
-                _serverService.StartServer(ipAddress, 63398);  
+                _serverService.StartServer(Username, ipAddress, 63398);  
                 
                 return true;
             }
