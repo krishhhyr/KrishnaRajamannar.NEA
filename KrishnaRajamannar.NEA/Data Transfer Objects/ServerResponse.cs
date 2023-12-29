@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace KrishnaRajamannar.NEA.ViewModels.Dto
+namespace KrishnaRajamannar.NEA.Models.Dto
 {
     [Serializable]
     public class ServerResponse
@@ -8,9 +8,9 @@ namespace KrishnaRajamannar.NEA.ViewModels.Dto
         public string SessionId { get; set; }
 
         public string DataType { get; set; }
-        
+
         public string Data { get; set; }
     }
 
-    
+
 }

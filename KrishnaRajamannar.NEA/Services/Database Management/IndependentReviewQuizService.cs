@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KrishnaRajamannar.NEA.Services
+namespace KrishnaRajamannar.NEA.Services.Database
 {
-    public class IndependentReviewQuizService : IIndependentReviewQuizService 
+    public class IndependentReviewQuizService : IIndependentReviewQuizService
     {
         private const string connectionString = $"Data Source=KRISHNASXPS\\SQLEXPRESS;Initial Catalog=quizApp;Persist Security Info=True;User ID=sa;Password=passw0rd;TrustServerCertificate=True";
 
@@ -65,10 +65,10 @@ namespace KrishnaRajamannar.NEA.Services
             connection.Close();
         }
 
-        public IList<IndependentReviewQuizModel> GetAllQuestions(int quizID) 
+        public IList<IndependentReviewQuizModel> GetAllQuestions(int quizID)
         {
             IList<IndependentReviewQuizModel> questionsToReview = new List<IndependentReviewQuizModel>();
-            
+
             string question, answer;
             string? option1, option2, option3, option4, option5, option6;
             option1 = option2 = option3 = option4 = option5 = option6 = "";
@@ -100,7 +100,7 @@ namespace KrishnaRajamannar.NEA.Services
 
             var data = command.ExecuteReader();
 
-            while (data.Read()) 
+            while (data.Read())
             {
                 feedbackID = data.GetInt32(0);
 
@@ -129,30 +129,39 @@ namespace KrishnaRajamannar.NEA.Services
                 {
                     pointsGained = 0;
                 }
-                else 
+                else
                 {
                     pointsGained = data.GetInt32(10);
                 }
- 
+
                 isCorrect = data.GetBoolean(11);
 
                 answerStreak = data.GetInt32(12);
 
-                questionsToReview.Add(new IndependentReviewQuizModel() 
+                questionsToReview.Add(new IndependentReviewQuizModel()
                 {
-                   FeedbackID = feedbackID ,Question = question, Answer = answer,
+                    FeedbackID = feedbackID,
+                    Question = question,
+                    Answer = answer,
 
-                    Option1 = options[0], Option2 = options[1], Option3 = options[2], 
-                    Option4 = options[3], Option5 = options[4], Option6 = options[5],
+                    Option1 = options[0],
+                    Option2 = options[1],
+                    Option3 = options[2],
+                    Option4 = options[3],
+                    Option5 = options[4],
+                    Option6 = options[5],
 
-                    PointsForQuestion = pointsForQuestion, PointsGained = pointsGained, IsCorrect = isCorrect, AnswerStreak = answerStreak,
+                    PointsForQuestion = pointsForQuestion,
+                    PointsGained = pointsGained,
+                    IsCorrect = isCorrect,
+                    AnswerStreak = answerStreak,
                 });
             }
 
             return questionsToReview;
         }
 
-        public IList<IndependentReviewQuizFeedbackModel> GetQuizFeedback(int quizID) 
+        public IList<IndependentReviewQuizFeedbackModel> GetQuizFeedback(int quizID)
         {
             IList<IndependentReviewQuizFeedbackModel> quizFeedback = new List<IndependentReviewQuizFeedbackModel>();
 
@@ -190,7 +199,7 @@ namespace KrishnaRajamannar.NEA.Services
                 question = data.GetString(0);
                 isCorrect = data.GetBoolean(1);
 
-                quizFeedback.Add(new IndependentReviewQuizFeedbackModel() { QuestionNumber = questionNumber, Question = question, AnsweredCorrectly = isCorrect});
+                quizFeedback.Add(new IndependentReviewQuizFeedbackModel() { QuestionNumber = questionNumber, Question = question, AnsweredCorrectly = isCorrect });
                 questionNumber++;
             }
             return quizFeedback;
@@ -198,7 +207,7 @@ namespace KrishnaRajamannar.NEA.Services
 
 
         //update answer streak, update isCorrect to 1, update points 
-        public void UpdateQuizFeedback(int feedbackID, int answerStreak, bool isCorrect, int pointsGained) 
+        public void UpdateQuizFeedback(int feedbackID, int answerStreak, bool isCorrect, int pointsGained)
         {
             const string sqlQuery =
                 @"

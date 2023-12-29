@@ -9,10 +9,10 @@ using KrishnaRajamannar.NEA.Services.Interfaces;
 using System.Windows;
 using KrishnaRajamannar.NEA.Events;
 using System.Diagnostics;
-using KrishnaRajamannar.NEA.ViewModels.Dto;
 using System.Text.Json;
+using KrishnaRajamannar.NEA.Models.Dto;
 
-namespace KrishnaRajamannar.NEA.Services
+namespace KrishnaRajamannar.NEA.Services.Connection
 {
     public class ClientService : IClientService
     {
@@ -38,7 +38,7 @@ namespace KrishnaRajamannar.NEA.Services
             {
                 Task task = Task.Factory.StartNew(() =>
                 {
-                    messageFromServer = HandleClientRequests(username,userId, ipAddressConnect, portNumberConnect, sessionId);
+                    messageFromServer = HandleClientRequests(username, userId, ipAddressConnect, portNumberConnect, sessionId);
                 });
 
                 task.Wait();
@@ -63,14 +63,14 @@ namespace KrishnaRajamannar.NEA.Services
             OnClientConnected(new ClientConnectedEventArgs() { SessionId = sessionId });
 
             NetworkStream stream = server.GetStream();
-            UserSessionDto dto = new UserSessionDto
+            UserSessionData dto = new UserSessionData
             {
-                SessionId = sessionId,
-                Name = username,
-                Id = userID
+                SessionID = sessionId,
+                Username = username,
+                UserID = userID
             };
 
-            var payload = JsonSerializer.Serialize<UserSessionDto>(dto);
+            var payload = JsonSerializer.Serialize(dto);
 
             var messageBytes = Encoding.UTF8.GetBytes(payload);
 
@@ -84,6 +84,7 @@ namespace KrishnaRajamannar.NEA.Services
                 {
                     var reading = stream.Read(buffer, 0, buffer.Length);
                     messageFromServer = Encoding.UTF8.GetString(buffer, 0, reading);
+                    ServerResponse response = JsonSerializer.Deserialize<ServerResponse>(messageFromServer);
                     Debug.Print(messageFromServer);
                 }
 

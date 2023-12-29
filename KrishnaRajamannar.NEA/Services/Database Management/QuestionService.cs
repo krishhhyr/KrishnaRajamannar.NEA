@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KrishnaRajamannar.NEA.Services
+namespace KrishnaRajamannar.NEA.Services.Database
 {
     public class QuestionService : IQuestionService
     {
@@ -15,7 +15,7 @@ namespace KrishnaRajamannar.NEA.Services
 
         public QuestionService()
         {
-            
+
         }
 
         // A region which groups services that do not represent a question type.
@@ -68,7 +68,7 @@ namespace KrishnaRajamannar.NEA.Services
             {
                 question = data.GetString(0);
                 answer = data.GetString(1);
-  
+
                 string[]? options = { option1, option2, option3, option4, option5, option6 };
                 for (int i = 1; i <= 6; i++)
                 {
@@ -108,7 +108,7 @@ namespace KrishnaRajamannar.NEA.Services
 
         // A function which gets the number of questions in a quiz using the aggregate SQL function COUNT
 
-        public int GetNumberOfQuestions(int quizID) 
+        public int GetNumberOfQuestions(int quizID)
         {
             int numberOfQuestions = 0;
 
@@ -128,7 +128,7 @@ namespace KrishnaRajamannar.NEA.Services
                         WHERE Quiz.QuizID = QuizMultipleChoiceQuestionLink.QuizID AND QuizMultipleChoiceQuestionLink.MCQuestionID = MultipleChoiceQuestion.MCQuestionID AND Quiz.QuizID = @QuizID
                     ) AS QuestionsInQuiz
                 ";
-            
+
             using SqlConnection connection = new SqlConnection(connectionString);
             connection.Open();
 
@@ -140,7 +140,7 @@ namespace KrishnaRajamannar.NEA.Services
 
             var data = command.ExecuteReader();
 
-            while (data.Read()) 
+            while (data.Read())
             {
                 numberOfQuestions = data.GetInt32(0);
 
@@ -187,7 +187,7 @@ namespace KrishnaRajamannar.NEA.Services
 
         // Procedure which inserts values into the QuizTextQuestionLink table in the database.
         // This allows text questions and the quizzes to have a Many-to-many relationship via QuizTextQuestionLink
-        public void InsertTextQuestionLink(int quizID) 
+        public void InsertTextQuestionLink(int quizID)
         {
             int textQuestionID = GetRecentTextQuestionID();
 
@@ -213,7 +213,7 @@ namespace KrishnaRajamannar.NEA.Services
 
         // Function which uses aggregate SQL functions to get the text question ID of the most recent question added to the database.
         // This is used to insert values into QuizTextQuestionLink which requires the Quiz ID and the Text Question ID
-        public int GetRecentTextQuestionID() 
+        public int GetRecentTextQuestionID()
         {
             // Sets the inital Text Question ID before assigning a value to it from the DB.
             int textQuestionID = 0;
@@ -357,7 +357,7 @@ namespace KrishnaRajamannar.NEA.Services
             {
                 command.Parameters.AddWithValue("@Option3", DBNull.Value);
             }
-            else 
+            else
             {
                 command.Parameters.AddWithValue("@Option3", options["Option3"]);
             }
@@ -457,7 +457,7 @@ namespace KrishnaRajamannar.NEA.Services
 
 
         // This deletes a multiple choice question form the database
-        public void DeleteMultipleChoiceQuestion(string question, string answer, int quizID) 
+        public void DeleteMultipleChoiceQuestion(string question, string answer, int quizID)
         {
             int mcQuestionID = GetMultipleChoiceQuestionID(question, answer, quizID);
 
@@ -484,10 +484,10 @@ namespace KrishnaRajamannar.NEA.Services
 
 
         // This gets the ID of a Multiple Choice Question
-        public int GetMultipleChoiceQuestionID(string question, string answer, int quizID) 
+        public int GetMultipleChoiceQuestionID(string question, string answer, int quizID)
         {
             int mcQuestionID = 0;
-            
+
             const string sqlQuery =
                 @"
                     SELECT mcQuestionID 
@@ -509,7 +509,7 @@ namespace KrishnaRajamannar.NEA.Services
 
             var data = command.ExecuteReader();
 
-            while (data.Read()) 
+            while (data.Read())
             {
                 mcQuestionID = data.GetInt32(0);
                 return mcQuestionID;
@@ -518,5 +518,5 @@ namespace KrishnaRajamannar.NEA.Services
         }
         #endregion
     }
-          
+
 }

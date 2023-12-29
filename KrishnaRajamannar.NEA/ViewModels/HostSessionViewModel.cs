@@ -1,9 +1,10 @@
 ﻿using Azure;
 using KrishnaRajamannar.NEA.Events;
 using KrishnaRajamannar.NEA.Models;
+using KrishnaRajamannar.NEA.Models.Dto;
 using KrishnaRajamannar.NEA.Services;
+using KrishnaRajamannar.NEA.Services.Connection;
 using KrishnaRajamannar.NEA.Services.Interfaces;
-using KrishnaRajamannar.NEA.ViewModels.Dto;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -104,8 +105,8 @@ namespace KrishnaRajamannar.NEA.ViewModels
             }
         }
 
-        private ObservableCollection<UserSessionDto> _users = new ObservableCollection<UserSessionDto>();
-        public ObservableCollection<UserSessionDto> Users 
+        private ObservableCollection<UserSessionData> _users = new ObservableCollection<UserSessionData>();
+        public ObservableCollection<UserSessionData> Users 
         {
             get { return _users; }
             set 
