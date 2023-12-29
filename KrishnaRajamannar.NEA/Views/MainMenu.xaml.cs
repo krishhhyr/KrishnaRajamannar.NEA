@@ -61,6 +61,7 @@ namespace KrishnaRajamannar.NEA.Views
         private void MainMenuViewModel_ShowHostSessionWindow(object sender, Events.ShowAccountParameterWindowEventArgs e)
         {
             _mainMenuViewModel.HostSessionViewModel.UserID = e.UserID;
+            _mainMenuViewModel.HostSessionViewModel.Username = e.Username;
             hostSession = new HostSession(_mainMenuViewModel.HostSessionViewModel);
 
             hostSession.ShowDialog();

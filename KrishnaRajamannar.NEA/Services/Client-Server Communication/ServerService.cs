@@ -22,6 +22,7 @@ namespace KrishnaRajamannar.NEA.Services.Connection
     public class ServerService : IServerService
     {
         TcpListener server;
+        private string _hostname;
         private List<TcpClient> clients = new List<TcpClient>();
         CancellationTokenSource source = new CancellationTokenSource();
         UserConnectionService _userConnectionService;
@@ -35,8 +36,9 @@ namespace KrishnaRajamannar.NEA.Services.Connection
             _sessionService = sessionService;
         }
 
-        public void StartServer(string ipAddress, int portNumber)
+        public void StartServer(string hostname, string ipAddress, int portNumber)
         {
+            _hostname = hostname;
             ListeningForConnections(ipAddress, portNumber);
         }
         public void ListeningForConnections(string ipAddress, int portNumber)
@@ -97,8 +99,10 @@ namespace KrishnaRajamannar.NEA.Services.Connection
             // Gets the details of the users connected to the session
             // Used to pass onto the client's UI window 
             IList<UserSessionData> userDetails = _userSessionService.GetUserSessionDetails(userSessionData);
-            // Creates a new object to pass the selected Quiz and the other users connected to client
+            // Creates a new object to pass the selected Quiz, the other users connected to client
+            // and host name
             SessionData sessionData = new SessionData();
+            sessionData.HostName = _hostname;
             sessionData.QuizSelected = quizSelected;
             sessionData.UserSessions = userDetails;
             // Expressing the type of data so that the Client can process the request accordingly

@@ -118,6 +118,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
             ShowAccountParameterWindowEventArgs args = new ShowAccountParameterWindowEventArgs();
             args.IsShown = true;
             args.UserID = _userid;
+            args.Username = _username;
             OnShowHostSessionWindow(args);
 
         }
