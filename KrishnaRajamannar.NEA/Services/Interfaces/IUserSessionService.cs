@@ -1,4 +1,4 @@
-﻿using KrishnaRajamannar.NEA.ViewModels.Dto;
+﻿using KrishnaRajamannar.NEA.Models.Dto;
 using System.Collections;
 using System.Collections.Generic;
 

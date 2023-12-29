@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Shapes;
 using KrishnaRajamannar.NEA.Services.Interfaces;
-using KrishnaRajamannar.NEA.ViewModels.Dto;
+using KrishnaRajamannar.NEA.Models.Dto;
 using KrishnaRajamannar.NEA.Views;
 using log4net;
 using Microsoft.Identity.Client;
