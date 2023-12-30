@@ -28,6 +28,7 @@ namespace KrishnaRajamannar.NEA.Services.Connection
         UserConnectionService _userConnectionService;
         IUserSessionService _userSessionService;
         ISessionService _sessionService;
+        private UserSessionData userSessionData;
 
         public ServerService(UserConnectionService userConnectionService, IUserSessionService userSessionService, ISessionService sessionService)
         {
@@ -70,11 +71,11 @@ namespace KrishnaRajamannar.NEA.Services.Connection
             string usersession = Encoding.UTF8.GetString(buffer, 0, reading);
             // Converts the string into an object
             // Object represents the UserID and Username of client connected
-            UserSessionData userSessionData = JsonSerializer.Deserialize<UserSessionData>(usersession);
+            userSessionData = JsonSerializer.Deserialize<UserSessionData>(usersession);
             // Calls a series of events to update UI to reflect new client connection
             _userConnectionService.UserJoinedSession(userSessionData);
             // Calls function to respond to new client connection
-            SendAcknowledgement(client, userSessionData);
+            SendAcknowledgement(client);
         }
 
         // Used to send general commands to all clients connected
@@ -82,15 +83,19 @@ namespace KrishnaRajamannar.NEA.Services.Connection
         {
             foreach (var client in clients)
             {
+                ServerResponse serverResponse = new ServerResponse();
+                serverResponse.SessionId = userSessionData.SessionID;
+                serverResponse.DataType = "Start Quiz";
                 NetworkStream stream = client.GetStream();
-                var messageBytes = Encoding.UTF8.GetBytes(command);
+                var payload = JsonSerializer.Serialize<ServerResponse>(serverResponse);
+                var messageBytes = Encoding.UTF8.GetBytes(payload);
                 stream.Write(messageBytes, 0, messageBytes.Length);
             }
         }
         // Sends a response message back to clients after inital connection
         // (acknowledges the connection, signals clients that a connection has been established)
         // Used to display same data that the clients can see in a different window
-        public void SendAcknowledgement(TcpClient client, UserSessionData userSessionData)
+        public void SendAcknowledgement(TcpClient client)
         {
             ServerResponse serverResponse = new ServerResponse();
             serverResponse.SessionId = userSessionData.SessionID;
