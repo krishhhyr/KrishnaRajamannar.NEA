@@ -178,6 +178,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
                     ShowMessageDialog("Account Login successful");
 
                     ShowMainMenu();
+                    HideAccountLogin();
                 }
             }
         }
