@@ -45,13 +45,15 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
             _userConnectionService.UserJoined += OnUserJoined;
             _userConnectionService.UserLeft += OnUserLeft;
-            _clientService.ClientConnected += _clientService_ClientConnected;
+            _clientService.StartQuizEvent += _clientService_StartQuizEvent;
         }
 
-        private void _clientService_ClientConnected(object sender, ClientConnectedEventArgs e)
+        private void _clientService_StartQuizEvent(object sender, StartQuizEventArgs e)
         {
             throw new NotImplementedException();
         }
+
+       
 
         #region Properties
 
@@ -335,7 +337,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
                 _sessionService.InsertSessionData(SessionID, SelectedQuiz, SelectedCondition, ConditionValue
                 ,ipAddress, portNumber, 36);
-                _serverService.StartServer(Username, ipAddress, 63398);  
+                _serverService.StartServer(Username, ipAddress, portNumber);  
                 
                 return true;
             }
@@ -362,7 +364,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
         public void StartQuiz()
         {
-            _serverService.SendMessageToClients("Start Quiz");
+            _serverService.SendMessageToClients("StartQuiz");
         }
     } 
 }

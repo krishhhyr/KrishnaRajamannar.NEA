@@ -17,7 +17,8 @@ namespace KrishnaRajamannar.NEA.Services.Connection
     {
         //Create a event handler 
         public event ClientConnectedEventHandler ClientConnected;
-        public event ClientConnectedEventHandler StartQuizButtonPressed;
+        public event StartQuizEventHandler StartQuizEvent;
+
         private readonly string sessionId;
         private TcpClient server = new TcpClient();
         private ConcurrentQueue<ServerResponse> serverResponses = new ConcurrentQueue<ServerResponse>();
@@ -50,11 +51,11 @@ namespace KrishnaRajamannar.NEA.Services.Connection
                         args.ServerResponse = response;
                         OnClientConnected(args);
                     }
-                    else if (response.DataType == "Start Quiz")
+                    else if (response.DataType == "StartQuiz")
                     {
                         // We pass usual quiz data; I.e time limit or number of qs?
                         // subscribe to event in ViewSessionInfo + Host Session Window??
-                        ClientConnectedEventArgs args = new ClientConnectedEventArgs();
+                        StartQuizEventArgs args = new StartQuizEventArgs();
                         args.ServerResponse = response;
                         OnStartQuizButtonPressed(args);
                     }
@@ -72,9 +73,9 @@ namespace KrishnaRajamannar.NEA.Services.Connection
             }
         }
 
-        protected virtual void OnStartQuizButtonPressed(ClientConnectedEventArgs e)
+        protected virtual void OnStartQuizButtonPressed(StartQuizEventArgs e)
         {
-            ClientConnectedEventHandler handler = StartQuizButtonPressed;
+            StartQuizEventHandler handler = StartQuizEvent;
             if (handler != null)
             {
                 handler(this, e);
