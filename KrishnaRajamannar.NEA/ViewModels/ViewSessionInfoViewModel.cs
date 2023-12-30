@@ -12,13 +12,13 @@ namespace KrishnaRajamannar.NEA.ViewModels
     {
         public event PropertyChangedEventHandler? PropertyChanged;
         private readonly IClientService _clientService;
-        private ShowSessionParameterWindowEventHandler ShowMultipleQuizReviewWindow;
-        private HideWindowEventHandler HideViewSessionInfoWindow;
+        public event ShowSessionParameterWindowEventHandler ShowMultipleQuizReviewWindow;
+        public event HideWindowEventHandler HideViewSessionInfoWindow;
 
         public ViewSessionInfoViewModel(IClientService clientService)
         {
             _clientService = clientService;
-            _clientService.OnStartQuizButtonPressed += OnStartQuizButtonPressed;
+            _clientService.StartQuizButtonPressed += OnStartQuizButtonPressed;
         }
 
         private void OnStartQuizButtonPressed(object sender, Events.ClientConnectedEventArgs e)
