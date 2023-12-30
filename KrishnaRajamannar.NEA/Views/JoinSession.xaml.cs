@@ -1,7 +1,10 @@
-﻿using KrishnaRajamannar.NEA.ViewModels;
+﻿using KrishnaRajamannar.NEA.Models.Dto;
+using KrishnaRajamannar.NEA.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -22,16 +25,30 @@ namespace KrishnaRajamannar.NEA.Views
     {
         private JoinSessionViewModel _joinSessionViewModel;
 
+        private ViewSessionInformation _viewSessionInformation;
+        private readonly ViewSessionInfoViewModel _viewSessionInfoViewModel;
         public JoinSession(JoinSessionViewModel joinSessionViewModel)
         {
             InitializeComponent();
             _joinSessionViewModel = joinSessionViewModel;
+            _viewSessionInfoViewModel = App.ServiceProvider.GetService<ViewSessionInfoViewModel>();
 
             this.DataContext = _joinSessionViewModel;
 
             _joinSessionViewModel.ShowMessage += JoinSessionViewModel_ShowMessage;
             _joinSessionViewModel.HideJoinSessionWindow += _joinSessionViewModel_HideJoinSessionWindow;
+            _joinSessionViewModel.ShowViewSessionInfoWindow += OnShowViewSessionInfoWindow;
 
+        }
+
+        private void OnShowViewSessionInfoWindow(object sender, Events.ShowSessionParameterWindowEventArgs e)
+        {
+            if (e.ServerResponse != null)
+            {
+               _viewSessionInfoViewModel.LoadData(e.ServerResponse);
+               _viewSessionInformation = new ViewSessionInformation(_viewSessionInfoViewModel);               ;
+               _viewSessionInformation.ShowDialog();               
+            }
         }
 
         private void _joinSessionViewModel_HideJoinSessionWindow(object sender, Events.HideWindowEventArgs e)
