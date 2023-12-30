@@ -17,6 +17,7 @@ namespace KrishnaRajamannar.NEA.Services.Connection
     {
         //Create a event handler 
         public event ClientConnectedEventHandler ClientConnected;
+        public event ClientConnectedEventHandler StartQuizButtonPressed;
         private readonly string sessionId;
         private TcpClient server = new TcpClient();
         private ConcurrentQueue<ServerResponse> serverResponses = new ConcurrentQueue<ServerResponse>();
@@ -32,32 +33,48 @@ namespace KrishnaRajamannar.NEA.Services.Connection
            
         }
 
+        // Processes all the different data types for messages...
         private void StartWorkerThread()
         {
-
             //Task task = Task.Factory.StartNew(() =>
-            //{
-               while (true)
-               {
-                    ServerResponse response=null;
-                    serverResponses.TryDequeue(out response);    
-                    if(response != null)
+            //{});
+            while (true)
+            {
+                ServerResponse response = null;
+                serverResponses.TryDequeue(out response);
+                if (response != null) 
+                {
+                    if (response.DataType.Equals("Acknowledgement"))
                     {
-                        if(response.DataType.Equals("Acknowledgement"))
-                        {
-                            ClientConnectedEventArgs args = new ClientConnectedEventArgs();
-                            args.ServerResponse = response;
-                            OnClientConnected(args);
-                        }                      
+                        ClientConnectedEventArgs args = new ClientConnectedEventArgs();
+                        args.ServerResponse = response;
+                        OnClientConnected(args);
                     }
-               }
-            //});
+                    else if (response.DataType == "Start Quiz")
+                    {
+                        // We pass usual quiz data; I.e time limit or number of qs?
+                        // subscribe to event in ViewSessionInfo + Host Session Window??
+                        ClientConnectedEventArgs args = new ClientConnectedEventArgs();
+                        args.ServerResponse = response;
+                        OnStartQuizButtonPressed(args);
+                    }
+                }
+            }
+            
         }
-
 
         protected virtual void OnClientConnected(ClientConnectedEventArgs e)
         {
             ClientConnectedEventHandler handler = ClientConnected;
+            if (handler != null)
+            {
+                handler(this, e);
+            }
+        }
+
+        protected virtual void OnStartQuizButtonPressed(ClientConnectedEventArgs e)
+        {
+            ClientConnectedEventHandler handler = StartQuizButtonPressed;
             if (handler != null)
             {
                 handler(this, e);

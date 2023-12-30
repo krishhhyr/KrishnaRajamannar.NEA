@@ -26,6 +26,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
         public event ShowMessageEventHandler ShowMessage;
         private readonly IServerService _serverService;
         private readonly ISessionService _sessionService;
+        private readonly IClientService _clientService;
         private readonly UserConnectionService _userConnectionService;
         private readonly IQuizService _quizService;
 
@@ -33,17 +34,26 @@ namespace KrishnaRajamannar.NEA.ViewModels
         public string Username;
         IList<QuizModel> quizzes = new List<QuizModel>();
 
-        public HostSessionViewModel(ISessionService sessionService, IQuizService quizService, IServerService serverService, UserConnectionService userConnectionService)
+        public HostSessionViewModel(ISessionService sessionService, IQuizService quizService, 
+            IServerService serverService, UserConnectionService userConnectionService, IClientService clientService)
         {
             _serverService = serverService;
             _sessionService = sessionService;
             _quizService = quizService;
             _userConnectionService = userConnectionService;
+            _clientService = clientService;
 
             _userConnectionService.UserJoined += OnUserJoined;
             _userConnectionService.UserLeft += OnUserLeft;
-
+            _clientService.ClientConnected += _clientService_ClientConnected;
         }
+
+        private void _clientService_ClientConnected(object sender, ClientConnectedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        #region Properties
 
         private List<string> _quizTitles;
         public List<string> QuizTitles 
@@ -128,6 +138,9 @@ namespace KrishnaRajamannar.NEA.ViewModels
             }
         }
 
+        #endregion
+
+        #region Events
         public void RaisePropertyChange(string propertyname)
         {
             if (PropertyChanged != null)
@@ -178,19 +191,21 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
         }
 
+        #endregion
+
         // Used to generate a random six digit session ID in which users will enter to join to.
-        public int CreateSessionID() 
+        public int CreateSessionID()
         {
             Random random = new Random();
 
             int sessionID = 0;
             bool valid = false;
-            while (valid == false) 
+            while (valid == false)
             {
                 sessionID = random.Next(100000, 1000000);
                 // This checks whether the session ID has already been created and stored in the DB
                 // If it hasn't, the newly created ID can be used. 
-                if (_sessionService.IsSessionIDExist(sessionID) == false) 
+                if (_sessionService.IsSessionIDExist(sessionID) == false)
                 {
                     SessionID = sessionID;
                     valid = true;
@@ -199,54 +214,26 @@ namespace KrishnaRajamannar.NEA.ViewModels
             return sessionID;
         }
 
-        // Used to insert the session data into the Session table in the database. 
-        // This also calls a function to start the server for the TCP/IP connection.
-        public bool CreateSession() 
+        // Used to assign the methods which the host can select to end a multiplayer quiz.
+        // This is assigned to the property of the class which is binded to the UI.
+        public void AssignQuizConditions()
         {
-            bool valid = false;
+            List<string> endQuizConditions = new List<string>();
+            endQuizConditions.Add("Number of Questions");
+            endQuizConditions.Add("Time Limit");
 
-            if (SelectedCondition == "Number of Questions")
-            {
-                valid = ValidateNumberOfQuestionsInput();
-            }
-            else
-            {
-                valid = ValidateTimeInput();
-            }
-
-            if (valid == true) 
-            {
-                //string ipAddress = "192.168.0.65";
-                //int portNumber = 60631;
-
-                //real
-                //int sessionID = CreateSessionID();
-                string ipAddress = GetIPAddress();
-                //int portNumber = GetPortNumber();
-
-                //_sessionService.InsertSessionData(sessionID, SelectedQuiz, SelectedCondition, ConditionValue
-                //,ipAddress, portNumber, 36);
-                _serverService.StartServer(Username, ipAddress, 63398);  
-                
-                return true;
-            }
-            return false;
-        }
-
-        public void SendSessionStartedCommand()
-        {
-            _serverService.SendCommandToClients("Start Quiz");
+            _endQuizConditions = endQuizConditions;
         }
 
         // This retrieves the IP address of the host's machine 
         // Used to know which IP address other users should connect to for the multiplayer quiz. 
-        private string GetIPAddress() 
+        private string GetIPAddress()
         {
             string IPAddress = Dns.GetHostEntry(Dns.GetHostName()).AddressList[1].ToString();
             return IPAddress;
         }
         // Generates a random port number which is where the server will start on.
-        private int GetPortNumber() 
+        private int GetPortNumber()
         {
             Random random = new Random();
 
@@ -265,8 +252,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
             }
             return portNumber;
         }
-        // Used to retrieve the titles of the quizzes which have been created by the host. 
-        // This is used so that the host can select a quiz to review with other users.
+
         public void GetQuizzes()
         {
             List<string> titlesOfQuizzes = new List<string>();
@@ -285,22 +271,11 @@ namespace KrishnaRajamannar.NEA.ViewModels
             _quizTitles = titlesOfQuizzes;
         }
 
-        // Used to assign the methods which the host can select to end a multiplayer quiz.
-        // This is assigned to the property of the class which is binded to the UI.
-        public void AssignQuizConditions() 
-        {
-            List<string> endQuizConditions = new List<string>();
-            endQuizConditions.Add("Number of Questions");
-            endQuizConditions.Add("Time Limit");
-
-            _endQuizConditions = endQuizConditions;
-        }
-
         // This validates the input in which the quiz ends if a certain number of 
         // questions has been answered.
         // This checks if the input is below or equal to the number of questions
         // in the quiz selected by the host.
-        private bool ValidateNumberOfQuestionsInput() 
+        private bool ValidateNumberOfQuestionsInput()
         {
             bool valid = false;
 
@@ -338,7 +313,39 @@ namespace KrishnaRajamannar.NEA.ViewModels
             }
         }
 
-        private void UpdateNumberOfUsersJoined() 
+        // Used to insert the session data into the Session table in the database. 
+        // This also calls a function to start the server for the TCP/IP connection.
+        public bool CreateSession() 
+        {
+            bool valid = false;
+
+            if (SelectedCondition == "Number of Questions")
+            {
+                valid = ValidateNumberOfQuestionsInput();
+            }
+            else
+            {
+                valid = ValidateTimeInput();
+            }
+
+            if (valid == true) 
+            {
+                string ipAddress = GetIPAddress();
+                int portNumber = GetPortNumber();
+
+                _sessionService.InsertSessionData(SessionID, SelectedQuiz, SelectedCondition, ConditionValue
+                ,ipAddress, portNumber, 36);
+                _serverService.StartServer(Username, ipAddress, 63398);  
+                
+                return true;
+            }
+            return false;
+        }
+
+        // Used to retrieve the titles of the quizzes which have been created by the host. 
+        // This is used so that the host can select a quiz to review with other users.
+
+        private void UpdateNumberOfUsersJoined()
         {
             int numberOfUsers = _users.Count;
 
@@ -346,11 +353,16 @@ namespace KrishnaRajamannar.NEA.ViewModels
             {
                 NumberOfUsersJoined = $"({numberOfUsers} user has joined.)";
             }
-            else 
+            else
             {
                 NumberOfUsersJoined = $"({numberOfUsers} users have joined.)";
             }
-            
+
+        }
+
+        public void StartQuiz()
+        {
+            _serverService.SendMessageToClients("Start Quiz");
         }
     } 
 }

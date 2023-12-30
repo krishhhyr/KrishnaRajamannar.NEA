@@ -67,6 +67,7 @@ namespace KrishnaRajamannar.NEA
             services.AddTransient(typeof(JoinSessionViewModel));
             services.AddTransient(typeof(IndependentReviewQuizModel));
             services.AddTransient(typeof(ViewSessionInfoViewModel));
+            services.AddTransient(typeof(MultipleQuizReviewViewModel));
 
 
         }
