@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Sockets;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-using KrishnaRajamannar.NEA.Services.Interfaces;
-using System.Windows;
-using KrishnaRajamannar.NEA.Events;
-using System.Diagnostics;
-using System.Text.Json;
+﻿using KrishnaRajamannar.NEA.Events;
 using KrishnaRajamannar.NEA.Models.Dto;
+using KrishnaRajamannar.NEA.Services.Interfaces;
+using System;
+using System.Collections.Concurrent;
+using System.Diagnostics;
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
+using System.Text.Json;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace KrishnaRajamannar.NEA.Services.Connection
 {
@@ -20,6 +19,41 @@ namespace KrishnaRajamannar.NEA.Services.Connection
         public event ClientConnectedEventHandler ClientConnected;
         private readonly string sessionId;
         private TcpClient server = new TcpClient();
+        private ConcurrentQueue<ServerResponse> serverResponses = new ConcurrentQueue<ServerResponse>();
+
+        public ClientService() {
+
+            Thread workerThread = new Thread(() =>
+            {
+                StartWorkerThread();
+            });
+            workerThread.SetApartmentState(ApartmentState.STA);
+            workerThread.Start();
+           
+        }
+
+        private void StartWorkerThread()
+        {
+
+            //Task task = Task.Factory.StartNew(() =>
+            //{
+               while (true)
+               {
+                    ServerResponse response=null;
+                    serverResponses.TryDequeue(out response);    
+                    if(response != null)
+                    {
+                        if(response.DataType.Equals("Acknowledgement"))
+                        {
+                            ClientConnectedEventArgs args = new ClientConnectedEventArgs();
+                            args.ServerResponse = response;
+                            OnClientConnected(args);
+                        }                      
+                    }
+               }
+            //});
+        }
+
 
         protected virtual void OnClientConnected(ClientConnectedEventArgs e)
         {
@@ -54,13 +88,11 @@ namespace KrishnaRajamannar.NEA.Services.Connection
 
         public string HandleClientRequests(string username, int userID, string ipAddressConnect, int portNumberConnect, string sessionId)
         {
-            var buffer = new byte[1024];
+            var buffer = new byte[4096];
             string messageFromServer = "";
             IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse(ipAddressConnect), portNumberConnect);
             server.Connect(endPoint);
-
-            //Raise the Event 
-            OnClientConnected(new ClientConnectedEventArgs() { SessionId = sessionId });
+                     
 
             NetworkStream stream = server.GetStream();
             UserSessionData dto = new UserSessionData
@@ -84,8 +116,9 @@ namespace KrishnaRajamannar.NEA.Services.Connection
                 {
                     var reading = stream.Read(buffer, 0, buffer.Length);
                     messageFromServer = Encoding.UTF8.GetString(buffer, 0, reading);
+                    //Pass the recieved message to queue for further processing                    
                     ServerResponse response = JsonSerializer.Deserialize<ServerResponse>(messageFromServer);
-                    Debug.Print(messageFromServer);
+                    serverResponses.Enqueue(response);
                 }
 
             }

@@ -10,5 +10,6 @@ namespace KrishnaRajamannar.NEA.Events
     {
         public bool IsShown { get; set; }
     }
-    public delegate void ShowWindowEventHandler(Object sender, ShowWindowEventArgs e); 
+    public delegate void ShowWindowEventHandler(Object sender, ShowWindowEventArgs e);
+    
 }
