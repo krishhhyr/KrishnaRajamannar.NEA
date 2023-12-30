@@ -10,8 +10,8 @@ namespace KrishnaRajamannar.NEA.Services.Interfaces
 
         public void HandleClientRequests(TcpListener server);
 
-        public void StopServer();
+        public void SendMessageToClients(string message);
 
-        public void SendCommandToClients(string command);
+        public void StopServer();
     }
 }

@@ -78,20 +78,6 @@ namespace KrishnaRajamannar.NEA.Services.Connection
             SendAcknowledgement(client);
         }
 
-        // Used to send general commands to all clients connected
-        public void SendCommandToClients(string command)
-        {
-            foreach (var client in clients)
-            {
-                ServerResponse serverResponse = new ServerResponse();
-                serverResponse.SessionId = userSessionData.SessionID;
-                serverResponse.DataType = "Start Quiz";
-                NetworkStream stream = client.GetStream();
-                var payload = JsonSerializer.Serialize<ServerResponse>(serverResponse);
-                var messageBytes = Encoding.UTF8.GetBytes(payload);
-                stream.Write(messageBytes, 0, messageBytes.Length);
-            }
-        }
         // Sends a response message back to clients after inital connection
         // (acknowledges the connection, signals clients that a connection has been established)
         // Used to display same data that the clients can see in a different window
@@ -122,6 +108,22 @@ namespace KrishnaRajamannar.NEA.Services.Connection
             var payload = JsonSerializer.Serialize<ServerResponse>(serverResponse);
             var messageBytes = Encoding.UTF8.GetBytes(payload);
             stream.Write(messageBytes, 0, messageBytes.Length);
+        }
+
+        // Used to send general messages to all clients connected
+        public void SendMessageToClients(string message)
+        {
+            foreach (var client in clients)
+            {
+                ServerResponse serverResponse = new ServerResponse();
+                serverResponse.SessionId = userSessionData.SessionID;
+                serverResponse.DataType = message;
+                serverResponse.Data = message;
+                NetworkStream stream = client.GetStream();
+                var payload = JsonSerializer.Serialize<ServerResponse>(serverResponse);
+                var messageBytes = Encoding.UTF8.GetBytes(payload);
+                stream.Write(messageBytes, 0, messageBytes.Length);
+            }
         }
         public void StopServer()
         {

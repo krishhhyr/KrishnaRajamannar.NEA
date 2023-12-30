@@ -8,7 +8,8 @@ namespace KrishnaRajamannar.NEA.Models.Dto
     {
         public string HostName { get; set; }
         public string QuizSelected { get; set; }
-
+        public string EndQuizCondition { get; set; }
+        public string EndQuizConditionValue { get; set; }
         public IList<UserSessionData> UserSessions { get; set; }
     }
 }

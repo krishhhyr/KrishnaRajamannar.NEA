@@ -34,7 +34,9 @@ namespace KrishnaRajamannar.NEA.ViewModels
             _sessionService = sessionService;
             _clientService = clientService;
             _userConnectionService = userConnectionService;
-            _clientService.ClientConnected += OnClientConnected;           
+
+            _clientService.ClientConnected += OnClientConnected;
+            //_clientService.
         }
 
         // I need to show the Viewsession info window 

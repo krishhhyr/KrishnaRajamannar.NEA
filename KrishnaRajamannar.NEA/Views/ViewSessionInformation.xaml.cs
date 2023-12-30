@@ -1,4 +1,5 @@
 ﻿using KrishnaRajamannar.NEA.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,11 +22,34 @@ namespace KrishnaRajamannar.NEA.Views
     public partial class ViewSessionInformation : Window
     {
         private readonly ViewSessionInfoViewModel _viewSessionInfoViewModel;
+
+        private MultipleQuizReview _multipleQuizReview;
+        private readonly MultipleQuizReviewViewModel _multipleQuizReviewViewModel;
         public ViewSessionInformation(ViewSessionInfoViewModel viewSessionInfoViewModel)
         {           
             InitializeComponent();
             _viewSessionInfoViewModel = viewSessionInfoViewModel;
-            DataContext = _viewSessionInfoViewModel;
+            _multipleQuizReviewViewModel = App.ServiceProvider.GetService<MultipleQuizReviewViewModel>();
+
+            this.DataContext = _viewSessionInfoViewModel;
+
+            _viewSessionInfoViewModel.ShowMultipleQuizReviewWindow += OnShowMultipleQuizReviewWindow;
+            _viewSessionInfoViewModel.HideViewSessionInfoWindow += OnHideViewSessionInfoWindow;
+        }
+
+        private void OnHideViewSessionInfoWindow(object sender, Events.HideWindowEventArgs e)
+        {
+            this.Close();
+        }
+
+        private void OnShowMultipleQuizReviewWindow(object sender, Events.ShowSessionParameterWindowEventArgs e)
+        {
+            if (e.ServerResponse != null)
+            {
+                //_multipleQuizReviewViewModel.LoadData(e.ServerResponse);
+                _multipleQuizReview = new MultipleQuizReview(_multipleQuizReviewViewModel); ;
+                _multipleQuizReview.ShowDialog();
+            }
         }
     }
 }
