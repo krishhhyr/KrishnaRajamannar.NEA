@@ -1,7 +1,9 @@
 ﻿using KrishnaRajamannar.NEA.Events;
+using KrishnaRajamannar.NEA.Models.Dto;
 using KrishnaRajamannar.NEA.Services;
 using KrishnaRajamannar.NEA.Services.Connection;
 using KrishnaRajamannar.NEA.Services.Interfaces;
+using KrishnaRajamannar.NEA.Views;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,11 +17,14 @@ namespace KrishnaRajamannar.NEA.ViewModels
     {
         public event PropertyChangedEventHandler? PropertyChanged;
         public event ShowMessageEventHandler ShowMessage;
+        public event ShowSessionParameterWindowEventHandler ShowViewSessionInfoWindow;
         public event HideWindowEventHandler HideJoinSessionWindow;
         private readonly IClientService _clientService;
         private readonly ISessionService _sessionService;
-
         private readonly UserConnectionService _userConnectionService;
+
+        private ViewSessionInformation viewSessionInformation;
+        private ViewSessionInfoViewModel viewSessionInfoViewModel;
 
         public int UserID;
         public string Username;
@@ -29,13 +34,13 @@ namespace KrishnaRajamannar.NEA.ViewModels
             _sessionService = sessionService;
             _clientService = clientService;
             _userConnectionService = userConnectionService;
-
-            _clientService.ClientConnected += _clientService_ClientConnected;
+            _clientService.ClientConnected += OnClientConnected;           
         }
 
-        private void _clientService_ClientConnected(object sender, ClientConnectedEventArgs e)
+        // I need to show the Viewsession info window 
+        private void OnClientConnected(object sender, ClientConnectedEventArgs e)
         {
-            ;
+            ShowViewSessionInfo(e.ServerResponse);
         }
 
         public void RaisePropertyChange(string propertyname)
@@ -74,6 +79,14 @@ namespace KrishnaRajamannar.NEA.ViewModels
             OnShowMessage(args);
         }
 
+        private void ShowViewSessionInfo(ServerResponse response) 
+        {
+            ShowSessionParameterWindowEventArgs args = new ShowSessionParameterWindowEventArgs();
+            args.IsShown = true;
+            args.ServerResponse = response;
+            OnShowViewSessionInfoWindow(args);
+        }
+
         private void HideJoinSession()
         {
             HideWindowEventArgs args = new HideWindowEventArgs();
@@ -85,6 +98,15 @@ namespace KrishnaRajamannar.NEA.ViewModels
         {
             ShowMessageEventHandler handler = ShowMessage;
             if (handler != null)
+            {
+                handler(this, e);
+            }
+        }
+
+        protected virtual void OnShowViewSessionInfoWindow(ShowSessionParameterWindowEventArgs e) 
+        {
+            ShowSessionParameterWindowEventHandler handler = ShowViewSessionInfoWindow;
+            if (handler != null) 
             {
                 handler(this, e);
             }

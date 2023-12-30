@@ -1,4 +1,5 @@
-﻿using System;
+﻿using KrishnaRajamannar.NEA.Models.Dto;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,8 +17,7 @@ namespace KrishnaRajamannar.NEA.Events
 
     public class ClientConnectedEventArgs:EventArgs
     {
-        public string SessionId { get; set; }
-        public string SessionName { get; set; }
+       public ServerResponse ServerResponse { get; set; }
     }
 
     public delegate void ClientConnectedEventHandler(Object sender, ClientConnectedEventArgs e);
