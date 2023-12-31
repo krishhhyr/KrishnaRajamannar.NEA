@@ -38,8 +38,6 @@ namespace KrishnaRajamannar.NEA.Services.Connection
         // Processes all the different data types for messages...
         private void StartWorkerThread()
         {
-            //Task task = Task.Factory.StartNew(() =>
-            //{});
             while (true)
             {
                 try 
