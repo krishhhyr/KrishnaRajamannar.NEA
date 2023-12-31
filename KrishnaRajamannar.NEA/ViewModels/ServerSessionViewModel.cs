@@ -32,7 +32,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
         public ServerSessionViewModel(IServerService serverService, ISessionService sessionService, IQuizService quizService)
         {
-            _serverService = serverService;
+            _serverService = serverService;            
             _sessionService = sessionService;
             _quizService = quizService;
         }
@@ -47,7 +47,10 @@ namespace KrishnaRajamannar.NEA.ViewModels
             {
                 _quizTitles = value;
                 RaisePropertyChange("QuizTitles");
-            }
+        }
+
+        public void StopServer() {
+           _serverService.StopServer();
         }
         private List<string> _endQuizConditions;
         public List<string> EndQuizConditions
@@ -57,17 +60,17 @@ namespace KrishnaRajamannar.NEA.ViewModels
             {
                 _endQuizConditions = value;
                 RaisePropertyChange("EndQuizConditions");
-            }
         }
+    }
         private string _selectedQuiz;
         public string SelectedQuiz
-        {
+    {
             get { return _selectedQuiz; }
             set
-            {
+        {
                 _selectedQuiz = value;
                 RaisePropertyChange("SelectedQuiz");
-            }
+        }
         }
         private string _selectedCondition;
         public string SelectedCondition
@@ -77,7 +80,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
             {
                 _selectedCondition = value;
                 RaisePropertyChange("SelectedCondition");
-            }
+        }
         }
         private string _conditionValue;
         public string ConditionValue
@@ -87,7 +90,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
             {
                 _conditionValue = value;
                 RaisePropertyChange("ConditionValue");
-            }
+        }
         }
         private int _sessionID;
         public int SessionID
@@ -108,7 +111,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
             {
                 _message = value;
                 RaisePropertyChange("Message");
-            }
+        }
         }
 
         private ObservableCollection<UserSessionData> _users = new ObservableCollection<UserSessionData>();
@@ -119,7 +122,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
             {
                 _users = value;
                 RaisePropertyChange("Users");
-            }
+        }       
         }
 
         private string _numberOfUsersJoined;
@@ -158,8 +161,8 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 {
                     SessionID = sessionID;
                     valid = true;
-                }
             }
+        }
             return sessionID;
         }
 
@@ -177,7 +180,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
         // This retrieves the IP address of the host's machine 
         // Used to know which IP address other users should connect to for the multiplayer quiz. 
         private string GetIPAddress()
-        {
+            {
             string IPAddress = Dns.GetHostEntry(Dns.GetHostName()).AddressList[1].ToString();
             return IPAddress;
         }
@@ -189,13 +192,13 @@ namespace KrishnaRajamannar.NEA.ViewModels
             int portNumber = 0;
             bool valid = false;
             while (valid == false)
-            {
+        {
                 // Randomising between 49152 and 65535 is used as these ports are not assigned to anything.
                 // Known as Dynamic Ports, they are used for temporary/private connections.
                 portNumber = random.Next(49152, 65536);
                 // Checks if the port number has not previously been generated and stored in the DB.
                 if (_sessionService.IsPortNumberExist(portNumber) == false)
-                {
+            {
                     valid = true;
                 }
             }
@@ -231,7 +234,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
             foreach (var quiz in Quizzes)
             {
                 if ((SelectedQuiz == quiz.QuizTitle) && (int.Parse(ConditionValue) <= quiz.NumberOfQuestions))
-                {
+        {
                     valid = true;
                     return valid;
                 }
@@ -249,11 +252,11 @@ namespace KrishnaRajamannar.NEA.ViewModels
         // time has passed.
         // This checks if the input is between 5 and 60 minutes.
         private bool ValidateTimeInput()
-        {
-            if ((int.Parse(ConditionValue) >= 5) && (int.Parse(ConditionValue) <= 60))
             {
+            if ((int.Parse(ConditionValue) >= 5) && (int.Parse(ConditionValue) <= 60))
+                {
                 return true;
-            }
+                }
             else
             {
                 Message = "Invalid input. Enter a value between 5 and 60 minutes.";
@@ -264,17 +267,17 @@ namespace KrishnaRajamannar.NEA.ViewModels
         // Used to insert the session data into the Session table in the database. 
         // This also calls a function to start the server for the TCP/IP connection.
         public bool StartSession()
-        {
+                {
             bool valid = false;
 
             if (SelectedCondition == "Number of Questions")
-            {
+                    {
                 valid = ValidateNumberOfQuestionsInput();
             }
             else
-            {
+                        {
                 valid = ValidateTimeInput();
-            }
+                        }
 
             if (valid == true)
             {
@@ -287,9 +290,9 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 Message = "Session started";
 
                 return true;
-            }
+                    }
             return false;
-        }
+                }
 
         // Sends the first question + time to answer? to all clients 
         public void StartQuiz()
@@ -300,7 +303,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
             string quizData = JsonSerializer.Serialize<QuizModel>(firstQuestion);
             _serverService.SendDataToClients(quizData, "StartQuiz");
 
-        }
+            }
 
         //public QuizModel RandomiseQuiz(QuizModel quiz) 
         //{

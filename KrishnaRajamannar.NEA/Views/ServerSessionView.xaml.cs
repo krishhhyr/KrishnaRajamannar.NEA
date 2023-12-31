@@ -52,7 +52,7 @@ namespace KrishnaRajamannar.NEA.Views
 
             sessionDataStackPanel.Visibility = Visibility.Hidden;
             multipleQuizReviewStackPanel.Visibility = Visibility.Visible;
-
+           
             _serverSessionViewModel.StartQuiz();
         }
     }

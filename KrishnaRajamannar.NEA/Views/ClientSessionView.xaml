@@ -97,6 +97,8 @@
                                Foreground="White"></Label>
             </StackPanel>
 
+            
+            
             <Button x:Name="leaveSessionBtn" Content="Leave Session" Grid.Column="2"
                             FontSize="20" Width="230" Background="WhiteSmoke" Margin="5"
                             HorizontalAlignment="Center" Height="40"></Button>
@@ -157,6 +159,16 @@
                                        Foreground="White"></Label>
                 </StackPanel>
             </StackPanel>
+
+
+
+            <!--<--><!--Label Content="Client" Foreground="Black" FontSize="40"></Label>
+            <Button Grid.Column="1" Content="Connect To Server" Click="Button_Click" ></Button>
+            <Label x:Name="label" Grid.Column="0" Content="{Binding SessionId}" HorizontalAlignment="Left"  Grid.Row="1" VerticalAlignment="Top"/>
+            <Label x:Name="label2" Grid.Column="1" Content="{Binding DataType}" HorizontalAlignment="Left"  Grid.Row="1" VerticalAlignment="Top"/>--><!-->-->
+        
+        
+        
         </Grid>
     </Border>
 </Window>
