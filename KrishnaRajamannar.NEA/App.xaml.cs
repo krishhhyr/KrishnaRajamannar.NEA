@@ -47,6 +47,11 @@ namespace KrishnaRajamannar.NEA
 
             //Register all UI windows
             services.AddTransient(typeof(AccountLogin));
+
+            services.AddTransient(typeof(ServerSessionView));
+            services.AddTransient(typeof(ClientSessionView));
+
+
             services.AddTransient(typeof(AccountCreation));
             services.AddTransient(typeof(MainMenu));
             services.AddTransient(typeof(IndependentReviewQuiz));
@@ -69,6 +74,9 @@ namespace KrishnaRajamannar.NEA
             services.AddTransient(typeof(ViewSessionInfoViewModel));
             services.AddTransient(typeof(MultipleQuizReviewViewModel));
 
+            services.AddTransient(typeof(ServerSessionViewModel));
+            services.AddTransient(typeof(ClientSessionViewModel));
+
 
         }
 
@@ -90,7 +98,10 @@ namespace KrishnaRajamannar.NEA
             log.Info("Showing Account login Screen");
             var accountLogin = ServiceProvider.GetService<AccountLogin>();
             accountLogin.Show();
-                        
+
+            //var server = ServiceProvider.GetService<ServerSessionView>();
+            //server.Show();
+
             base.OnStartup(e);
         }
 

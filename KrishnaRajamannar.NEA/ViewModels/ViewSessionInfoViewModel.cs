@@ -18,7 +18,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
         public ViewSessionInfoViewModel(IClientService clientService)
         {
             _clientService = clientService;
-            _clientService.StartQuizEvent += OnStartQuizButtonPressed;
+            //_clientService.StartQuizEvent += OnStartQuizButtonPressed;
         }
 
         private void OnStartQuizButtonPressed(object sender, Events.StartQuizEventArgs e)

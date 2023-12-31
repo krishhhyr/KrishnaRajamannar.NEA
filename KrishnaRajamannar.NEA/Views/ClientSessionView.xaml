@@ -1,0 +1,161 @@
+﻿<Window x:Class="KrishnaRajamannar.NEA.Views.ClientSessionView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:KrishnaRajamannar.NEA.Views"
+        mc:Ignorable="d"
+        Title="ClientSessionView" Height="900" Width="1600" 
+        ResizeMode="NoResize" 
+        FontFamily="Segoe UI Light">
+
+
+    <Border Background="#7474b0" BorderBrush="AntiqueWhite" BorderThickness="2">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="100"></ColumnDefinition>
+                <ColumnDefinition Width="1200"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="60"></RowDefinition>
+                <RowDefinition Height="60"></RowDefinition>
+                <RowDefinition Height="650"></RowDefinition>
+                <RowDefinition Height="130"></RowDefinition>
+            </Grid.RowDefinitions>
+
+            <Border Background="#a1a1ce" Grid.Column="0" Grid.Row="0"></Border>
+
+            <Border Background="#a1a1ce" Grid.Column="1" Grid.Row="0"></Border>
+
+            <Border Background="#a1a1ce" Grid.Column="1" Grid.Row="0"></Border>
+
+            <Border Background="#a1a1ce" Grid.Column="2" Grid.Row="0"></Border>
+
+            <Border Background="#a1a1ce" Grid.Column="2" Grid.Row="1"></Border>
+
+            <Border Background="#a1a1ce" Grid.Column="2" Grid.Row="2"></Border>
+
+            <Border Background="#a1a1ce" Grid.Column="2" Grid.Row="3"></Border>
+
+            <Border Background="#a1a1ce" Grid.Column="1" Grid.Row="3"></Border>
+
+            <Border Background="#a1a1ce" Grid.Column="0" Grid.Row="3"></Border>
+
+            <Border Background="#a1a1ce" Grid.Column="0" Grid.Row="2"></Border>
+
+
+
+            <Button x:Name="backBtn" Content="Back" Grid.Column="0"
+                    FontSize="20" Background="WhiteSmoke" Margin="5" Height="40"></Button>
+
+            <StackPanel x:Name="sessionDetailsStackPanel" Orientation="Horizontal" Grid.Column="1" Grid.Row="0" Visibility="Visible">
+
+                <Label Content="Host Name:" FontSize="20" VerticalAlignment="Center" Margin="5"
+                       Foreground="White"></Label>
+
+                <Label x:Name="hostNameLbl" Content="Krishna001" FontSize="20" VerticalAlignment="Center"
+                       Foreground="White"></Label>
+                
+                <Label Content="Quiz Selected:" FontSize="20" VerticalAlignment="Center" Margin="10,5,5,5"
+                       Foreground="White"></Label>
+
+                <Label x:Name="quizSelectedLbl" Content="A-Level Econ" FontSize= "20" VerticalAlignment="Center"
+                       Foreground="White"></Label>
+
+                <Label Content="Condition Selected:" FontSize="20" VerticalAlignment="Center" Margin="10,5,5,5"
+                       Foreground="White"></Label>
+
+                <Label x:Name="selectedConditionLbl" Content="Time Limit" FontSize="20" VerticalAlignment="Center"
+                       Foreground="White"></Label>
+
+                <Label Content="Condition Value:" FontSize="20" VerticalAlignment="Center" Margin="10,5,5,5"
+                       Foreground="White"></Label>
+
+                <Label x:Name="conditionValueLbl" Content="20" FontSize="20" VerticalAlignment="Center"
+                       Foreground="White"></Label>
+
+            </StackPanel>
+
+            <StackPanel x:Name="multipleQuizReviewStackPanel" Orientation="Horizontal" Grid.Column="1" Visibility="Hidden">
+                <Label Content="Question:" Grid.Column="1" FontSize="20" VerticalAlignment="Center"
+                               Margin="5,0,0,0" Foreground="Beige"></Label>
+                <Label x:Name="numberOfQuestionsLbl" Content="2/6" FontSize="20" VerticalAlignment="Center"
+                               Foreground="White"></Label>
+
+                <Label Content="Time Limit for Question (In Seconds):" FontSize="20" VerticalAlignment="Center"
+                               Margin="10,5,0,5" Foreground="White"></Label>
+
+                <Label x:Name="questionTimeLimitLbl" Content="30" FontSize="20" VerticalAlignment="Center"
+                               Foreground="White"></Label>
+
+                <Label Content="Number Of Points Gained:" FontSize="20" VerticalAlignment="Center"
+                               Margin="10,5,0,5" Foreground="White"></Label>
+
+                <Label x:Name="numberOfPointsGained" Content="1000" FontSize="20" VerticalAlignment="Center"
+                               Foreground="White"></Label>
+            </StackPanel>
+
+            
+            
+            <Button x:Name="leaveSessionBtn" Content="Leave Session" Grid.Column="2"
+                            FontSize="20" Width="230" Background="WhiteSmoke" Margin="5"
+                            HorizontalAlignment="Center" Height="40"></Button>
+
+            <Border Grid.Column="0" Grid.Row="1" Background="#a1a1ce"></Border>
+
+            <Label x:Name="messageLbl" Content="message" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center"
+                           VerticalAlignment="Center" FontSize="20" Foreground="#cfcfe8"></Label>
+
+
+            <StackPanel Orientation="Vertical" Grid.Column="1" Grid.Row="2">
+                <Label x:Name="questionLbl" Content="Question" FontSize="55" 
+                           Grid.Column="1" HorizontalAlignment="Center" Height="80" VerticalAlignment="Top"
+                           Foreground="White"></Label>
+                <StackPanel Orientation="Vertical">
+                    <TextBox x:Name="textAnswerTxtBox" Visibility="Visible" Height="40" Width="800" Margin="0,10,0,0"
+                                     FontSize="30" HorizontalContentAlignment="Center"></TextBox>
+                    <StackPanel x:Name="multipleChoiceAnswerRbStackPanel" Visibility="Hidden">
+                        <RadioButton x:Name="option1rb" Content="Option1" FontSize="30" HorizontalAlignment="Center"
+                                         IsTabStop="False" Foreground="White"></RadioButton>
+                        <RadioButton x:Name="option2rb" Content="Option2" FontSize="30" HorizontalAlignment="Center"
+                                         IsTabStop="False" Margin="5"  Foreground="White"></RadioButton>
+                        <RadioButton x:Name="option3rb" Content="Option3" FontSize="30" HorizontalAlignment="Center"
+                                         IsTabStop="False" Margin="5" Foreground="White"></RadioButton>
+                        <RadioButton x:Name="option4rb" Content="Option4" FontSize="30" HorizontalAlignment="Center"
+                                         IsTabStop="False" Margin="5" Foreground="White"></RadioButton>
+                        <RadioButton x:Name="option5rb" Content="Option5" FontSize="30" HorizontalAlignment="Center"
+                                         IsTabStop="False" Margin="5" Foreground="White"></RadioButton>
+                        <RadioButton x:Name="option6rb" Content="Option6" FontSize="30" HorizontalAlignment="Center"
+                                         IsTabStop="False" Margin="5" Foreground="White"></RadioButton>
+
+                    </StackPanel>
+
+                    <Button x:Name="submitBtn" Content="Submit" FontSize="30" Height="50" Width="250"
+                                    Margin="50" Background="WhiteSmoke"></Button>
+                </StackPanel>
+            </StackPanel>
+
+            <StackPanel Orientation="Vertical" Grid.Column="2" Grid.Row="2">
+                <DataGrid x:Name="usersJoinedDataGrid" Height="550" Margin="20" Width="235"></DataGrid>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Label Content="Number Of Participants:" FontSize="20" HorizontalAlignment="Center"
+                                       Foreground="White"></Label>
+                    <Label x:Name="numberOfUsersJoinedLbl" Content="100" FontSize="20" HorizontalAlignment="Center"
+                                       Foreground="White"></Label>
+                </StackPanel>
+            </StackPanel>
+
+
+
+            <!--<--><!--Label Content="Client" Foreground="Black" FontSize="40"></Label>
+            <Button Grid.Column="1" Content="Connect To Server" Click="Button_Click" ></Button>
+            <Label x:Name="label" Grid.Column="0" Content="{Binding SessionId}" HorizontalAlignment="Left"  Grid.Row="1" VerticalAlignment="Top"/>
+            <Label x:Name="label2" Grid.Column="1" Content="{Binding DataType}" HorizontalAlignment="Left"  Grid.Row="1" VerticalAlignment="Top"/>--><!-->-->
+        
+        
+        
+        </Grid>
+    </Border>
+</Window>

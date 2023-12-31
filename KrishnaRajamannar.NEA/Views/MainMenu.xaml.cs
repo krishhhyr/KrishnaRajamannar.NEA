@@ -29,6 +29,9 @@ namespace KrishnaRajamannar.NEA.Views
         private AccountLogin accountLogin;
         private ViewQuizzes viewQuizzes;
 
+        private ServerSessionView serverSessionView;
+        private ClientSessionView clientSessionView;
+
         private readonly MainMenuViewModel _mainMenuViewModel;
         public MainMenu(MainMenuViewModel mainMenuViewModel)
         {
@@ -53,18 +56,23 @@ namespace KrishnaRajamannar.NEA.Views
         {
             _mainMenuViewModel.JoinSessionViewModel.UserID = e.UserID;
             _mainMenuViewModel.JoinSessionViewModel.Username = e.Username;
-            joinSession = new JoinSession(_mainMenuViewModel.JoinSessionViewModel);
+            //joinSession = new JoinSession(_mainMenuViewModel.JoinSessionViewModel);
 
-            joinSession.ShowDialog();
+            //joinSession.ShowDialog();
+
+            clientSessionView = new ClientSessionView(_mainMenuViewModel.ClientSessionViewModel);
+            clientSessionView.Show(); 
         }
 
         private void MainMenuViewModel_ShowHostSessionWindow(object sender, Events.ShowAccountParameterWindowEventArgs e)
         {
             _mainMenuViewModel.HostSessionViewModel.UserID = e.UserID;
             _mainMenuViewModel.HostSessionViewModel.Username = e.Username;
-            hostSession = new HostSession(_mainMenuViewModel.HostSessionViewModel);
+            //hostSession = new HostSession(_mainMenuViewModel.HostSessionViewModel);
+            //hostSession.ShowDialog();
 
-            hostSession.ShowDialog();
+            serverSessionView = new ServerSessionView(_mainMenuViewModel.ServerSessionViewModel);
+            serverSessionView.Show();
         }
 
         private void MainMenuViewModel_ShowViewQuizzesWindow(object sender, Events.ShowAccountParameterWindowEventArgs e)
@@ -110,7 +118,7 @@ namespace KrishnaRajamannar.NEA.Views
 
         private void joinSessionBtn_Click(object sender, RoutedEventArgs e)
         {
-            _mainMenuViewModel.DisplayJoinSessionWindow();   
+           _mainMenuViewModel.DisplayJoinSessionWindow();   
         }
     }
 }

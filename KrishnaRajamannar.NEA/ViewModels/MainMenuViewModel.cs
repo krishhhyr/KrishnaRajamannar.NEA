@@ -39,6 +39,10 @@ namespace KrishnaRajamannar.NEA.ViewModels
         public HostSessionViewModel HostSessionViewModel;
 
         public JoinSessionViewModel JoinSessionViewModel;
+
+        public ServerSessionViewModel ServerSessionViewModel;
+        public ClientSessionViewModel ClientSessionViewModel;
+
         public MainMenuViewModel()
         {
             AccountLoginViewModel = App.ServiceProvider.GetService(typeof(AccountLoginViewModel)) as AccountLoginViewModel;
@@ -46,6 +50,9 @@ namespace KrishnaRajamannar.NEA.ViewModels
             ViewLeaderboardViewModel = App.ServiceProvider.GetService(typeof(ViewLeaderboardViewModel)) as ViewLeaderboardViewModel;
             HostSessionViewModel = App.ServiceProvider.GetService(typeof(HostSessionViewModel)) as HostSessionViewModel;
             JoinSessionViewModel = App.ServiceProvider.GetService(typeof(JoinSessionViewModel)) as JoinSessionViewModel;
+
+            ServerSessionViewModel = App.ServiceProvider.GetService(typeof(ServerSessionViewModel)) as ServerSessionViewModel;
+            ClientSessionViewModel = App.ServiceProvider.GetService(typeof(ClientSessionViewModel)) as ClientSessionViewModel;
 
         }
         private int _userid;

@@ -18,6 +18,7 @@ namespace KrishnaRajamannar.NEA.Services.Connection
         //Create a event handler 
         public event ClientConnectedEventHandler ClientConnected;
         public event StartQuizEventHandler StartQuizEvent;
+        public event ProcessCommandEventHandler ProcessCommand;
 
         private readonly string sessionId;
         private TcpClient server = new TcpClient();
@@ -31,37 +32,52 @@ namespace KrishnaRajamannar.NEA.Services.Connection
             });
             workerThread.SetApartmentState(ApartmentState.STA);
             workerThread.Start();
-           
+
         }
 
         // Processes all the different data types for messages...
         private void StartWorkerThread()
         {
-            //Task task = Task.Factory.StartNew(() =>
-            //{});
             while (true)
             {
-                ServerResponse response = null;
-                serverResponses.TryDequeue(out response);
-                if (response != null) 
+                try 
                 {
-                    if (response.DataType.Equals("Acknowledgement"))
+                    if (!serverResponses.IsEmpty) 
                     {
-                        ClientConnectedEventArgs args = new ClientConnectedEventArgs();
-                        args.ServerResponse = response;
-                        OnClientConnected(args);
-                    }
-                    else if (response.DataType == "StartQuiz")
-                    {
-                        // We pass usual quiz data; I.e time limit or number of qs?
-                        // subscribe to event in ViewSessionInfo + Host Session Window??
-                        StartQuizEventArgs args = new StartQuizEventArgs();
-                        args.ServerResponse = response;
-                        OnStartQuizButtonPressed(args);
+                        ServerResponse response = null;
+                        serverResponses.TryDequeue(out response);
+                        if (response != null)
+                        {
+                            Debug.Print(response.DataType);
+                            switch (response.DataType)
+                            {
+                                case "Acknowledgement":
+
+                                    ClientConnectedEventArgs args = new ClientConnectedEventArgs();
+                                    args.ServerResponse = response;
+                                    OnClientConnected(args);
+                                    break;
+                                case "StartQuiz":
+                                    // We pass usual quiz data; I.e time limit or number of qs?
+                                    // subscribe to event in ViewSessionInfo + Host Session Window??
+                                    StartQuizEventArgs argsStartQuiz = new StartQuizEventArgs();
+                                    argsStartQuiz.ServerResponse = response;
+                                    OnStartQuizButtonPressed(argsStartQuiz);
+                                    break;
+                                default:
+                                    ProcessCommandEventArgs argsProcessCommand = new ProcessCommandEventArgs();
+                                    argsProcessCommand.ServerResponse = response;
+                                    OnProcessCommand(argsProcessCommand);
+                                    break;
+                            }
+                        }
                     }
                 }
+                catch (Exception ex) 
+                {
+                    ;
+                }
             }
-            
         }
 
         protected virtual void OnClientConnected(ClientConnectedEventArgs e)
@@ -82,6 +98,15 @@ namespace KrishnaRajamannar.NEA.Services.Connection
             }
         }
 
+        protected virtual void OnProcessCommand(ProcessCommandEventArgs e)
+        {
+            ProcessCommandEventHandler handler = ProcessCommand;
+            if (handler != null)
+            {
+                handler(this, e);
+            }
+        }
+
         public string ConnectToServer(string username, int userId, string ipAddressConnect, int portNumberConnect, string sessionId)
         {
             string messageFromServer = "";
@@ -93,7 +118,7 @@ namespace KrishnaRajamannar.NEA.Services.Connection
                     messageFromServer = HandleClientRequests(username, userId, ipAddressConnect, portNumberConnect, sessionId);
                 });
 
-                task.Wait();
+                //task.Wait();
                 return messageFromServer;
 
             }

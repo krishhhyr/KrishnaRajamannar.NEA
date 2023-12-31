@@ -45,7 +45,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
             _userConnectionService.UserJoined += OnUserJoined;
             _userConnectionService.UserLeft += OnUserLeft;
-            _clientService.StartQuizEvent += _clientService_StartQuizEvent;
+            //_clientService.StartQuizEvent += _clientService_StartQuizEvent;
         }
 
         private void _clientService_StartQuizEvent(object sender, StartQuizEventArgs e)
