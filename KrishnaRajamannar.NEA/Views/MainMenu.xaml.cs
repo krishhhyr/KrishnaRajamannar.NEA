@@ -2,6 +2,7 @@
 using KrishnaRajamannar.NEA.Models;
 using KrishnaRajamannar.NEA.Services;
 using KrishnaRajamannar.NEA.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,23 +34,35 @@ namespace KrishnaRajamannar.NEA.Views
         private ClientSessionView clientSessionView;
 
         private readonly MainMenuViewModel _mainMenuViewModel;
+        private readonly ClientSessionViewModel _clientSessionViewModel;
         public MainMenu(MainMenuViewModel mainMenuViewModel)
         {
             InitializeComponent();
 
             _mainMenuViewModel = mainMenuViewModel;
+            _clientSessionViewModel = App.ServiceProvider.GetService<ClientSessionViewModel>();
 
             this.DataContext = _mainMenuViewModel;
 
-            // need to fix this later
-            //viewLeaderboard = new ViewLeaderboard();
+            _mainMenuViewModel.HideMainMenuWindow += MainMenuViewModel_HideMainMenuWindow;
 
-            mainMenuViewModel.HideMainMenuWindow += MainMenuViewModel_HideMainMenuWindow;
+            _mainMenuViewModel.ShowViewQuizzesWindow += MainMenuViewModel_ShowViewQuizzesWindow;
+            _mainMenuViewModel.ShowLeaderboardWindow += MainMenuViewModel_ShowLeaderboardWindow;
+            _mainMenuViewModel.ShowHostSessionWindow += MainMenuViewModel_ShowHostSessionWindow;
+            _mainMenuViewModel.ShowJoinSessionWindow += MainMenuViewModel_ShowJoinSessionWindow;
+            _mainMenuViewModel.ShowClientSessionWindow += OnShowClientSessionWindow;
 
-            mainMenuViewModel.ShowViewQuizzesWindow += MainMenuViewModel_ShowViewQuizzesWindow;
-            mainMenuViewModel.ShowLeaderboardWindow += MainMenuViewModel_ShowLeaderboardWindow;
-            mainMenuViewModel.ShowHostSessionWindow += MainMenuViewModel_ShowHostSessionWindow;
-            mainMenuViewModel.ShowJoinSessionWindow += MainMenuViewModel_ShowJoinSessionWindow;
+
+        }
+
+        private void OnShowClientSessionWindow(object sender, Events.ShowSessionParameterWindowEventArgs e)
+        {
+            if (e.ServerResponse != null)
+            {
+                _clientSessionViewModel.LoadData(e.ServerResponse);
+                clientSessionView = new ClientSessionView(_clientSessionViewModel); ;
+                clientSessionView.ShowDialog();
+            }
         }
 
         private void MainMenuViewModel_ShowJoinSessionWindow(object sender, Events.ShowAccountParameterWindowEventArgs e)
@@ -71,6 +84,8 @@ namespace KrishnaRajamannar.NEA.Views
             //hostSession = new HostSession(_mainMenuViewModel.HostSessionViewModel);
             //hostSession.ShowDialog();
 
+            _mainMenuViewModel.ServerSessionViewModel.UserID = e.UserID;
+            _mainMenuViewModel.ServerSessionViewModel.Username = e.Username;
             serverSessionView = new ServerSessionView(_mainMenuViewModel.ServerSessionViewModel);
             serverSessionView.Show();
         }
@@ -97,28 +112,32 @@ namespace KrishnaRajamannar.NEA.Views
 
         private void logOutBtn_Click(object sender, RoutedEventArgs e)
         {
-            _mainMenuViewModel.CloseMainMenuWindow();
-            _mainMenuViewModel.DisplayAccountLoginWindow();
+            _mainMenuViewModel.HideMainMenu();
+            _mainMenuViewModel.ShowAccountLogin();
         }
 
         private void viewQuizzesBtn_Click(object sender, RoutedEventArgs e)
         {
-            _mainMenuViewModel.DisplayViewQuizzesWindow();
+            _mainMenuViewModel.ShowViewQuizzes();
         }
 
         private void leaderboardBtn_Click(object sender, RoutedEventArgs e)
         {   
-            _mainMenuViewModel.DisplayLeaderboardWindow();
+            _mainMenuViewModel.ShowLeaderboard();
         }
 
         private void hostSessionBtn_Click(object sender, RoutedEventArgs e)
         {
-           _mainMenuViewModel.DisplayHostSessionWindow();
+           _mainMenuViewModel.ShowHostSession();
         }
 
         private void joinSessionBtn_Click(object sender, RoutedEventArgs e)
         {
-           _mainMenuViewModel.DisplayJoinSessionWindow();   
+            if (_mainMenuViewModel.JoinSession() == true)
+            {
+                sessionIDTxtBox.IsEnabled = false;
+                joinSessionBtn.IsEnabled = false;
+            }
         }
     }
 }

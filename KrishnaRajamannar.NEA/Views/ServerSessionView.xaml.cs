@@ -25,23 +25,35 @@ namespace KrishnaRajamannar.NEA.Views
         {
             InitializeComponent();
             _serverSessionViewModel = serverSessionViewModel;
+
             DataContext = _serverSessionViewModel;
+
+            _serverSessionViewModel.CreateSessionID();
+            _serverSessionViewModel.GetQuizzes();
+            _serverSessionViewModel.AssignQuizConditions();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void startSessionBtn_Click(object sender, RoutedEventArgs e)
         {
-            _serverSessionViewModel.StartSession();
-        }
+            if (_serverSessionViewModel.StartSession() == true) 
+            { 
+                startQuizBtn.IsEnabled = true;
+                usersJoinedDataGrid.IsEnabled = true;
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
-        {
-            _serverSessionViewModel.SendCommand("StartQuiz");
-
-            for (int i = 0; i < 10; i++)
-            {             
-                _serverSessionViewModel.SendCommand($"Question-{i}");
+                startSessionBtn.IsEnabled = false;
+                conditionSelectionComboBox.IsEnabled = false;
+                quizSelectionComboBox.IsEnabled = false;
             }
-           
+        }
+
+        private void startQuizBtn_Click(object sender, RoutedEventArgs e)
+        {
+            startQuizBtn.IsEnabled = false;
+
+            sessionDataStackPanel.Visibility = Visibility.Hidden;
+            multipleQuizReviewStackPanel.Visibility = Visibility.Visible;
+
+            _serverSessionViewModel.StartQuiz();
         }
     }
 }

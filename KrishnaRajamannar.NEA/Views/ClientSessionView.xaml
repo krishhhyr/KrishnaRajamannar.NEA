@@ -55,25 +55,25 @@
                 <Label Content="Host Name:" FontSize="20" VerticalAlignment="Center" Margin="5"
                        Foreground="White"></Label>
 
-                <Label x:Name="hostNameLbl" Content="Krishna001" FontSize="20" VerticalAlignment="Center"
+                <Label x:Name="hostNameLbl" Content="{Binding HostName}" FontSize="20" VerticalAlignment="Center"
                        Foreground="White"></Label>
                 
                 <Label Content="Quiz Selected:" FontSize="20" VerticalAlignment="Center" Margin="10,5,5,5"
                        Foreground="White"></Label>
 
-                <Label x:Name="quizSelectedLbl" Content="A-Level Econ" FontSize= "20" VerticalAlignment="Center"
+                <Label x:Name="quizSelectedLbl" Content="{Binding QuizSelected}" FontSize= "20" VerticalAlignment="Center"
                        Foreground="White"></Label>
 
                 <Label Content="Condition Selected:" FontSize="20" VerticalAlignment="Center" Margin="10,5,5,5"
                        Foreground="White"></Label>
 
-                <Label x:Name="selectedConditionLbl" Content="Time Limit" FontSize="20" VerticalAlignment="Center"
+                <Label x:Name="selectedConditionLbl" Content="{Binding EndQuizConditionSelected}" FontSize="20" VerticalAlignment="Center"
                        Foreground="White"></Label>
 
                 <Label Content="Condition Value:" FontSize="20" VerticalAlignment="Center" Margin="10,5,5,5"
                        Foreground="White"></Label>
 
-                <Label x:Name="conditionValueLbl" Content="20" FontSize="20" VerticalAlignment="Center"
+                <Label x:Name="conditionValueLbl" Content="{Binding EndQuizConditionValue}" FontSize="20" VerticalAlignment="Center"
                        Foreground="White"></Label>
 
             </StackPanel>
@@ -97,19 +97,28 @@
                                Foreground="White"></Label>
             </StackPanel>
 
-            
-            
             <Button x:Name="leaveSessionBtn" Content="Leave Session" Grid.Column="2"
                             FontSize="20" Width="230" Background="WhiteSmoke" Margin="5"
                             HorizontalAlignment="Center" Height="40"></Button>
 
             <Border Grid.Column="0" Grid.Row="1" Background="#a1a1ce"></Border>
 
-            <Label x:Name="messageLbl" Content="message" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center"
+
+            <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="1" >
+
+                <Label Content="Session ID:" Grid.Column="1" HorizontalAlignment="Left"
+                           VerticalAlignment="Center" FontSize="20" Foreground="White" Margin="5"></Label>
+
+
+                <Label x:Name="sessionIDLbl" Content="{Binding SessionId}" Grid.Column="1" HorizontalAlignment="Left"
+                           VerticalAlignment="Center" FontSize="20" Foreground="White" Margin="5"></Label>
+            </StackPanel>
+
+            <Label x:Name="messageLbl" Content="" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center"
                            VerticalAlignment="Center" FontSize="20" Foreground="#cfcfe8"></Label>
 
 
-            <StackPanel Orientation="Vertical" Grid.Column="1" Grid.Row="2">
+            <StackPanel Orientation="Vertical" Grid.Column="1" Grid.Row="2" Visibility="Hidden">
                 <Label x:Name="questionLbl" Content="Question" FontSize="55" 
                            Grid.Column="1" HorizontalAlignment="Center" Height="80" VerticalAlignment="Top"
                            Foreground="White"></Label>
@@ -138,24 +147,16 @@
             </StackPanel>
 
             <StackPanel Orientation="Vertical" Grid.Column="2" Grid.Row="2">
-                <DataGrid x:Name="usersJoinedDataGrid" Height="550" Margin="20" Width="235"></DataGrid>
+                <DataGrid x:Name="usersJoinedDataGrid" Height="550" Margin="20" Width="235"
+                          ItemsSource="{Binding UserSessionData}" FontSize="20" AlternatingRowBackground="#cfcfe8"
+                          IsReadOnly="True" Background="#7474b0"></DataGrid>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <Label Content="Number Of Participants:" FontSize="20" HorizontalAlignment="Center"
+                    <Label Content="Number Of Joined Users:" FontSize="20" HorizontalAlignment="Center"
                                        Foreground="White"></Label>
-                    <Label x:Name="numberOfUsersJoinedLbl" Content="100" FontSize="20" HorizontalAlignment="Center"
+                    <Label x:Name="numberOfUsersJoinedLbl" Content="{Binding NumberOfJoinedUsers}" FontSize="20" HorizontalAlignment="Center"
                                        Foreground="White"></Label>
                 </StackPanel>
             </StackPanel>
-
-
-
-            <!--<--><!--Label Content="Client" Foreground="Black" FontSize="40"></Label>
-            <Button Grid.Column="1" Content="Connect To Server" Click="Button_Click" ></Button>
-            <Label x:Name="label" Grid.Column="0" Content="{Binding SessionId}" HorizontalAlignment="Left"  Grid.Row="1" VerticalAlignment="Top"/>
-            <Label x:Name="label2" Grid.Column="1" Content="{Binding DataType}" HorizontalAlignment="Left"  Grid.Row="1" VerticalAlignment="Top"/>--><!-->-->
-        
-        
-        
         </Grid>
     </Border>
 </Window>

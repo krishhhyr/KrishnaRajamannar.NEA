@@ -1,4 +1,6 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using KrishnaRajamannar.NEA.Models;
+using KrishnaRajamannar.NEA.Models.Dto;
+using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -100,12 +102,12 @@ namespace KrishnaRajamannar.NEA.Services.Database
                 return true;
             }
         }
-        public string GetQuizSelectedForSession(int sessionID)
+        public SessionData GetSessionData(int sessionID)
         {
-            string quizSelected = "";
+            SessionData sessionData = new SessionData();
             const string sqlQuery =
                 @"
-                    SELECT Quiz FROM Session
+                    SELECT Quiz, EndQuizCondition, EndQuizValue FROM Session
                     WHERE SessionID = @SessionID;
                 ";
             using SqlConnection connection = new SqlConnection(connectionString);
@@ -116,10 +118,13 @@ namespace KrishnaRajamannar.NEA.Services.Database
             var data = command.ExecuteReader();
             while (data.Read())
             {
-                quizSelected = data.GetString(0);
-                return quizSelected;
+                sessionData.QuizSelected = data.GetString(0);
+                sessionData.EndQuizCondition = data.GetString(1);
+                sessionData.EndQuizConditionValue = Convert.ToString(data.GetInt32(2));
+                
+                return sessionData;
             }
-            return quizSelected;
+            return sessionData;
         }
     }
 }
