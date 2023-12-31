@@ -8,4 +8,5 @@ namespace KrishnaRajamannar.NEA.Events
        public ServerResponse ServerResponse { get; set; }
     }
     public delegate void ClientConnectedEventHandler(Object sender, ClientConnectedEventArgs e);
+    public delegate void StartQuizEventHandler(Object sender, StartQuizEventArgs e);
 }
