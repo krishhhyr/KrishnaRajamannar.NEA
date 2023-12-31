@@ -1,10 +1,15 @@
 ﻿using KrishnaRajamannar.NEA.Events;
 using KrishnaRajamannar.NEA.Models;
+using KrishnaRajamannar.NEA.Models.Dto;
+using KrishnaRajamannar.NEA.Services;
+using KrishnaRajamannar.NEA.Services.Interfaces;
 using KrishnaRajamannar.NEA.Views;
 using System;
 using System.CodeDom;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
+using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,33 +22,27 @@ namespace KrishnaRajamannar.NEA.ViewModels
         public event PropertyChangedEventHandler? PropertyChanged;
 
         public event ShowAccountParameterWindowEventHandler ShowViewQuizzesWindow;
-
         public event ShowWindowEventHandler ShowLeaderboardWindow;
-
         public event ShowAccountParameterWindowEventHandler ShowHostSessionWindow;
-
         public event ShowAccountParameterWindowEventHandler ShowJoinSessionWindow;
 
-        public event ShowWindowEventHandler ShowAccountLoginWindow;
+        public event ShowSessionParameterWindowEventHandler ShowClientSessionWindow;
 
+        public event ShowWindowEventHandler ShowAccountLoginWindow;
         public event HideWindowEventHandler HideMainMenuWindow;
 
-        // need to add other view models - leaderboardVM, hostsessionVM and joinsessionVM
-
         public AccountLoginViewModel AccountLoginViewModel;
-
         public ViewQuizzesViewModel ViewQuizzesViewModel;
-
         public ViewLeaderboardViewModel ViewLeaderboardViewModel;
-
         public HostSessionViewModel HostSessionViewModel;
-
         public JoinSessionViewModel JoinSessionViewModel;
-
         public ServerSessionViewModel ServerSessionViewModel;
         public ClientSessionViewModel ClientSessionViewModel;
 
-        public MainMenuViewModel()
+        private readonly ISessionService _sessionService;
+        private readonly IClientService _clientService;
+
+        public MainMenuViewModel(ISessionService sessionService, IClientService clientService)
         {
             AccountLoginViewModel = App.ServiceProvider.GetService(typeof(AccountLoginViewModel)) as AccountLoginViewModel;
             ViewQuizzesViewModel = App.ServiceProvider.GetService(typeof(ViewQuizzesViewModel)) as ViewQuizzesViewModel;
@@ -54,7 +53,15 @@ namespace KrishnaRajamannar.NEA.ViewModels
             ServerSessionViewModel = App.ServiceProvider.GetService(typeof(ServerSessionViewModel)) as ServerSessionViewModel;
             ClientSessionViewModel = App.ServiceProvider.GetService(typeof(ClientSessionViewModel)) as ClientSessionViewModel;
 
+            _sessionService = sessionService;
+            _clientService = clientService;
+
+            _clientService.ClientConnected += OnClientConnected;
+
         }
+
+        #region Properties
+
         private int _userid;
         public int UserID
         {
@@ -85,6 +92,26 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 RaisePropertyChange("TotalPoints");
             }
         }
+        private int _sessionID;
+        public int SessionID
+        {
+            get { return _sessionID; }
+            set
+            {
+                _sessionID = value;
+                RaisePropertyChange("SessionID");
+            }
+        }
+        private string _connectionMessage;
+        public string ConnectionMessage
+        {
+            get { return _connectionMessage; }
+            set
+            {
+                _connectionMessage = value;
+                RaisePropertyChange("ConnectionMessage");
+            }
+        }
         public void RaisePropertyChange(string propertyname)
         {
             if (PropertyChanged != null)
@@ -92,52 +119,59 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyname));
             }
         }
-        private void HideMainMenu()
+
+        #endregion
+
+        #region Events
+
+        // Event for when a client is first connected to the server
+        // This passes the data sent from the client to a function which displays the client window
+        private void OnClientConnected(object sender, ClientConnectedEventArgs e)
+        {
+            ShowClientSession(e.ServerResponse);
+        }
+
+        private void ShowClientSession(ServerResponse response)
+        {
+            ShowSessionParameterWindowEventArgs args = new ShowSessionParameterWindowEventArgs();
+            args.IsShown = true;
+            args.ServerResponse = response;
+            OnShowClientSessionWindow(args);
+        }
+
+        protected virtual void OnShowClientSessionWindow(ShowSessionParameterWindowEventArgs e)
+        {
+            ShowSessionParameterWindowEventHandler handler = ShowClientSessionWindow;
+            if (handler != null)
+            {
+                handler(this, e);
+            }
+        }
+
+        public void HideMainMenu()
         {
             HideWindowEventArgs args = new HideWindowEventArgs();
             args.IsHidden = true;
             OnHideMainMenuWindow(args);
         }
-        private void ShowAccountLogin()
+
+        protected virtual void OnHideMainMenuWindow(HideWindowEventArgs e)
+        {
+            HideWindowEventHandler handler = HideMainMenuWindow;
+            if (handler != null)
+            {
+                handler(this, e);
+            }
+        }
+
+        public void ShowAccountLogin()
         {
             ShowWindowEventArgs args = new ShowWindowEventArgs();
             args.IsShown = true;
             OnShowAccountLoginWindow(args);
 
         }
-        private void ShowViewQuizzes()
-        {
-            ShowAccountParameterWindowEventArgs args = new ShowAccountParameterWindowEventArgs();
-            args.IsShown = true;
-            args.UserID = _userid;
-            OnShowViewQuizzesWindow(args);
 
-        }
-        private void ShowLeaderboard()
-        {
-            ShowWindowEventArgs args = new ShowWindowEventArgs();
-            args.IsShown = true;
-            OnShowLeaderboardWindow(args);
-
-        }
-        private void ShowHostSession()
-        {
-            ShowAccountParameterWindowEventArgs args = new ShowAccountParameterWindowEventArgs();
-            args.IsShown = true;
-            args.UserID = _userid;
-            args.Username = _username;
-            OnShowHostSessionWindow(args);
-
-        }
-        private void ShowJoinSession()
-        {
-            ShowAccountParameterWindowEventArgs args = new ShowAccountParameterWindowEventArgs();
-            args.IsShown = true;
-            args.UserID = _userid;
-            args.Username = _username;
-            OnShowJoinSessionWindow(args);
-
-        }
         protected virtual void OnShowAccountLoginWindow(ShowWindowEventArgs e)
         {
             ShowWindowEventHandler handler = ShowAccountLoginWindow;
@@ -146,6 +180,16 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 handler(this, e);
             }
         }
+
+        public void ShowViewQuizzes()
+        {
+            ShowAccountParameterWindowEventArgs args = new ShowAccountParameterWindowEventArgs();
+            args.IsShown = true;
+            args.UserID = _userid;
+            OnShowViewQuizzesWindow(args);
+
+        }
+
         protected virtual void OnShowViewQuizzesWindow(ShowAccountParameterWindowEventArgs e)
         {
             ShowAccountParameterWindowEventHandler handler = ShowViewQuizzesWindow;
@@ -153,6 +197,13 @@ namespace KrishnaRajamannar.NEA.ViewModels
             {
                 handler(this, e);
             }
+        }
+        public void ShowLeaderboard()
+        {
+            ShowWindowEventArgs args = new ShowWindowEventArgs();
+            args.IsShown = true;
+            OnShowLeaderboardWindow(args);
+
         }
         protected virtual void OnShowLeaderboardWindow(ShowWindowEventArgs e)
         {
@@ -162,6 +213,15 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 handler(this, e);
             }
         }
+        public void ShowHostSession()
+        {
+            ShowAccountParameterWindowEventArgs args = new ShowAccountParameterWindowEventArgs();
+            args.IsShown = true;
+            args.UserID = _userid;
+            args.Username = _username;
+            OnShowHostSessionWindow(args);
+
+        }
         protected virtual void OnShowHostSessionWindow(ShowAccountParameterWindowEventArgs e)
         {
             ShowAccountParameterWindowEventHandler handler = ShowHostSessionWindow;
@@ -170,6 +230,16 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 handler(this, e);
             }
         }
+        public void ShowJoinSession()
+        {
+            ShowAccountParameterWindowEventArgs args = new ShowAccountParameterWindowEventArgs();
+            args.IsShown = true;
+            args.UserID = _userid;
+            args.Username = _username;
+            OnShowJoinSessionWindow(args);
+
+        }
+        
         protected virtual void OnShowJoinSessionWindow(ShowAccountParameterWindowEventArgs e)
         {
             ShowAccountParameterWindowEventHandler handler = ShowJoinSessionWindow;
@@ -178,37 +248,27 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 handler(this, e);
             }
         }
-        protected virtual void OnHideMainMenuWindow(HideWindowEventArgs e)
+       
+        #endregion
+
+        public bool JoinSession() 
         {
-            HideWindowEventHandler handler = HideMainMenuWindow;
-            if (handler != null)
+            if (_sessionService.IsSessionIDExist(SessionID) != true)
             {
-                handler(this, e);
+                ConnectionMessage = "Session ID not found";
+                return false;
             }
-        }
-        public void DisplayAccountLoginWindow() 
-        {
-            ShowAccountLogin();
-        }
-        public void DisplayViewQuizzesWindow() 
-        {
-            ShowViewQuizzes();
-        }
-        public void DisplayLeaderboardWindow() 
-        {
-            ShowLeaderboard();
-        }
-        public void DisplayHostSessionWindow() 
-        {
-            ShowHostSession();
-        }
-        public void DisplayJoinSessionWindow() 
-        {
-            ShowJoinSession();
-        }
-        public void CloseMainMenuWindow() 
-        {
-            HideMainMenu();
+            else
+            {
+                (string, int) connectionInfo = _sessionService.GetConnectionData(SessionID);
+
+                string ipAddressConnect = connectionInfo.Item1;
+                int portNumberConnect = connectionInfo.Item2;
+
+                _clientService.ConnectToServer(Username, UserID, ipAddressConnect, portNumberConnect, SessionID.ToString());
+                ConnectionMessage = "Connecting...";
+                return true;
+            }
         }
     }
 }

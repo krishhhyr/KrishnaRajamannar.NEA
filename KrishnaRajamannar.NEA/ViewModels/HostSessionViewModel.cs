@@ -364,7 +364,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
         public void StartQuiz()
         {
-            _serverService.SendMessageToClients("StartQuiz");
+            //_serverService.SendMessageToClients("StartQuiz");
         }
     } 
 }

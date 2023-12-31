@@ -84,17 +84,17 @@ namespace KrishnaRajamannar.NEA.Services.Connection
         public void SendAcknowledgement(TcpClient client)
         {
             ServerResponse serverResponse = new ServerResponse();
+            SessionData sessionData = new SessionData();
+
             serverResponse.SessionId = userSessionData.SessionID;
             // Gets the quiz that was selected by the host when starting the session
-            var quizSelected = _sessionService.GetQuizSelectedForSession(Convert.ToInt32(userSessionData.SessionID));
+            sessionData = _sessionService.GetSessionData(Convert.ToInt32(userSessionData.SessionID));
             // Gets the details of the users connected to the session
             // Used to pass onto the client's UI window 
             IList<UserSessionData> userDetails = _userSessionService.GetUserSessionDetails(userSessionData);
             // Creates a new object to pass the selected Quiz, the other users connected to client
             // and host name
-            SessionData sessionData = new SessionData();
             sessionData.HostName = _hostname;
-            sessionData.QuizSelected = quizSelected;
             sessionData.UserSessions = userDetails;
             // Expressing the type of data so that the Client can process the request accordingly
             serverResponse.DataType = "Acknowledgement";
@@ -111,13 +111,14 @@ namespace KrishnaRajamannar.NEA.Services.Connection
         }
 
         // Used to send general messages to all clients connected
-        public void SendMessageToClients(string message)
+        public void SendDataToClients(string data, string dataType)
         {
             foreach (var client in clients)
             {
                 ServerResponse serverResponse = new ServerResponse();
                 serverResponse.SessionId = userSessionData.SessionID;
-                serverResponse.DataType = message;
+                serverResponse.DataType = dataType;
+                serverResponse.Data = data;
                 NetworkStream stream = client.GetStream();
                 var payload = JsonSerializer.Serialize<ServerResponse>(serverResponse);
                 var messageBytes = Encoding.UTF8.GetBytes(payload);

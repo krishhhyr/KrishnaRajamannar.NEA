@@ -7,7 +7,7 @@ namespace KrishnaRajamannar.NEA.Events
     {
         public ServerResponse ServerResponse { get; set; }
     }
-    public delegate void StartQuizEventHandler(Object sender, StartQuizEventArgs e);
+    //public delegate void StartQuizEventHandler(Object sender, StartQuizEventArgs e);
 
     public class ProcessCommandEventArgs : EventArgs
     {

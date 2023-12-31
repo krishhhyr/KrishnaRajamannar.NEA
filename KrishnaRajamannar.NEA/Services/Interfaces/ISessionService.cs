@@ -1,4 +1,7 @@
-﻿namespace KrishnaRajamannar.NEA.Services
+﻿using KrishnaRajamannar.NEA.Models;
+using KrishnaRajamannar.NEA.Models.Dto;
+
+namespace KrishnaRajamannar.NEA.Services
 {
     public interface ISessionService
     {
@@ -11,6 +14,6 @@
 
         public (string, int) GetConnectionData(int sessionID);
 
-        public string GetQuizSelectedForSession(int sessionID);
+        public SessionData GetSessionData(int sessionID);
     }
 }

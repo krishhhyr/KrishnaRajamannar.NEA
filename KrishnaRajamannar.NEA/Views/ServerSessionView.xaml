@@ -42,18 +42,21 @@
                         <Label Content="Select a Quiz to Review:" Grid.Column="1" FontSize="20"
                             Width="230" HorizontalAlignment="Left" VerticalContentAlignment="Center"
                            Margin="5"></Label>
-                        <ComboBox x:Name="quizSelectionComboBox" FontSize="20" Width="215"
+                        <ComboBox x:Name="quizSelectionComboBox" ItemsSource="{Binding QuizTitles}" SelectedIndex="0"
+                                  SelectedItem="{Binding SelectedQuiz}" FontSize="20" Width="215"
                                   Height="30"></ComboBox>
                         <Label Content="Select Condition To End Quiz:" Grid.Column="1" FontSize="20"
                             Width="260" HorizontalAlignment="Left" VerticalContentAlignment="Center"
                            Margin="10,5,5,5"></Label>
                         <ComboBox x:Name="conditionSelectionComboBox" FontSize="20" Width="215"
-                                  Height="30"></ComboBox>
+                                  Height="30" ItemsSource="{Binding EndQuizConditions}" SelectedIndex="0"
+                                  SelectedItem="{Binding SelectedCondition}"
+                                 ></ComboBox>
 
                         <Label Content="Condition Value:" Grid.Column="1" FontSize="20"
                             Width="150" HorizontalAlignment="Left" VerticalContentAlignment="Center"
                            Margin="10,5,5,5"></Label>
-                        <TextBox x:Name="endQuizconditionTxtBox" FontSize="20" Height="30" Width="87" Margin="5"></TextBox>
+                        <TextBox x:Name="endQuizConditionValueTxtBox" Text="{Binding ConditionValue}" FontSize="20" Height="30" Width="87" Margin="5"></TextBox>
                     </StackPanel>
 
                     <StackPanel x:Name="multipleQuizReviewStackPanel" Orientation="Horizontal" Grid.Column="1" Visibility="Hidden">
@@ -77,7 +80,7 @@
                     
                     <Button x:Name="startSessionBtn" Content="Start Session" Grid.Column="2"
                             FontSize="20" Width="230" Background="WhiteSmoke" Margin="5"
-                            HorizontalAlignment="Center" Height="40"></Button>
+                            HorizontalAlignment="Center" Height="40" Click="startSessionBtn_Click"></Button>
                 </Grid>
             </Border>
             <Border Grid.Row="1">
@@ -90,13 +93,24 @@
 
                     <Border Background="#a1a1ce" Grid.Column="0"></Border>
 
-                    <Label x:Name="messageLbl" Content="message" Grid.Column="1" HorizontalAlignment="Center"
+                    <StackPanel Orientation="Horizontal" Grid.Column="1" >
+
+                        <Label Content="Session ID:" Grid.Column="1" HorizontalAlignment="Left"
+                           VerticalAlignment="Center" FontSize="20" Foreground="White" Margin="5"></Label>
+
+
+                        <Label x:Name="sessionIDLbl" Content="{Binding SessionID}" Grid.Column="1" HorizontalAlignment="Left"
+                           VerticalAlignment="Center" FontSize="20" Foreground="White" Margin="5"></Label>
+                    </StackPanel>
+                    
+                    
+                    <Label x:Name="messageLbl" Content="{Binding Message}" Grid.Column="1" HorizontalAlignment="Center"
                            VerticalAlignment="Center" FontSize="20" Foreground="#cfcfe8"></Label>
 
                     <Border Background="#a1a1ce" Grid.Column="2">
                         <Button x:Name="startQuizBtn" Content="Start Quiz" FontSize="20" Width="230" 
                                 HorizontalAlignment="Center" Margin="5" Background="WhiteSmoke"
-                                Height="40"></Button>
+                                Height="40" IsEnabled="False" Click="startQuizBtn_Click"></Button>
                     </Border>
                 </Grid>
             </Border>
@@ -108,7 +122,7 @@
                         <ColumnDefinition Width="*"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
                     <Border Background="#a1a1ce" Grid.Column="0"></Border>
-                    <StackPanel Orientation="Vertical" Grid.Column="1">
+                    <StackPanel Orientation="Vertical" Grid.Column="1" Visibility="Hidden">
                         <Label x:Name="questionLbl" Content="Question" FontSize="55" 
                            Grid.Column="1" HorizontalAlignment="Center" Height="80" VerticalAlignment="Top"
                            Foreground="White"></Label>
@@ -137,8 +151,9 @@
                     </StackPanel>
                     <Border Background="#a1a1ce" Grid.Column="2">
                         <StackPanel Orientation="Vertical">
-                            <DataGrid x:Name="usersJoinedDataGrid" Height="550" Margin="20" Width="235"></DataGrid>
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <DataGrid x:Name="usersJoinedDataGrid" Height="550" Margin="20" Width="235"
+                                      IsEnabled="False"></DataGrid>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Visibility="Hidden">
                                 <Label Content="Number Of Participants:" FontSize="20" HorizontalAlignment="Center"
                                        Foreground="White"></Label>
                                 <Label x:Name="numberOfUsersJoinedLbl" Content="100" FontSize="20" HorizontalAlignment="Center"
