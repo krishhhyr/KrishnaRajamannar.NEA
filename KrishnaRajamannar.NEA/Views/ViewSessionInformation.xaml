@@ -46,7 +46,7 @@
 
             <StackPanel x:Name="sessionInformationStackPanel" Orientation="Vertical" Height="250" Visibility="Visible" Margin="10">
 
-                <TextBlock x:Name="numberOfUsersTxtBlock" Text="{Binding NumberOfUsersJoined}" FontSize="20" HorizontalAlignment="Center" ></TextBlock>
+                <!--<TextBlock x:Name="numberOfUsersTxtBlock" Text="{Binding NumberOfUsersJoined}" FontSize="20" HorizontalAlignment="Center" ></TextBlock>-->
                 <DataGrid x:Name="joinedUsersDataGrid" ItemsSource="{Binding UserSessionData}" ColumnWidth="*" Height="175" CanUserSortColumns="True" 
                   IsReadOnly="True" FontSize="20" AlternatingRowBackground="AliceBlue" IsEnabled="False"/>
             </StackPanel>

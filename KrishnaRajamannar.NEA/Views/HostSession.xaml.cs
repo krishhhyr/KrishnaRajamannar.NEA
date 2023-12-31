@@ -59,7 +59,7 @@ namespace KrishnaRajamannar.NEA.Views
         private void startQuizBtn_Click(object sender, RoutedEventArgs e)
         {
             _hostSessionViewModel.StartQuiz();
-            this.Close();
+            //this.Close();
         }
     }
 }

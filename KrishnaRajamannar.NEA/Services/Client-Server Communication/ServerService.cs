@@ -118,7 +118,6 @@ namespace KrishnaRajamannar.NEA.Services.Connection
                 ServerResponse serverResponse = new ServerResponse();
                 serverResponse.SessionId = userSessionData.SessionID;
                 serverResponse.DataType = message;
-                serverResponse.Data = message;
                 NetworkStream stream = client.GetStream();
                 var payload = JsonSerializer.Serialize<ServerResponse>(serverResponse);
                 var messageBytes = Encoding.UTF8.GetBytes(payload);
