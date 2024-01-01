@@ -88,6 +88,28 @@ namespace KrishnaRajamannar.NEA.ViewModels
             }
         }
 
+        private string _userName;
+        public string UserName
+        {
+            get { return _userName; }
+            set
+            {
+                _userName = value;
+                RaisePropertyChange("UserName");
+            }
+        }
+
+        private int _userId;
+        public int UserId
+        {
+            get { return _userId; }
+            set
+            {
+                _userId = value;
+                RaisePropertyChange("UserId");
+            }
+        }
+
         private string _sessionId;
         public string SessionId
         {
@@ -346,6 +368,28 @@ namespace KrishnaRajamannar.NEA.ViewModels
             _clientService.ConnectToServer(UserName, UserId, ipAddressConnect, portNumberConnect, SessionId.ToString());
 
             Message = "Connected.";
+        }
+
+        public bool JoinSession()
+        {
+            if (SessionId == null) return false;
+
+            if (_sessionService.IsSessionIDExist(Convert.ToInt32(SessionId)) != true)
+            {
+                //ConnectionMessage = "Session ID not found";
+                return false;
+            }
+            else
+            {
+                (string, int) connectionInfo = _sessionService.GetConnectionData(Convert.ToInt32(SessionId));
+
+                string ipAddressConnect = connectionInfo.Item1;
+                int portNumberConnect = connectionInfo.Item2;
+
+                _clientService.ConnectToServer(UserName, UserId, ipAddressConnect, portNumberConnect, SessionId.ToString());
+                //ConnectionMessage = "Connecting...";
+                return true;
+            }
         }
 
         public void LoadData(ServerResponse response)
