@@ -102,14 +102,14 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 RaisePropertyChange("SessionID");
             }
         }
-        private string _connectionMessage;
-        public string ConnectionMessage
+        private string _message;
+        public string Message
         {
-            get { return _connectionMessage; }
+            get { return _message; }
             set
             {
-                _connectionMessage = value;
-                RaisePropertyChange("ConnectionMessage");
+                _message = value;
+                RaisePropertyChange("Message");
             }
         }
         public void RaisePropertyChange(string propertyname)
@@ -190,15 +190,6 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
         }
 
-        public void ShowViewQuizzes()
-        {
-            ShowAccountParameterWindowEventArgs args = new ShowAccountParameterWindowEventArgs();
-            args.IsShown = true;
-            args.UserID = _userid;
-            OnShowViewQuizzesWindow(args);
-
-        }
-
         protected virtual void OnShowViewQuizzesWindow(ShowAccountParameterWindowEventArgs e)
         {
             ShowAccountParameterWindowEventHandler handler = ShowViewQuizzesWindow;
@@ -214,13 +205,6 @@ namespace KrishnaRajamannar.NEA.ViewModels
             OnShowLeaderboardWindow(args);
 
         }
-        public void ShowLeaderboard()
-        {
-            ShowWindowEventArgs args = new ShowWindowEventArgs();
-            args.IsShown = true;
-            OnShowLeaderboardWindow(args);
-
-        }
         protected virtual void OnShowLeaderboardWindow(ShowWindowEventArgs e)
         {
             ShowWindowEventHandler handler = ShowLeaderboardWindow;
@@ -228,15 +212,6 @@ namespace KrishnaRajamannar.NEA.ViewModels
             {
                 handler(this, e);
             }
-        }
-        public void ShowHostSession()
-        {
-            ShowAccountParameterWindowEventArgs args = new ShowAccountParameterWindowEventArgs();
-            args.IsShown = true;
-            args.UserID = _userid;
-            args.Username = _username;
-            OnShowHostSessionWindow(args);
-
         }
         public void ShowHostSession()
         {
@@ -264,15 +239,6 @@ namespace KrishnaRajamannar.NEA.ViewModels
             OnShowJoinSessionWindow(args);
 
         }
-        public void ShowJoinSession()
-        {
-            ShowAccountParameterWindowEventArgs args = new ShowAccountParameterWindowEventArgs();
-            args.IsShown = true;
-            args.UserID = _userid;
-            args.Username = _username;
-            OnShowJoinSessionWindow(args);
-
-        }
         
         protected virtual void OnShowJoinSessionWindow(ShowAccountParameterWindowEventArgs e)
         {
@@ -282,8 +248,19 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 handler(this, e);
             }
         }
-       
+
         #endregion
+
+        public bool ValidateSessionID() 
+        {
+            if (_sessionService.IsSessionIDExist(SessionID) != true) 
+            {
+                Message = "Session ID not Found.";
+                return false;
+            }
+            Message = "Session ID Found. Press Join Session";
+            return true;
+        }
 
         //public bool JoinSession() 
         //{

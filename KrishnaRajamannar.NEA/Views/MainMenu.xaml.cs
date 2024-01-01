@@ -127,11 +127,14 @@ namespace KrishnaRajamannar.NEA.Views
 
         private void joinSessionBtn_Click(object sender, RoutedEventArgs e)
         {
-            _mainMenuViewModel.ClientSessionViewModel.SessionId = _mainMenuViewModel.SessionID.ToString();
-            _mainMenuViewModel.ClientSessionViewModel.UserId=_mainMenuViewModel.UserID;
-            _mainMenuViewModel.ClientSessionViewModel.UserName = _mainMenuViewModel.Username;
-            clientSessionView = new ClientSessionView(_mainMenuViewModel.ClientSessionViewModel);
-            clientSessionView.Show();
+            if (_mainMenuViewModel.ValidateSessionID() == true) 
+            {
+                _mainMenuViewModel.ClientSessionViewModel.SessionId = _mainMenuViewModel.SessionID.ToString();
+                _mainMenuViewModel.ClientSessionViewModel.UserId = _mainMenuViewModel.UserID;
+                _mainMenuViewModel.ClientSessionViewModel.UserName = _mainMenuViewModel.Username;
+                clientSessionView = new ClientSessionView(_mainMenuViewModel.ClientSessionViewModel);
+                clientSessionView.Show();
+            }
         }
     }
 }

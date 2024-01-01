@@ -1,4 +1,5 @@
-﻿using KrishnaRajamannar.NEA.Models;
+﻿using KrishnaRajamannar.NEA.Events;
+using KrishnaRajamannar.NEA.Models;
 using KrishnaRajamannar.NEA.Models.Dto;
 using KrishnaRajamannar.NEA.Services;
 using KrishnaRajamannar.NEA.Services.Connection;
@@ -7,18 +8,23 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Security;
 using System.Text.Json;
+using System.Windows.Controls;
 
 namespace KrishnaRajamannar.NEA.ViewModels
 {
     public class ClientSessionViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
+        public event QuestionRecievedEventHandler TextQuestionRecieved;
+        public event QuestionRecievedEventHandler MultipleChoiceQuestionRecieved;
         private readonly IClientService _clientService;
         private readonly ISessionService _sessionService;
         public ClientSessionViewModel(ISessionService sessionService)
         {
             _sessionService = sessionService;
+
             //There can be only one instance worker thread that process client service
             _clientService = new ClientService();
             _clientService.ClientConnected += OnClientConnected;
@@ -40,14 +46,6 @@ namespace KrishnaRajamannar.NEA.ViewModels
         {
             LoadData(e.ServerResponse);
         }
-
-        public void ConnectToServer()
-        {
-            System.Windows.Application.Current.Dispatcher.Invoke(System.Windows.Threading.DispatcherPriority.Normal, (Action)delegate ()
-            {
-                _clientService.ConnectToServer("Krishna001", 1, "192.168.0.65", 59763, "107450");
-            });            
-        }       
 
         public void RaisePropertyChange(string propertyname)
         {
@@ -89,7 +87,6 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 RaisePropertyChange("UserId");
             }
         }
-
 
         private string _sessionId;
         public string SessionId
@@ -168,6 +165,137 @@ namespace KrishnaRajamannar.NEA.ViewModels
             }
         }
 
+        private string _message;
+        public string Message
+        {
+            get { return _message; }
+            set
+            {
+                _message = value;
+                RaisePropertyChange("Message");
+            }
+        }
+
+        private string _question;
+        public string Question
+        {
+            get { return _question; }
+            set
+            {
+                _question = value;
+                RaisePropertyChange("Question");
+            }
+        }
+
+        private string _correctAnswer;
+        public string CorrectAnswer
+        {
+            get { return _correctAnswer; }
+            set
+            {
+                _correctAnswer = value;
+                RaisePropertyChange("CorrectAnswer");
+            }
+        }
+
+        private string _option1;
+        public string Option1
+        {
+            get { return _option1; }
+            set
+            {
+                _option1 = value;
+                RaisePropertyChange("Option1");
+            }
+        }
+
+        private string _option2;
+        public string Option2
+        {
+            get { return _option2; }
+            set
+            {
+                _option2 = value;
+                RaisePropertyChange("Option2");
+            }
+        }
+
+        private string _option3;
+        public string Option3
+        {
+            get { return _option3; }
+            set
+            {
+                _option3 = value;
+                RaisePropertyChange("Option3");
+            }
+        }
+
+        private string _option4;
+        public string Option4
+        {
+            get { return _option4; }
+            set
+            {
+                _option4 = value;
+                RaisePropertyChange("Option4");
+            }
+        }
+
+        private string _option5;
+        public string Option5
+        {
+            get { return _option5; }
+            set
+            {
+                _option5 = value;
+                RaisePropertyChange("Option5");
+            }
+        }
+
+        private string _option6;
+        public string Option6
+        {
+            get { return _option6; }
+            set
+            {
+                _option6 = value;
+                RaisePropertyChange("Option6");
+            }
+        }
+        private void ShowTextQuestion() 
+        {
+            QuestionRecievedEventArgs args = new QuestionRecievedEventArgs();
+            OnShowTextQuestion(args);
+
+        }
+
+        protected virtual void OnShowTextQuestion(QuestionRecievedEventArgs e) 
+        {
+            QuestionRecievedEventHandler handler = TextQuestionRecieved;
+            if (handler != null) 
+            {
+                handler(this, e);
+            }
+        }
+
+        private void ShowMultipleChoiceQuestion() 
+        {
+            QuestionRecievedEventArgs args = new QuestionRecievedEventArgs();
+            OnShowMultipleChoiceQuestion(args);
+
+        }
+
+        protected virtual void OnShowMultipleChoiceQuestion(QuestionRecievedEventArgs e) 
+        {
+            QuestionRecievedEventHandler handler = MultipleChoiceQuestionRecieved;
+            if (handler != null)
+            {
+                handler(this, e);
+            }
+        }
+
+        // need an event for each question type?
         public void ProcessCommand(ServerResponse response)
         {
             if (response != null)
@@ -176,32 +304,48 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 DataType = response.DataType;
                 if (!string.IsNullOrEmpty(response.Data))
                 {
-                    QuizModel quizData = JsonSerializer.Deserialize<QuizModel>(response.Data);
-                    
+                    switch (response.DataType) 
+                    {
+                        case "SendQuestion":
+                            QuestionModel question = JsonSerializer.Deserialize<QuestionModel>(response.Data);
+                            // mc question
+                            if (question.Option1 != null)
+                            {
+                                ShowMultipleChoiceQuestion();
+                            }
+                            else 
+                            {
+                                ShowTextQuestion();
+                            }
+                            AssignQuestionValues(question);
+                            break;
+                    }
                 }
             }
         }
 
-        public bool JoinSession()
+        // change NULL bit in Question service!
+        private void AssignQuestionValues(QuestionModel questionData) 
         {
-            if (SessionId == null) return false;
+            Question = questionData.Question;
+            Option1 = questionData.Option1;
+            Option2 = questionData.Option2;
+            Option3 = questionData.Option3;
+            Option4 = questionData.Option4;
+            Option5 = questionData.Option5;
+            Option6 = questionData.Option6;
+        }
 
-            if (_sessionService.IsSessionIDExist(Convert.ToInt32(SessionId)) != true)
-            {
-                //ConnectionMessage = "Session ID not found";
-                return false;
-            }
-            else
-            {
-                (string, int) connectionInfo = _sessionService.GetConnectionData(Convert.ToInt32(SessionId));
+        public void ConnectToServer()
+        {
+            (string, int) connectionInfo = _sessionService.GetConnectionData(Convert.ToInt32(SessionId));
 
-                string ipAddressConnect = connectionInfo.Item1;
-                int portNumberConnect = connectionInfo.Item2;
+            string ipAddressConnect = connectionInfo.Item1;
+            int portNumberConnect = connectionInfo.Item2;
 
-                _clientService.ConnectToServer(UserName, UserId, ipAddressConnect, portNumberConnect, SessionId.ToString());
-                //ConnectionMessage = "Connecting...";
-                return true;
-            }
+            _clientService.ConnectToServer(UserName, UserId, ipAddressConnect, portNumberConnect, SessionId.ToString());
+
+            Message = "Connected.";
         }
 
         public void LoadData(ServerResponse response)
@@ -222,7 +366,10 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
                         if (data.UserSessions.Any())
                         {
+                            List<string> users = new List<string>();
+
                             UserSessionData.Clear();
+                            
                             //_userSessionData.AddRange(data.UserSessions);
                             UserSessionData = data.UserSessions.ToList();
                             NumberofJoinedUsers = _userSessionData.Count;

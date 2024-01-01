@@ -10,12 +10,14 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics.SymbolStore;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Security.RightsManagement;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace KrishnaRajamannar.NEA.ViewModels
 {
@@ -25,16 +27,20 @@ namespace KrishnaRajamannar.NEA.ViewModels
         private readonly IServerService _serverService;
         private readonly ISessionService _sessionService;
         private readonly IQuizService _quizService;
+        private readonly IQuestionService _questionService; 
 
         public int UserID;
         public string Username;
         IList<QuizModel> Quizzes = new List<QuizModel>();
+        IList<QuestionModel> Questions = new List<QuestionModel>();
+        public int NumberOfQuestions; 
 
-        public ServerSessionViewModel(IServerService serverService, ISessionService sessionService, IQuizService quizService)
+        public ServerSessionViewModel(IServerService serverService, ISessionService sessionService, IQuizService quizService, IQuestionService questionService)
         {
             _serverService = serverService;            
             _sessionService = sessionService;
             _quizService = quizService;
+            _questionService = questionService;
         }
 
         #region Properties
@@ -297,9 +303,22 @@ namespace KrishnaRajamannar.NEA.ViewModels
         {
             //make model serializable and serialise quiz model and send as message
             Message = "Quiz Started";
-            QuizModel firstQuestion = Quizzes.First();
-            string quizData = JsonSerializer.Serialize<QuizModel>(firstQuestion);
-            _serverService.SendDataToClients(quizData, "StartQuiz");
+
+            foreach (QuizModel quiz in Quizzes) 
+            {
+                if (quiz.QuizTitle == SelectedQuiz) 
+                {
+                    Questions = _questionService.GetQuestions(quiz.QuizID); 
+                }
+            }
+
+            NumberOfQuestions = Questions.Count;
+
+            // randomise questions
+
+            QuestionModel firstQuestion = Questions.First();
+            string questionData = JsonSerializer.Serialize<QuestionModel>(firstQuestion);
+            _serverService.SendDataToClients(questionData, "SendQuestion");
 
             }
 
