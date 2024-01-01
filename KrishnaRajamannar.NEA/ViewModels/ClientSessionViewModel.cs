@@ -1,5 +1,7 @@
 ﻿using KrishnaRajamannar.NEA.Models;
 using KrishnaRajamannar.NEA.Models.Dto;
+using KrishnaRajamannar.NEA.Services;
+using KrishnaRajamannar.NEA.Services.Connection;
 using KrishnaRajamannar.NEA.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -13,9 +15,12 @@ namespace KrishnaRajamannar.NEA.ViewModels
     {
         public event PropertyChangedEventHandler? PropertyChanged;
         private readonly IClientService _clientService;
-        public ClientSessionViewModel(IClientService clientService)
+        private readonly ISessionService _sessionService;
+        public ClientSessionViewModel(ISessionService sessionService)
         {
-            _clientService = clientService;
+            _sessionService = sessionService;
+            //There can be only one instance worker thread that process client service
+            _clientService = new ClientService();
             _clientService.ClientConnected += OnClientConnected;
             _clientService.StartQuizEvent += OnStartQuizEvent;
             _clientService.ProcessCommand += OnProcessCommand;
@@ -62,6 +67,29 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 RaisePropertyChange("HostName");
             }
         }
+
+        private string _userName;
+        public string UserName
+        {
+            get { return _userName; }
+            set
+            {
+                _userName = value;
+                RaisePropertyChange("UserName");
+            }
+        }
+
+        private int _userId;
+        public int UserId
+        {
+            get { return _userId; }
+            set
+            {
+                _userId = value;
+                RaisePropertyChange("UserId");
+            }
+        }
+
 
         private string _sessionId;
         public string SessionId
@@ -149,7 +177,30 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 if (!string.IsNullOrEmpty(response.Data))
                 {
                     QuizModel quizData = JsonSerializer.Deserialize<QuizModel>(response.Data);
+                    
                 }
+            }
+        }
+
+        public bool JoinSession()
+        {
+            if (SessionId == null) return false;
+
+            if (_sessionService.IsSessionIDExist(Convert.ToInt32(SessionId)) != true)
+            {
+                //ConnectionMessage = "Session ID not found";
+                return false;
+            }
+            else
+            {
+                (string, int) connectionInfo = _sessionService.GetConnectionData(Convert.ToInt32(SessionId));
+
+                string ipAddressConnect = connectionInfo.Item1;
+                int portNumberConnect = connectionInfo.Item2;
+
+                _clientService.ConnectToServer(UserName, UserId, ipAddressConnect, portNumberConnect, SessionId.ToString());
+                //ConnectionMessage = "Connecting...";
+                return true;
             }
         }
 
@@ -164,17 +215,17 @@ namespace KrishnaRajamannar.NEA.ViewModels
                     SessionData data = JsonSerializer.Deserialize<SessionData>(response.Data);
                     if (data != null)
                     {
-                        _quizSelected = data.QuizSelected;
-                        _hostName = data.HostName;
-                        _endQuizConditionSelected = data.EndQuizCondition;
-                        _endQuizConditionValue = data.EndQuizConditionValue;
+                        QuizSelected = data.QuizSelected;
+                        HostName = data.HostName;
+                        EndQuizConditionSelected = data.EndQuizCondition;
+                        EndQuizConditionValue = data.EndQuizConditionValue;
 
                         if (data.UserSessions.Any())
                         {
-                            _userSessionData.Clear();
-                            _userSessionData.AddRange(data.UserSessions);
-
-                            _numberofJoinedUsers = data.UserSessions.Count;
+                            UserSessionData.Clear();
+                            //_userSessionData.AddRange(data.UserSessions);
+                            UserSessionData = data.UserSessions.ToList();
+                            NumberofJoinedUsers = _userSessionData.Count;
                         }
                     }
                 }

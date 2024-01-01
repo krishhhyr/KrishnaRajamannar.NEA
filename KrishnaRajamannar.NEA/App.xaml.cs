@@ -37,7 +37,7 @@ namespace KrishnaRajamannar.NEA
             services.AddSingleton<IQuestionService, QuestionService>();
             services.AddSingleton<IIndependentReviewQuizService, IndependentReviewQuizService>();
             services.AddSingleton<ISessionService, SessionService>();
-            services.AddSingleton<IClientService, ClientService>();
+            //services.AddSingleton<IClientService, ClientService>();
             services.AddSingleton<IServerService, ServerService>();
             services.AddSingleton<IUserSessionService, UserSessionService>();
             services.AddSingleton<UserConnectionService>();

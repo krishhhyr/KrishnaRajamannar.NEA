@@ -52,7 +52,6 @@ namespace KrishnaRajamannar.NEA.Services.Connection
                             switch (response.DataType)
                             {
                                 case "Acknowledgement":
-
                                     ClientConnectedEventArgs args = new ClientConnectedEventArgs();
                                     args.ServerResponse = response;
                                     OnClientConnected(args);

@@ -26,6 +26,12 @@ namespace KrishnaRajamannar.NEA.Views
             InitializeComponent();
             _clientSessionViewModel = clientSessionViewModel;
             DataContext = _clientSessionViewModel;
+            Loaded += ClientSessionView_Loaded;
+        }
+
+        private void ClientSessionView_Loaded(object sender, RoutedEventArgs e)
+        {
+            _clientSessionViewModel.JoinSession();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

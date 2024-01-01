@@ -49,38 +49,32 @@ namespace KrishnaRajamannar.NEA.Views
             _mainMenuViewModel.ShowViewQuizzesWindow += MainMenuViewModel_ShowViewQuizzesWindow;
             _mainMenuViewModel.ShowLeaderboardWindow += MainMenuViewModel_ShowLeaderboardWindow;
             _mainMenuViewModel.ShowHostSessionWindow += MainMenuViewModel_ShowHostSessionWindow;
-            _mainMenuViewModel.ShowJoinSessionWindow += MainMenuViewModel_ShowJoinSessionWindow;
-            _mainMenuViewModel.ShowClientSessionWindow += OnShowClientSessionWindow;
+            //_mainMenuViewModel.ShowJoinSessionWindow += MainMenuViewModel_ShowJoinSessionWindow;
+            //_mainMenuViewModel.ShowClientSessionWindow += OnShowClientSessionWindow;
 
 
         }
 
-        private void OnShowClientSessionWindow(object sender, Events.ShowSessionParameterWindowEventArgs e)
-        {
-            if (e.ServerResponse != null)
-            {
-                _clientSessionViewModel.LoadData(e.ServerResponse);
-                clientSessionView = new ClientSessionView(_clientSessionViewModel); ;
-                clientSessionView.ShowDialog();
-            }
-        }
+        //private void OnShowClientSessionWindow(object sender, Events.ShowSessionParameterWindowEventArgs e)
+        //{
+        //    if (e.ServerResponse != null)
+        //    {
+        //        _clientSessionViewModel.LoadData(e.ServerResponse);
+        //        clientSessionView = new ClientSessionView(_clientSessionViewModel); ;
+        //        clientSessionView.ShowDialog();
+        //    }
+        //}
 
-        private void MainMenuViewModel_ShowJoinSessionWindow(object sender, Events.ShowAccountParameterWindowEventArgs e)
-        {
-            _mainMenuViewModel.JoinSessionViewModel.UserID = e.UserID;
-            _mainMenuViewModel.JoinSessionViewModel.Username = e.Username;
-            //joinSession = new JoinSession(_mainMenuViewModel.JoinSessionViewModel);
-
-            //joinSession.ShowDialog();
-
-            clientSessionView = new ClientSessionView(_mainMenuViewModel.ClientSessionViewModel);
-            clientSessionView.Show(); 
-        }
+        //private void MainMenuViewModel_ShowJoinSessionWindow(object sender, Events.ShowAccountParameterWindowEventArgs e)
+        //{
+            
+           
+        //}
 
         private void MainMenuViewModel_ShowHostSessionWindow(object sender, Events.ShowAccountParameterWindowEventArgs e)
         {
-            _mainMenuViewModel.HostSessionViewModel.UserID = e.UserID;
-            _mainMenuViewModel.HostSessionViewModel.Username = e.Username;
+            //_mainMenuViewModel.HostSessionViewModel.UserID = e.UserID;
+            //_mainMenuViewModel.HostSessionViewModel.Username = e.Username;
             //hostSession = new HostSession(_mainMenuViewModel.HostSessionViewModel);
             //hostSession.ShowDialog();
 
@@ -133,11 +127,11 @@ namespace KrishnaRajamannar.NEA.Views
 
         private void joinSessionBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (_mainMenuViewModel.JoinSession() == true)
-            {
-                sessionIDTxtBox.IsEnabled = false;
-                joinSessionBtn.IsEnabled = false;
-            }
+            _mainMenuViewModel.ClientSessionViewModel.SessionId = _mainMenuViewModel.SessionID.ToString();
+            _mainMenuViewModel.ClientSessionViewModel.UserId=_mainMenuViewModel.UserID;
+            _mainMenuViewModel.ClientSessionViewModel.UserName = _mainMenuViewModel.Username;
+            clientSessionView = new ClientSessionView(_mainMenuViewModel.ClientSessionViewModel);
+            clientSessionView.Show();
         }
     }
 }
