@@ -47,11 +47,9 @@ namespace KrishnaRajamannar.NEA.ViewModels
             {
                 _quizTitles = value;
                 RaisePropertyChange("QuizTitles");
+            }
         }
 
-        public void StopServer() {
-           _serverService.StopServer();
-        }
         private List<string> _endQuizConditions;
         public List<string> EndQuizConditions
         {

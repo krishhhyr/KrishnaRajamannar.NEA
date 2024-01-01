@@ -40,23 +40,23 @@ namespace KrishnaRajamannar.NEA.ViewModels
         public ClientSessionViewModel ClientSessionViewModel;
 
         private readonly ISessionService _sessionService;
-        private readonly IClientService _clientService;
+        //private readonly IClientService _clientService;
 
-        public MainMenuViewModel(ISessionService sessionService, IClientService clientService)
+        public MainMenuViewModel(ISessionService sessionService)
         {
             AccountLoginViewModel = App.ServiceProvider.GetService(typeof(AccountLoginViewModel)) as AccountLoginViewModel;
             ViewQuizzesViewModel = App.ServiceProvider.GetService(typeof(ViewQuizzesViewModel)) as ViewQuizzesViewModel;
             ViewLeaderboardViewModel = App.ServiceProvider.GetService(typeof(ViewLeaderboardViewModel)) as ViewLeaderboardViewModel;
-            HostSessionViewModel = App.ServiceProvider.GetService(typeof(HostSessionViewModel)) as HostSessionViewModel;
-            JoinSessionViewModel = App.ServiceProvider.GetService(typeof(JoinSessionViewModel)) as JoinSessionViewModel;
+            //HostSessionViewModel = App.ServiceProvider.GetService(typeof(HostSessionViewModel)) as HostSessionViewModel;
+            //JoinSessionViewModel = App.ServiceProvider.GetService(typeof(JoinSessionViewModel)) as JoinSessionViewModel;
 
             ServerSessionViewModel = App.ServiceProvider.GetService(typeof(ServerSessionViewModel)) as ServerSessionViewModel;
             ClientSessionViewModel = App.ServiceProvider.GetService(typeof(ClientSessionViewModel)) as ClientSessionViewModel;
 
             _sessionService = sessionService;
-            _clientService = clientService;
+            //_clientService = clientService;
 
-            _clientService.ClientConnected += OnClientConnected;
+            //_clientService.ClientConnected += OnClientConnected;
 
         }
 
@@ -251,24 +251,24 @@ namespace KrishnaRajamannar.NEA.ViewModels
        
         #endregion
 
-        public bool JoinSession() 
-        {
-            if (_sessionService.IsSessionIDExist(SessionID) != true)
-            {
-                ConnectionMessage = "Session ID not found";
-                return false;
-            }
-            else
-            {
-                (string, int) connectionInfo = _sessionService.GetConnectionData(SessionID);
+        //public bool JoinSession() 
+        //{
+        //    if (_sessionService.IsSessionIDExist(SessionID) != true)
+        //    {
+        //        ConnectionMessage = "Session ID not found";
+        //        return false;
+        //    }
+        //    else
+        //    {
+        //        (string, int) connectionInfo = _sessionService.GetConnectionData(SessionID);
 
-                string ipAddressConnect = connectionInfo.Item1;
-                int portNumberConnect = connectionInfo.Item2;
+        //        string ipAddressConnect = connectionInfo.Item1;
+        //        int portNumberConnect = connectionInfo.Item2;
 
-                _clientService.ConnectToServer(Username, UserID, ipAddressConnect, portNumberConnect, SessionID.ToString());
-                ConnectionMessage = "Connecting...";
-                return true;
-            }
-        }
+        //        _clientService.ConnectToServer(Username, UserID, ipAddressConnect, portNumberConnect, SessionID.ToString());
+        //        ConnectionMessage = "Connecting...";
+        //        return true;
+        //    }
+        //}
     }
 }

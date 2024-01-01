@@ -155,7 +155,7 @@
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <Label Content="Number Of Joined Users:" FontSize="20" HorizontalAlignment="Center"
                                        Foreground="White"></Label>
-                    <Label x:Name="numberOfUsersJoinedLbl" Content="{Binding NumberOfJoinedUsers}" FontSize="20" HorizontalAlignment="Center"
+                    <Label x:Name="numberOfUsersJoinedLbl" Content="{Binding NumberofJoinedUsers}" FontSize="20" HorizontalAlignment="Center"
                                        Foreground="White"></Label>
                 </StackPanel>
             </StackPanel>
