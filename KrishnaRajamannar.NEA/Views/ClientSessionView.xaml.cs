@@ -26,18 +26,31 @@ namespace KrishnaRajamannar.NEA.Views
             InitializeComponent();
             _clientSessionViewModel = clientSessionViewModel;
             DataContext = _clientSessionViewModel;
-            Loaded += ClientSessionView_Loaded;
-        }
 
-        private void ClientSessionView_Loaded(object sender, RoutedEventArgs e)
-        {
-            _clientSessionViewModel.JoinSession();
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
             _clientSessionViewModel.ConnectToServer();
-            
+
+            _clientSessionViewModel.TextQuestionRecieved += _clientSessionViewModel_TextQuestionRecieved;
+            _clientSessionViewModel.MultipleChoiceQuestionRecieved += _clientSessionViewModel_MultipleChoiceQuestionRecieved;
+        }
+
+        private void _clientSessionViewModel_MultipleChoiceQuestionRecieved(object sender, Events.QuestionRecievedEventArgs e)
+        {
+            this.Dispatcher.Invoke(() =>
+            {
+                questionAndAnswerStackPanel.Visibility = Visibility.Visible;
+                multipleChoiceAnswerRbStackPanel.Visibility = Visibility.Visible;
+                textAnswerTxtBox.Visibility = Visibility.Hidden;
+            });
+        }
+
+        private void _clientSessionViewModel_TextQuestionRecieved(object sender, Events.QuestionRecievedEventArgs e)
+        {
+            this.Dispatcher.Invoke(() =>
+            {
+                questionAndAnswerStackPanel.Visibility = Visibility.Visible;
+                textAnswerTxtBox.Visibility = Visibility.Visible;
+                multipleChoiceAnswerRbStackPanel.Visibility = Visibility.Hidden;
+            });
         }
     }
 }

@@ -102,14 +102,14 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 RaisePropertyChange("SessionID");
             }
         }
-        private string _connectionMessage;
-        public string ConnectionMessage
+        private string _message;
+        public string Message
         {
-            get { return _connectionMessage; }
+            get { return _message; }
             set
             {
-                _connectionMessage = value;
-                RaisePropertyChange("ConnectionMessage");
+                _message = value;
+                RaisePropertyChange("Message");
             }
         }
         public void RaisePropertyChange(string propertyname)
@@ -282,8 +282,19 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 handler(this, e);
             }
         }
-       
+
         #endregion
+
+        public bool ValidateSessionID() 
+        {
+            if (_sessionService.IsSessionIDExist(SessionID) != true) 
+            {
+                Message = "Session ID not Found.";
+                return false;
+            }
+            Message = "Session ID Found. Press Join Session";
+            return true;
+        }
 
         //public bool JoinSession() 
         //{
