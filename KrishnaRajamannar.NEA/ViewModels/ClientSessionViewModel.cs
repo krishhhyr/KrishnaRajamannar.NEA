@@ -23,7 +23,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
             _clientService = new ClientService();
             _clientService.ClientConnected += OnClientConnected;
             _clientService.StartQuizEvent += OnStartQuizEvent;
-            _clientService.ProcessCommand += OnProcessCommand;          
+            _clientService.ProcessCommand += OnProcessCommand;
         }
 
         private void OnProcessCommand(object sender, Events.ProcessCommandEventArgs e)

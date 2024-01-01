@@ -190,6 +190,15 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
         }
 
+        public void ShowViewQuizzes()
+        {
+            ShowAccountParameterWindowEventArgs args = new ShowAccountParameterWindowEventArgs();
+            args.IsShown = true;
+            args.UserID = _userid;
+            OnShowViewQuizzesWindow(args);
+
+        }
+
         protected virtual void OnShowViewQuizzesWindow(ShowAccountParameterWindowEventArgs e)
         {
             ShowAccountParameterWindowEventHandler handler = ShowViewQuizzesWindow;
@@ -197,6 +206,13 @@ namespace KrishnaRajamannar.NEA.ViewModels
             {
                 handler(this, e);
             }
+        }
+        public void ShowLeaderboard()
+        {
+            ShowWindowEventArgs args = new ShowWindowEventArgs();
+            args.IsShown = true;
+            OnShowLeaderboardWindow(args);
+
         }
         public void ShowLeaderboard()
         {
@@ -222,6 +238,15 @@ namespace KrishnaRajamannar.NEA.ViewModels
             OnShowHostSessionWindow(args);
 
         }
+        public void ShowHostSession()
+        {
+            ShowAccountParameterWindowEventArgs args = new ShowAccountParameterWindowEventArgs();
+            args.IsShown = true;
+            args.UserID = _userid;
+            args.Username = _username;
+            OnShowHostSessionWindow(args);
+
+        }
         protected virtual void OnShowHostSessionWindow(ShowAccountParameterWindowEventArgs e)
         {
             ShowAccountParameterWindowEventHandler handler = ShowHostSessionWindow;
@@ -229,6 +254,15 @@ namespace KrishnaRajamannar.NEA.ViewModels
             {
                 handler(this, e);
             }
+        }
+        public void ShowJoinSession()
+        {
+            ShowAccountParameterWindowEventArgs args = new ShowAccountParameterWindowEventArgs();
+            args.IsShown = true;
+            args.UserID = _userid;
+            args.Username = _username;
+            OnShowJoinSessionWindow(args);
+
         }
         public void ShowJoinSession()
         {
