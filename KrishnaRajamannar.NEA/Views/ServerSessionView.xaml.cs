@@ -31,6 +31,23 @@ namespace KrishnaRajamannar.NEA.Views
             _serverSessionViewModel.CreateSessionID();
             _serverSessionViewModel.GetQuizzes();
             _serverSessionViewModel.AssignQuizConditions();
+
+            _serverSessionViewModel.TextQuestionRecieved += _serverSessionViewModel_TextQuestionRecieved;
+            _serverSessionViewModel.MultipleChoiceQuestionRecieved += _serverSessionViewModel_MultipleChoiceQuestionRecieved;
+        }
+
+        private void _serverSessionViewModel_MultipleChoiceQuestionRecieved(object sender, Events.QuestionRecievedEventArgs e)
+        {
+            questionAndAnswerStackPanel.Visibility = Visibility.Visible;
+            textAnswerTxtBox.Visibility = Visibility.Hidden;
+            multipleChoiceAnswerRbStackPanel.Visibility = Visibility.Visible;
+        }
+
+        private void _serverSessionViewModel_TextQuestionRecieved(object sender, Events.QuestionRecievedEventArgs e)
+        {
+            questionAndAnswerStackPanel.Visibility = Visibility.Visible;
+            textAnswerTxtBox.Visibility = Visibility.Visible;
+            multipleChoiceAnswerRbStackPanel.Visibility = Visibility.Hidden;   
         }
 
         private void startSessionBtn_Click(object sender, RoutedEventArgs e)

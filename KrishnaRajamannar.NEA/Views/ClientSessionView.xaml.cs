@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -12,6 +13,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace KrishnaRajamannar.NEA.Views
 {
@@ -31,6 +33,7 @@ namespace KrishnaRajamannar.NEA.Views
 
             _clientSessionViewModel.TextQuestionRecieved += _clientSessionViewModel_TextQuestionRecieved;
             _clientSessionViewModel.MultipleChoiceQuestionRecieved += _clientSessionViewModel_MultipleChoiceQuestionRecieved;
+
         }
 
         private void _clientSessionViewModel_MultipleChoiceQuestionRecieved(object sender, Events.QuestionRecievedEventArgs e)
