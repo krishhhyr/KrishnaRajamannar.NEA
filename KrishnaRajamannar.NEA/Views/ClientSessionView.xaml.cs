@@ -33,7 +33,40 @@ namespace KrishnaRajamannar.NEA.Views
 
             _clientSessionViewModel.TextQuestionRecieved += _clientSessionViewModel_TextQuestionRecieved;
             _clientSessionViewModel.MultipleChoiceQuestionRecieved += _clientSessionViewModel_MultipleChoiceQuestionRecieved;
+            _clientSessionViewModel.AnswerTimerFinished += _clientSessionViewModel_AnswerTimerFinished;
 
+        }
+
+        private void _clientSessionViewModel_AnswerTimerFinished(object sender, Events.TimerEventArgs e)
+        {
+            this.Dispatcher.Invoke(() =>
+            {
+                submitBtn.IsEnabled = false;
+
+                textAnswerTxtBox.IsEnabled = false;
+                option1rb.IsEnabled = false;
+                option2rb.IsEnabled = false;
+                option3rb.IsEnabled = false;
+                option4rb.IsEnabled = false;
+                option5rb.IsEnabled = false;
+                option6rb.IsEnabled = false;
+
+                List<RadioButton> radioButtons = new List<RadioButton>();
+                radioButtons.Add(option1rb);
+                radioButtons.Add(option2rb);
+                radioButtons.Add(option3rb);
+                radioButtons.Add(option4rb);
+                radioButtons.Add(option5rb);
+                radioButtons.Add(option6rb);
+
+                foreach (RadioButton radioButton in radioButtons)
+                {
+                    if (radioButton.IsChecked == true)
+                    {
+                        _clientSessionViewModel.AnswerInput = radioButton.Content.ToString();
+                    }
+                }
+            });
         }
 
         private void _clientSessionViewModel_MultipleChoiceQuestionRecieved(object sender, Events.QuestionRecievedEventArgs e)
@@ -43,6 +76,8 @@ namespace KrishnaRajamannar.NEA.Views
                 questionAndAnswerStackPanel.Visibility = Visibility.Visible;
                 multipleChoiceAnswerRbStackPanel.Visibility = Visibility.Visible;
                 textAnswerTxtBox.Visibility = Visibility.Hidden;
+                multipleQuizReviewStackPanel.Visibility = Visibility.Visible;
+                sessionDetailsStackPanel.Visibility = Visibility.Hidden;
             });
         }
 
@@ -53,7 +88,38 @@ namespace KrishnaRajamannar.NEA.Views
                 questionAndAnswerStackPanel.Visibility = Visibility.Visible;
                 textAnswerTxtBox.Visibility = Visibility.Visible;
                 multipleChoiceAnswerRbStackPanel.Visibility = Visibility.Hidden;
+                multipleQuizReviewStackPanel.Visibility = Visibility.Visible;
+                sessionDetailsStackPanel.Visibility = Visibility.Hidden;
             });
+        }
+
+        private void submitBtn_Click(object sender, RoutedEventArgs e)
+        {
+            submitBtn.IsEnabled = false;
+
+            textAnswerTxtBox.IsEnabled = false;
+            option1rb.IsEnabled = false;
+            option2rb.IsEnabled = false;
+            option3rb.IsEnabled = false;    
+            option4rb.IsEnabled = false;
+            option5rb.IsEnabled = false;
+            option6rb.IsEnabled = false;
+
+            List<RadioButton> radioButtons = new List<RadioButton>();
+            radioButtons.Add(option1rb);
+            radioButtons.Add(option2rb);
+            radioButtons.Add(option3rb);
+            radioButtons.Add(option4rb);
+            radioButtons.Add(option5rb);
+            radioButtons.Add(option6rb);
+
+            foreach (RadioButton radioButton in radioButtons) 
+            {
+                if (radioButton.IsChecked == true) 
+                {
+                    _clientSessionViewModel.AnswerInput = radioButton.Content.ToString();
+                }
+            }
         }
     }
 }

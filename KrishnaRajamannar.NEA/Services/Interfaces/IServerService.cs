@@ -1,9 +1,12 @@
-﻿using System.Net.Sockets;
+﻿using KrishnaRajamannar.NEA.Events;
+using System.Net.Sockets;
 
 namespace KrishnaRajamannar.NEA.Services.Interfaces
 {
     public interface IServerService
     {
+        public event ProcessClientResponseEventHandler ProcessClientResponse;
+
         public void StartServer(string hostname, string ipAddress, int portNumber);
 
         public void ListeningForConnections(string ipAddress, int portNumber);
