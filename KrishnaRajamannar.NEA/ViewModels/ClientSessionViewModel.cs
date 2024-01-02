@@ -98,6 +98,17 @@ namespace KrishnaRajamannar.NEA.ViewModels
             }
         }
 
+        private int _userId;
+        public int UserId
+        {
+            get { return _userId; }
+            set
+            {
+                _userId = value;
+                RaisePropertyChange("UserId");
+            }
+        }
+
         private string _sessionId;
         public string SessionId
         {
