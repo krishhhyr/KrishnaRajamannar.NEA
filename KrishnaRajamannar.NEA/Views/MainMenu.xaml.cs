@@ -80,6 +80,7 @@ namespace KrishnaRajamannar.NEA.Views
 
             _mainMenuViewModel.ServerSessionViewModel.UserID = e.UserID;
             _mainMenuViewModel.ServerSessionViewModel.Username = e.Username;
+            _mainMenuViewModel.ServerSessionViewModel.TotalPoints = e.TotalPoints;
             serverSessionView = new ServerSessionView(_mainMenuViewModel.ServerSessionViewModel);
             serverSessionView.Show();
         }
@@ -130,8 +131,9 @@ namespace KrishnaRajamannar.NEA.Views
             if (_mainMenuViewModel.ValidateSessionID() == true) 
             {
                 _mainMenuViewModel.ClientSessionViewModel.SessionId = _mainMenuViewModel.SessionID.ToString();
-                _mainMenuViewModel.ClientSessionViewModel.UserId = _mainMenuViewModel.UserID;
-                _mainMenuViewModel.ClientSessionViewModel.UserName = _mainMenuViewModel.Username;
+                _mainMenuViewModel.ClientSessionViewModel.UserID = _mainMenuViewModel.UserID;
+                _mainMenuViewModel.ClientSessionViewModel.Username = _mainMenuViewModel.Username;
+                _mainMenuViewModel.ClientSessionViewModel.TotalPoints = _mainMenuViewModel.TotalPoints;
                 clientSessionView = new ClientSessionView(_mainMenuViewModel.ClientSessionViewModel);
                 clientSessionView.Show();
             }

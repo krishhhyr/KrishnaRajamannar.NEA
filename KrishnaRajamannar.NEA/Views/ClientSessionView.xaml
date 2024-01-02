@@ -87,13 +87,7 @@
                 <Label Content="Time Limit for Question (In Seconds):" FontSize="20" VerticalAlignment="Center"
                                Margin="10,5,0,5" Foreground="White"></Label>
 
-                <Label x:Name="questionTimeLimitLbl" Content="30" FontSize="20" VerticalAlignment="Center"
-                               Foreground="White"></Label>
-
-                <Label Content="Number Of Points Gained:" FontSize="20" VerticalAlignment="Center"
-                               Margin="10,5,0,5" Foreground="White"></Label>
-
-                <Label x:Name="numberOfPointsGained" Content="1000" FontSize="20" VerticalAlignment="Center"
+                <Label x:Name="questionTimeLimitLbl" Content="{Binding AnswerTimeLimit}" FontSize="20" VerticalAlignment="Center"
                                Foreground="White"></Label>
             </StackPanel>
 
@@ -122,15 +116,11 @@
             <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Right">
                 <Label Content="Points Gained:" VerticalAlignment="Center" FontSize="30" Foreground="White" Margin="5,5,0,5"></Label>
                 
-                <Label x:Name="pointsGainedLbl" Content="100" VerticalAlignment="Center" FontSize="30" Foreground="White" Margin="0,0,10,0"></Label>
+                <Label x:Name="pointsGainedLbl" Content="" VerticalAlignment="Center" FontSize="20" Foreground="White" Margin="0,0,10,0"></Label>
 
-                <Label Content="Remaining Time To Answer:" VerticalAlignment="Center" FontSize="30" Foreground="White" Margin="0,0,0,0"></Label>
+                <Label Content="Remaining Time To Answer:" VerticalAlignment="Center" FontSize="20" Foreground="White" Margin="0,0,0,0"></Label>
 
-                <Label x:Name="remainingTimeLbl" Content="{Binding RemainingTimeLimit}" VerticalAlignment="Center" FontSize="30" Foreground="White" Margin="0,5,5,5"></Label>
-
-                <Label Content="Time Limit:" VerticalAlignment="Center" FontSize="30" Foreground="White" Margin="0,0,0,0"></Label>
-
-                <Label x:Name="timeLimitLbl" Content="{Binding AnswerTimeLimit}" VerticalAlignment="Center" FontSize="30" Foreground="White" Margin="0,5,5,5"></Label>
+                <Label x:Name="remainingTimeLbl" Content="{Binding RemainingTimeLimit}" VerticalAlignment="Center" FontSize="20" Foreground="White" Margin="0,5,5,5"></Label>
             </StackPanel>
 
             <Grid Grid.Column="1" Grid.Row="2">
@@ -143,16 +133,16 @@
                 </Grid.RowDefinitions>
             </Grid>
 
-            <StackPanel x:Name="questionAndAnswerStackPanel" Orientation="Vertical" Grid.Column="1" Grid.Row="2" Visibility="Visible">
+            <StackPanel x:Name="questionAndAnswerStackPanel" Orientation="Vertical" Grid.Column="1" Grid.Row="2" Visibility="Hidden">
                 <TextBlock x:Name="questionTxtBlock" Text="{Binding Question}" FontSize="40" 
                            Grid.Column="1" HorizontalAlignment="Center" Height="100" VerticalAlignment="Top"
                            Foreground="White" Width="1200" TextWrapping="Wrap" TextAlignment="Center"></TextBlock>
                 <StackPanel Orientation="Vertical">
-                    <TextBox x:Name="textAnswerTxtBox" Visibility="Visible" Height="40" Width="800" Margin="0,10,0,0"
+                    <TextBox x:Name="textAnswerTxtBox" Text="{Binding AnswerInput}" Visibility="Visible" Height="40" Width="800" Margin="0,10,0,0"
                                      FontSize="30" HorizontalContentAlignment="Center"></TextBox>
                 </StackPanel>
 
-                <StackPanel x:Name="multipleChoiceAnswerRbStackPanel" Visibility="Visible">
+                <StackPanel x:Name="multipleChoiceAnswerRbStackPanel" Visibility="Hidden">
                     <RadioButton x:Name="option1rb" Content="{Binding Option1}" FontSize="20" HorizontalAlignment="Center"
                                          IsTabStop="False" Foreground="White" Margin="5"></RadioButton>
                     <RadioButton x:Name="option2rb" Content="{Binding Option2}" FontSize="20" HorizontalAlignment="Center"
@@ -169,8 +159,12 @@
                 </StackPanel>
 
                 <Button x:Name="submitBtn" Content="Submit" FontSize="30" Height="50" 
-                        Width="250" Margin="50" Background="WhiteSmoke" Grid.Row="3"></Button>
-                
+                        Width="250" Margin="50" Background="WhiteSmoke" Grid.Row="3"
+                        Click="submitBtn_Click"></Button>
+
+                <Label x:Name="validAnswerMessageLbl" Content="{Binding ValidAnswerMessage}" Grid.Column="3" HorizontalAlignment="Center"
+                           VerticalAlignment="Center" FontSize="20" Foreground="#cfcfe8"></Label>
+
             </StackPanel>
 
             <StackPanel Orientation="Vertical" Grid.Column="2" Grid.Row="2">

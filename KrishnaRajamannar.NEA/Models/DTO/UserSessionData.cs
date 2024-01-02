@@ -11,5 +11,6 @@ namespace KrishnaRajamannar.NEA.Models.Dto
         public string SessionID { get; set; }
         public int UserID { get; set; }
         public string Username { get; set; }
+        public int TotalPoints { get; set; }
     }
 }

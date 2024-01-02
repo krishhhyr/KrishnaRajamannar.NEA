@@ -14,13 +14,22 @@ using System.Windows.Shapes;
 using KrishnaRajamannar.NEA.Services.Interfaces;
 using KrishnaRajamannar.NEA.Models.Dto;
 using KrishnaRajamannar.NEA.Views;
-using log4net;
+//using log4net;
 using Microsoft.Identity.Client;
+using System.IO.Packaging;
+using System.Collections.Concurrent;
+using KrishnaRajamannar.NEA.Events;
+using KrishnaRajamannar.NEA.Models.DTO;
+using Azure;
+using System.Text.Json.Serialization;
+using System.Runtime.Serialization.Json;
 
 namespace KrishnaRajamannar.NEA.Services.Connection
 {
     public class ServerService : IServerService
     {
+        public event ProcessClientResponseEventHandler ProcessClientResponse;
+
         TcpListener server;
         private string _hostname;
         private List<TcpClient> clients = new List<TcpClient>();
@@ -28,13 +37,22 @@ namespace KrishnaRajamannar.NEA.Services.Connection
         UserConnectionService _userConnectionService;
         IUserSessionService _userSessionService;
         ISessionService _sessionService;
+
         private UserSessionData userSessionData;
+        private ConcurrentQueue<ClientResponse> clientResponses = new ConcurrentQueue<ClientResponse>();
 
         public ServerService(UserConnectionService userConnectionService, IUserSessionService userSessionService, ISessionService sessionService)
         {
             _userConnectionService = userConnectionService;
             _userSessionService = userSessionService;
             _sessionService = sessionService;
+
+            Thread workerThread = new Thread(() =>
+            {
+                ListenAndProcessClientResponses();
+            });
+            workerThread.SetApartmentState(ApartmentState.STA);
+            workerThread.Start();
         }
 
         public void StartServer(string hostname, string ipAddress, int portNumber)
@@ -42,6 +60,44 @@ namespace KrishnaRajamannar.NEA.Services.Connection
             _hostname = hostname;
             ListeningForConnections(ipAddress, portNumber);
         }
+
+        public void ListenAndProcessClientResponses()
+        {
+            while (true)
+            {
+                try
+                {
+                    RecieveDataFromClients();
+
+                    if (!clientResponses.IsEmpty)
+                    {
+                        ClientResponse clientResponse = null;
+                        clientResponses.TryDequeue(out clientResponse);
+                        if (clientResponse != null)
+                        {
+                            ProcessClientResponseEventArgs args = new ProcessClientResponseEventArgs();
+                            args.ClientResponse = clientResponse;
+                            OnProcessClientResponse(args);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ;
+                }
+            }
+
+        }
+
+        protected virtual void OnProcessClientResponse(ProcessClientResponseEventArgs e)
+        {
+            ProcessClientResponseEventHandler handler = ProcessClientResponse;
+            if (handler != null)
+            {
+                handler(this, e);
+            }
+        }
+
         public void ListeningForConnections(string ipAddress, int portNumber)
         {
             IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse(ipAddress), portNumber);
@@ -108,6 +164,7 @@ namespace KrishnaRajamannar.NEA.Services.Connection
             var payload = JsonSerializer.Serialize<ServerResponse>(serverResponse);
             var messageBytes = Encoding.UTF8.GetBytes(payload);
             stream.Write(messageBytes, 0, messageBytes.Length);
+
         }
 
         // Used to send general messages to all clients connected
@@ -120,11 +177,36 @@ namespace KrishnaRajamannar.NEA.Services.Connection
                 serverResponse.DataType = dataType;
                 serverResponse.Data = data;
                 NetworkStream stream = client.GetStream();
-                var payload = JsonSerializer.Serialize<ServerResponse>(serverResponse);
+
+                JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions();
+                jsonSerializerOptions.WriteIndented = false;
+
+                var payload = JsonSerializer.Serialize<ServerResponse>(serverResponse, jsonSerializerOptions);
                 var messageBytes = Encoding.UTF8.GetBytes(payload);
                 stream.Write(messageBytes, 0, messageBytes.Length);
             }
         }
+
+        private void RecieveDataFromClients() 
+        {
+            var buffer = new byte[4096];
+            string messageFromClient = null;
+
+            foreach (var client in clients) 
+            {
+                NetworkStream stream = client.GetStream();
+                
+                if (stream.DataAvailable == true) 
+                {
+                    var reading = stream.Read(buffer, 0, buffer.Length);
+                    messageFromClient = Encoding.UTF8.GetString(buffer, 0, reading);
+                    ClientResponse clientResponse = new ClientResponse();
+                    clientResponse = JsonSerializer.Deserialize<ClientResponse>(messageFromClient);
+                    clientResponses.Enqueue(clientResponse);
+                }
+            }
+        }
+
         public void StopServer()
         {
             server.Stop();

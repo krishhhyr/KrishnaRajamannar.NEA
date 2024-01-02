@@ -1,6 +1,7 @@
 ﻿using KrishnaRajamannar.NEA.Events;
 using KrishnaRajamannar.NEA.Models;
 using KrishnaRajamannar.NEA.Models.Dto;
+using KrishnaRajamannar.NEA.Models.DTO;
 using KrishnaRajamannar.NEA.Services;
 using KrishnaRajamannar.NEA.Services.Connection;
 using KrishnaRajamannar.NEA.Services.Database;
@@ -10,6 +11,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.SymbolStore;
 using System.Globalization;
 using System.Linq;
@@ -30,20 +32,31 @@ namespace KrishnaRajamannar.NEA.ViewModels
         private readonly IServerService _serverService;
         private readonly ISessionService _sessionService;
         private readonly IQuizService _quizService;
-        private readonly IQuestionService _questionService; 
+        private readonly IQuestionService _questionService;
+        private readonly IUserService _userService;
 
         public int UserID;
         public string Username;
+        public int TotalPoints;
         IList<QuizModel> Quizzes = new List<QuizModel>();
         IList<QuestionModel> Questions = new List<QuestionModel>();
+        QuestionModel CurrentQuestion = new QuestionModel();
         public int NumberOfQuestions; 
 
-        public ServerSessionViewModel(IServerService serverService, ISessionService sessionService, IQuizService quizService, IQuestionService questionService)
+        public ServerSessionViewModel(IServerService serverService, ISessionService sessionService, IQuizService quizService, IQuestionService questionService, IUserService userService)
         {
             _serverService = serverService;            
             _sessionService = sessionService;
             _quizService = quizService;
             _questionService = questionService;
+            _userService = userService;
+
+            _serverService.ProcessClientResponse += OnProcessClientResponse;
+        }
+
+        private void OnProcessClientResponse(object sender, ProcessClientResponseEventArgs e)
+        {
+            ProcessClientResponse(e.ClientResponse);
         }
 
         #region Properties
@@ -121,6 +134,17 @@ namespace KrishnaRajamannar.NEA.ViewModels
         }
         }
 
+        private string _pointsGained;
+        public string PointsGained 
+        {
+            get { return _pointsGained; }
+            set 
+            {
+                _pointsGained = value;
+                RaisePropertyChange("PointsGained");
+            }
+        }
+
         private ObservableCollection<UserSessionData> _users = new ObservableCollection<UserSessionData>();
         public ObservableCollection<UserSessionData> Users
         {
@@ -151,6 +175,17 @@ namespace KrishnaRajamannar.NEA.ViewModels
             {
                 _question = value;
                 RaisePropertyChange("Question");
+            }
+        }
+
+        private string _answerInput;
+        public string AnswerInput
+        {
+            get { return _answerInput; }
+            set
+            {
+                _answerInput = value;
+                RaisePropertyChange("AnswerInput");
             }
         }
 
@@ -429,6 +464,20 @@ namespace KrishnaRajamannar.NEA.ViewModels
         #endregion
 
         // Sends the first question + time to answer? to all clients 
+
+        private void ProcessClientResponse(ClientResponse response) 
+        {
+            if (response != null)
+            {
+                if (!string.IsNullOrEmpty(response.Data))
+                {
+                    UserSessionData userData = JsonSerializer.Deserialize<UserSessionData>(response.UserData);
+                    ValidateClientAnswer(response.Data, userData.UserID, userData.Username, userData.TotalPoints);
+                }
+            }
+        }
+        
+        
         public void StartQuiz()
         {
             Message = "Quiz Started";
@@ -444,6 +493,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
             NumberOfQuestions = Questions.Count;
 
             QuestionModel firstQuestion = Questions.First();
+            CurrentQuestion = firstQuestion;
             string questionData = JsonSerializer.Serialize<QuestionModel>(firstQuestion);
             _serverService.SendDataToClients(questionData, "SendQuestion");
             DisplayQuestion(firstQuestion);
@@ -478,6 +528,38 @@ namespace KrishnaRajamannar.NEA.ViewModels
             Option6 = questionData.Option6;
         }
 
+        public void ValidateServerAnswer() 
+        {
+            if (CurrentQuestion.Answer == AnswerInput) 
+            {
+                _pointsGained = _pointsGained + CurrentQuestion.NumberOfPoints;
+                Message = $"Correct Answer! You have gained {CurrentQuestion.NumberOfPoints} points!";
+                _userService.UpdatePoints(UserID, int.Parse(_pointsGained));
+            }
+            else 
+            {
+                Message = $"Answer was {CurrentQuestion.Answer}. You have gained 0 points!";
+            }
+        }
+
+        public void ValidateClientAnswer(string? answer, int userID, string username, int totalPoints) 
+        {
+            string? clientAnswer = answer.Replace(@" ", string.Empty);
+            string message = "";
+
+            if (CurrentQuestion.Answer == clientAnswer)
+            {
+                int numberOfPointsGained = totalPoints + CurrentQuestion.NumberOfPoints;
+                message = $"Correct Answer! You have gained {CurrentQuestion.NumberOfPoints} points!";
+                _userService.UpdatePoints(userID, totalPoints);
+            }
+            else
+            {
+                message = $"Answer: {CurrentQuestion.Answer}. You have gained 0 points!";
+            }
+
+            _serverService.SendDataToClients(message, "SendCorrectAnswer");
+        }
 
         public void StopServer() 
         {

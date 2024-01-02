@@ -21,9 +21,13 @@ namespace KrishnaRajamannar.NEA.ViewModels
         public event PropertyChangedEventHandler? PropertyChanged;
         public event QuestionRecievedEventHandler TextQuestionRecieved;
         public event QuestionRecievedEventHandler MultipleChoiceQuestionRecieved;
+        public event TimerEventHandler AnswerTimerFinished;
         private readonly IClientService _clientService;
         private readonly ISessionService _sessionService;
 
+        public string Username;
+        public int UserID;
+        public int TotalPoints;
         private DispatcherTimer answerTimer;
         private TimeSpan AnswerTime;
 
@@ -36,18 +40,18 @@ namespace KrishnaRajamannar.NEA.ViewModels
             answerTimer = new DispatcherTimer();
             _clientService.ClientConnected += OnClientConnected;
             _clientService.StartQuizEvent += OnStartQuizEvent;
-            _clientService.ProcessCommand += OnProcessCommand;
+            _clientService.ProcessServerResponse += OnProcessServerResponse;
 
         }
 
-        private void OnProcessCommand(object sender, Events.ProcessCommandEventArgs e)
+        private void OnProcessServerResponse(object sender, Events.ProcessServerResponseEventArgs e)
         {
-            ProcessCommand(e.ServerResponse);
+            ProcessServerResponse(e.ServerResponse);
         }
 
         private void OnStartQuizEvent(object sender, Events.StartQuizEventArgs e)
         {
-            ProcessCommand(e.ServerResponse);
+            ProcessServerResponse(e.ServerResponse);
         }
 
         private void OnClientConnected(object sender, Events.ClientConnectedEventArgs e)
@@ -73,39 +77,6 @@ namespace KrishnaRajamannar.NEA.ViewModels
             {
                 _hostName = value;
                 RaisePropertyChange("HostName");
-            }
-        }
-
-        private string _userName;
-        public string UserName
-        {
-            get { return _userName; }
-            set
-            {
-                _userName = value;
-                RaisePropertyChange("UserName");
-            }
-        }
-
-        private int _userId;
-        public int UserId
-        {
-            get { return _userId; }
-            set
-            {
-                _userId = value;
-                RaisePropertyChange("UserId");
-            }
-        }
-
-        private int _userId;
-        public int UserId
-        {
-            get { return _userId; }
-            set
-            {
-                _userId = value;
-                RaisePropertyChange("UserId");
             }
         }
 
@@ -197,6 +168,17 @@ namespace KrishnaRajamannar.NEA.ViewModels
             }
         }
 
+        private string _validAnswerMessage;
+        public string ValidAnswerMessage
+        {
+            get { return _validAnswerMessage; }
+            set
+            {
+                _validAnswerMessage = value;
+                RaisePropertyChange("ValidAnswerMessage");
+            }
+        }
+
         private string _question;
         public string Question
         {
@@ -205,6 +187,17 @@ namespace KrishnaRajamannar.NEA.ViewModels
             {
                 _question = value;
                 RaisePropertyChange("Question");
+            }
+        }
+
+        private string _answerInput;
+        public string AnswerInput
+        {
+            get { return _answerInput; }
+            set
+            {
+                _answerInput = value;
+                RaisePropertyChange("AnswerInput");
             }
         }
 
@@ -308,12 +301,6 @@ namespace KrishnaRajamannar.NEA.ViewModels
         }
 
         #endregion
-        private void ShowTextQuestion() 
-        {
-            QuestionRecievedEventArgs args = new QuestionRecievedEventArgs();
-            OnShowTextQuestion(args);
-
-        }
 
         protected virtual void OnShowTextQuestion(QuestionRecievedEventArgs e) 
         {
@@ -322,13 +309,6 @@ namespace KrishnaRajamannar.NEA.ViewModels
             {
                 handler(this, e);
             }
-        }
-
-        private void ShowMultipleChoiceQuestion() 
-        {
-            QuestionRecievedEventArgs args = new QuestionRecievedEventArgs();
-            OnShowMultipleChoiceQuestion(args);
-
         }
 
         protected virtual void OnShowMultipleChoiceQuestion(QuestionRecievedEventArgs e) 
@@ -340,8 +320,24 @@ namespace KrishnaRajamannar.NEA.ViewModels
             }
         }
 
+        private void DisableAnsweringQuestion() 
+        {
+            TimerEventArgs args = new TimerEventArgs();
+            OnDisableAnsweringQuestion(args);
+
+        }
+
+        protected virtual void OnDisableAnsweringQuestion(TimerEventArgs e) 
+        {
+            TimerEventHandler handler = AnswerTimerFinished;
+            if (handler != null) 
+            {
+                handler(this, e);
+            }
+        }
+
         // need an event for each question type?
-        public void ProcessCommand(ServerResponse response)
+        public void ProcessServerResponse(ServerResponse response)
         {
             if (response != null)
             {
@@ -356,15 +352,21 @@ namespace KrishnaRajamannar.NEA.ViewModels
                             // mc question
                             if (question.Option1 != null)
                             {
-                                ShowMultipleChoiceQuestion();
+                                QuestionRecievedEventArgs args = new QuestionRecievedEventArgs();
+                                OnShowMultipleChoiceQuestion(args);
                             }
                             else 
                             {
-                                ShowTextQuestion();
+                                QuestionRecievedEventArgs args = new QuestionRecievedEventArgs();
+                                OnShowTextQuestion(args);
                             }
                             AssignQuestionValues(question);
                             AssignAnswerTimeValues(question.Duration);
                             answerTimer.Start();
+                            break;
+                        case "SendCorrectAnswer":
+                            string message = response.Data;
+                            ValidAnswerMessage = message.Replace(@"\r","");
                             break;
                     }
                 }
@@ -386,21 +388,24 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
         private void AssignAnswerTimeValues(int answerTime) 
         {
+            AnswerTimeLimit = answerTime.ToString();
             AnswerTime = TimeSpan.FromSeconds(answerTime);
             answerTimer.Interval = TimeSpan.FromSeconds(1);
             answerTimer.Tick += AnswerTimer_Tick;
         }
 
+        // need to send event to stop answering when timer is up...
         private void AnswerTimer_Tick(object? sender, EventArgs e)
         {
             if (AnswerTime == TimeSpan.Zero) 
             {
                 answerTimer.Stop();
+                SendAnswer();
             }
             else 
             {
                 AnswerTime = AnswerTime.Add(TimeSpan.FromSeconds(-1));
-                RemainingTimeLimit = AnswerTime.ToString("ss");
+                RemainingTimeLimit = AnswerTime.Seconds.ToString();
             }
         }
 
@@ -411,31 +416,16 @@ namespace KrishnaRajamannar.NEA.ViewModels
             string ipAddressConnect = connectionInfo.Item1;
             int portNumberConnect = connectionInfo.Item2;
 
-            _clientService.ConnectToServer(UserName, UserId, ipAddressConnect, portNumberConnect, SessionId.ToString());
+            _clientService.ConnectToServer(Username, UserID, ipAddressConnect, portNumberConnect, SessionId.ToString());
 
             Message = "Connected.";
         }
 
-        public bool JoinSession()
+        public void SendAnswer() 
         {
-            if (SessionId == null) return false;
-
-            if (_sessionService.IsSessionIDExist(Convert.ToInt32(SessionId)) != true)
-            {
-                //ConnectionMessage = "Session ID not found";
-                return false;
-            }
-            else
-            {
-                (string, int) connectionInfo = _sessionService.GetConnectionData(Convert.ToInt32(SessionId));
-
-                string ipAddressConnect = connectionInfo.Item1;
-                int portNumberConnect = connectionInfo.Item2;
-
-                _clientService.ConnectToServer(UserName, UserId, ipAddressConnect, portNumberConnect, SessionId.ToString());
-                //ConnectionMessage = "Connecting...";
-                return true;
-            }
+            DisableAnsweringQuestion();
+            Message = "Times up! Validating Response...";
+            _clientService.SendDataToServer(AnswerInput, "SendAnswer", UserID, Username, TotalPoints);
         }
 
         public void LoadData(ServerResponse response)

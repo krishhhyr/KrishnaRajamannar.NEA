@@ -3,10 +3,10 @@ using System;
 
 namespace KrishnaRajamannar.NEA.Events
 {
-    public class StartQuizEventArgs : EventArgs
+    public class ProcessServerResponseEventArgs : EventArgs
     {
         public ServerResponse ServerResponse { get; set; }
     }
-    public delegate void StartQuizEventHandler(Object sender, StartQuizEventArgs e);
+    public delegate void ProcessServerResponseEventHandler(Object sender, ProcessServerResponseEventArgs e);
 }
 

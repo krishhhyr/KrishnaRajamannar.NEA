@@ -1,10 +1,12 @@
 ﻿using KrishnaRajamannar.NEA.Events;
 using KrishnaRajamannar.NEA.Models.Dto;
+using KrishnaRajamannar.NEA.Models.DTO;
 using KrishnaRajamannar.NEA.Services.Interfaces;
 using System;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Net;
+using System.Net.Http.Headers;
 using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
@@ -18,10 +20,10 @@ namespace KrishnaRajamannar.NEA.Services.Connection
         //Create a event handler 
         public event ClientConnectedEventHandler ClientConnected;
         public event StartQuizEventHandler StartQuizEvent;
-        public event ProcessCommandEventHandler ProcessCommand;
+        public event ProcessServerResponseEventHandler ProcessServerResponse;
 
-        private readonly string sessionId;
-        private TcpClient server = new TcpClient();
+        private string sessionID;
+        private TcpClient client = new TcpClient();
         private ConcurrentQueue<ServerResponse> serverResponses = new ConcurrentQueue<ServerResponse>();
 
         public ClientService() {
@@ -64,9 +66,9 @@ namespace KrishnaRajamannar.NEA.Services.Connection
                                     OnStartQuizButtonPressed(argsStartQuiz);
                                     break;
                                 default:
-                                    ProcessCommandEventArgs argsProcessCommand = new ProcessCommandEventArgs();
-                                    argsProcessCommand.ServerResponse = response;
-                                    OnProcessCommand(argsProcessCommand);
+                                    ProcessServerResponseEventArgs argsProcessServerResponse = new ProcessServerResponseEventArgs();
+                                    argsProcessServerResponse.ServerResponse = response;
+                                    OnProcessServerResponse(argsProcessServerResponse);
                                     break;
                             }
                         }
@@ -97,9 +99,9 @@ namespace KrishnaRajamannar.NEA.Services.Connection
             }
         }
 
-        protected virtual void OnProcessCommand(ProcessCommandEventArgs e)
+        protected virtual void OnProcessServerResponse(ProcessServerResponseEventArgs e)
         {
-            ProcessCommandEventHandler handler = ProcessCommand;
+            ProcessServerResponseEventHandler handler = ProcessServerResponse;
             if (handler != null)
             {
                 handler(this, e);
@@ -109,12 +111,13 @@ namespace KrishnaRajamannar.NEA.Services.Connection
         public string ConnectToServer(string username, int userId, string ipAddressConnect, int portNumberConnect, string sessionId)
         {
             string messageFromServer = "";
+            sessionID = sessionId;
 
             try
             {
                 Task task = Task.Factory.StartNew(() =>
                 {
-                    messageFromServer = HandleClientRequests(username, userId, ipAddressConnect, portNumberConnect, sessionId);
+                    messageFromServer = HandleClientRequests(username, userId, ipAddressConnect, portNumberConnect);
                 });
 
                 //task.Wait();
@@ -128,23 +131,23 @@ namespace KrishnaRajamannar.NEA.Services.Connection
             return messageFromServer;
         }
 
-        public string HandleClientRequests(string username, int userID, string ipAddressConnect, int portNumberConnect, string sessionId)
+        public string HandleClientRequests(string username, int userID, string ipAddressConnect, int portNumberConnect)
         {
             var buffer = new byte[4096];
             string messageFromServer = "";
             IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse(ipAddressConnect), portNumberConnect);
-            server.Connect(endPoint);
+            client.Connect(endPoint);
                      
 
-            NetworkStream stream = server.GetStream();
-            UserSessionData dto = new UserSessionData
+            NetworkStream stream = client.GetStream();
+            UserSessionData userData = new UserSessionData
             {
-                SessionID = sessionId,
+                SessionID = sessionID,
                 Username = username,
                 UserID = userID
             };
 
-            var payload = JsonSerializer.Serialize(dto);
+            var payload = JsonSerializer.Serialize(userData);
 
             var messageBytes = Encoding.UTF8.GetBytes(payload);
 
@@ -164,6 +167,34 @@ namespace KrishnaRajamannar.NEA.Services.Connection
                 }
 
             }
+        }
+        // would most likely need a client response as well?
+        public void SendDataToServer(string data, string dataType, int userID, string username, int totalPoints) 
+        {
+            NetworkStream stream = client.GetStream();
+            UserSessionData userData = new UserSessionData
+            {
+                SessionID = sessionID,
+                Username = username,
+                UserID = userID,
+                TotalPoints = totalPoints
+            };
+            var userDataPayload = JsonSerializer.Serialize(userData);
+
+            ClientResponse clientResponse = new ClientResponse
+            {
+                SessionID = sessionID,
+                DataType = dataType,
+                Data = data,
+                UserData = userDataPayload
+            };
+
+            var payload = JsonSerializer.Serialize(clientResponse);
+            var messageBytes = Encoding.UTF8.GetBytes(payload);
+
+            stream.Write(messageBytes, 0, messageBytes.Length);
+
+            Task.Delay(1000).Wait();
         }
     }
 }
