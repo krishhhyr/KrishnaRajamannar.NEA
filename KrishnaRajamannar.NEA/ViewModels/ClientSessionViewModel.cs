@@ -377,6 +377,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
         private void AssignQuestionValues(QuestionModel questionData) 
         {
             Question = questionData.Question;
+            AnswerTimeLimit = questionData.Duration.ToString();
             Option1 = questionData.Option1;
             Option2 = questionData.Option2;
             Option3 = questionData.Option3;
