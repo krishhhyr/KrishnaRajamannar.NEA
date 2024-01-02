@@ -10,7 +10,9 @@ using System.ComponentModel;
 using System.Linq;
 using System.Security;
 using System.Text.Json;
+using System.Threading;
 using System.Windows.Controls;
+using System.Windows.Threading;
 
 namespace KrishnaRajamannar.NEA.ViewModels
 {
@@ -21,15 +23,21 @@ namespace KrishnaRajamannar.NEA.ViewModels
         public event QuestionRecievedEventHandler MultipleChoiceQuestionRecieved;
         private readonly IClientService _clientService;
         private readonly ISessionService _sessionService;
+
+        private DispatcherTimer answerTimer;
+        private TimeSpan AnswerTime;
+
         public ClientSessionViewModel(ISessionService sessionService)
         {
             _sessionService = sessionService;
 
             //There can be only one instance worker thread that process client service
             _clientService = new ClientService();
+            answerTimer = new DispatcherTimer();
             _clientService.ClientConnected += OnClientConnected;
             _clientService.StartQuizEvent += OnStartQuizEvent;
             _clientService.ProcessCommand += OnProcessCommand;
+
         }
 
         private void OnProcessCommand(object sender, Events.ProcessCommandEventArgs e)
@@ -46,6 +54,8 @@ namespace KrishnaRajamannar.NEA.ViewModels
         {
             LoadData(e.ServerResponse);
         }
+
+        #region Properties
 
         public void RaisePropertyChange(string propertyname)
         {
@@ -85,17 +95,6 @@ namespace KrishnaRajamannar.NEA.ViewModels
             {
                 _userId = value;
                 RaisePropertyChange("UserId");
-            }
-        }
-
-        private string _userName;
-        public string UserName
-        {
-            get { return _userName; }
-            set
-            {
-                _userName = value;
-                RaisePropertyChange("UserName");
             }
         }
 
@@ -285,6 +284,30 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 RaisePropertyChange("Option6");
             }
         }
+
+        private string _remainingTimeLimit;
+        public string RemainingTimeLimit
+        {
+            get { return _remainingTimeLimit; }
+            set
+            {
+                _remainingTimeLimit = value;
+                RaisePropertyChange("RemainingTimeLimit");
+            }
+        }
+
+        private string _answerTimeLimit;
+        public string AnswerTimeLimit
+        {
+            get { return _answerTimeLimit; }
+            set
+            {
+                _answerTimeLimit = value;
+                RaisePropertyChange("AnswerTimeLimit");
+            }
+        }
+
+        #endregion
         private void ShowTextQuestion() 
         {
             QuestionRecievedEventArgs args = new QuestionRecievedEventArgs();
@@ -340,6 +363,8 @@ namespace KrishnaRajamannar.NEA.ViewModels
                                 ShowTextQuestion();
                             }
                             AssignQuestionValues(question);
+                            AssignAnswerTimeValues(question.Duration);
+                            answerTimer.Start();
                             break;
                     }
                 }
@@ -350,12 +375,33 @@ namespace KrishnaRajamannar.NEA.ViewModels
         private void AssignQuestionValues(QuestionModel questionData) 
         {
             Question = questionData.Question;
+            AnswerTimeLimit = questionData.Duration.ToString();
             Option1 = questionData.Option1;
             Option2 = questionData.Option2;
             Option3 = questionData.Option3;
             Option4 = questionData.Option4;
             Option5 = questionData.Option5;
             Option6 = questionData.Option6;
+        }
+
+        private void AssignAnswerTimeValues(int answerTime) 
+        {
+            AnswerTime = TimeSpan.FromSeconds(answerTime);
+            answerTimer.Interval = TimeSpan.FromSeconds(1);
+            answerTimer.Tick += AnswerTimer_Tick;
+        }
+
+        private void AnswerTimer_Tick(object? sender, EventArgs e)
+        {
+            if (AnswerTime == TimeSpan.Zero) 
+            {
+                answerTimer.Stop();
+            }
+            else 
+            {
+                AnswerTime = AnswerTime.Add(TimeSpan.FromSeconds(-1));
+                RemainingTimeLimit = AnswerTime.ToString("ss");
+            }
         }
 
         public void ConnectToServer()

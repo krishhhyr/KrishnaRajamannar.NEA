@@ -1,4 +1,5 @@
-﻿using KrishnaRajamannar.NEA.Models;
+﻿using KrishnaRajamannar.NEA.Events;
+using KrishnaRajamannar.NEA.Models;
 using KrishnaRajamannar.NEA.Models.Dto;
 using KrishnaRajamannar.NEA.Services;
 using KrishnaRajamannar.NEA.Services.Connection;
@@ -24,6 +25,8 @@ namespace KrishnaRajamannar.NEA.ViewModels
     public class ServerSessionViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
+        public event QuestionRecievedEventHandler TextQuestionRecieved;
+        public event QuestionRecievedEventHandler MultipleChoiceQuestionRecieved;
         private readonly IServerService _serverService;
         private readonly ISessionService _sessionService;
         private readonly IQuizService _quizService;
@@ -139,6 +142,95 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 RaisePropertyChange("NumberOfUsersJoined");
             }
         }
+
+        private string _question;
+        public string Question
+        {
+            get { return _question; }
+            set
+            {
+                _question = value;
+                RaisePropertyChange("Question");
+            }
+        }
+
+        private string _correctAnswer;
+        public string CorrectAnswer
+        {
+            get { return _correctAnswer; }
+            set
+            {
+                _correctAnswer = value;
+                RaisePropertyChange("CorrectAnswer");
+            }
+        }
+
+        private string _option1;
+        public string Option1
+        {
+            get { return _option1; }
+            set
+            {
+                _option1 = value;
+                RaisePropertyChange("Option1");
+            }
+        }
+
+        private string _option2;
+        public string Option2
+        {
+            get { return _option2; }
+            set
+            {
+                _option2 = value;
+                RaisePropertyChange("Option2");
+            }
+        }
+
+        private string _option3;
+        public string Option3
+        {
+            get { return _option3; }
+            set
+            {
+                _option3 = value;
+                RaisePropertyChange("Option3");
+            }
+        }
+
+        private string _option4;
+        public string Option4
+        {
+            get { return _option4; }
+            set
+            {
+                _option4 = value;
+                RaisePropertyChange("Option4");
+            }
+        }
+
+        private string _option5;
+        public string Option5
+        {
+            get { return _option5; }
+            set
+            {
+                _option5 = value;
+                RaisePropertyChange("Option5");
+            }
+        }
+
+        private string _option6;
+        public string Option6
+        {
+            get { return _option6; }
+            set
+            {
+                _option6 = value;
+                RaisePropertyChange("Option6");
+            }
+        }
+
         public void RaisePropertyChange(string propertyname)
         {
             if (PropertyChanged != null)
@@ -148,6 +240,42 @@ namespace KrishnaRajamannar.NEA.ViewModels
         }
 
         #endregion
+
+        #region Events
+        private void ShowTextQuestion()
+        {
+            QuestionRecievedEventArgs args = new QuestionRecievedEventArgs();
+            OnShowTextQuestion(args);
+
+        }
+
+        protected virtual void OnShowTextQuestion(QuestionRecievedEventArgs e)
+        {
+            QuestionRecievedEventHandler handler = TextQuestionRecieved;
+            if (handler != null)
+            {
+                handler(this, e);
+            }
+        }
+
+        private void ShowMultipleChoiceQuestion()
+        {
+            QuestionRecievedEventArgs args = new QuestionRecievedEventArgs();
+            OnShowMultipleChoiceQuestion(args);
+
+        }
+
+        protected virtual void OnShowMultipleChoiceQuestion(QuestionRecievedEventArgs e)
+        {
+            QuestionRecievedEventHandler handler = MultipleChoiceQuestionRecieved;
+            if (handler != null)
+            {
+                handler(this, e);
+            }
+        }
+        #endregion
+
+        #region SessionConfiguration
 
         // Used to generate a random six digit session ID in which users will enter to join to.
         public int CreateSessionID()
@@ -298,10 +426,11 @@ namespace KrishnaRajamannar.NEA.ViewModels
             return false;
                 }
 
+        #endregion
+
         // Sends the first question + time to answer? to all clients 
         public void StartQuiz()
         {
-            //make model serializable and serialise quiz model and send as message
             Message = "Quiz Started";
 
             foreach (QuizModel quiz in Quizzes) 
@@ -314,18 +443,41 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
             NumberOfQuestions = Questions.Count;
 
-            // randomise questions
-
             QuestionModel firstQuestion = Questions.First();
             string questionData = JsonSerializer.Serialize<QuestionModel>(firstQuestion);
             _serverService.SendDataToClients(questionData, "SendQuestion");
+            DisplayQuestion(firstQuestion);
 
             }
 
-        //public QuizModel RandomiseQuiz(QuizModel quiz) 
-        //{
-            
-        //}
+        public QuizModel RandomiseQuiz(QuizModel quiz)
+        {
+            return quiz;
+        }
+
+        private void DisplayQuestion(QuestionModel question) 
+        {
+            if (question.Option1 != null)
+            {
+                ShowMultipleChoiceQuestion();
+            }
+            else 
+            {
+                ShowTextQuestion();
+            }
+            AssignQuestionValues(question);
+        }
+        private void AssignQuestionValues(QuestionModel questionData)
+        {
+            Question = questionData.Question;
+            Option1 = questionData.Option1;
+            Option2 = questionData.Option2;
+            Option3 = questionData.Option3;
+            Option4 = questionData.Option4;
+            Option5 = questionData.Option5;
+            Option6 = questionData.Option6;
+        }
+
 
         public void StopServer() 
         {

@@ -122,27 +122,26 @@
                         <ColumnDefinition Width="*"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
                     <Border Background="#a1a1ce" Grid.Column="0"></Border>
-                    <StackPanel Orientation="Vertical" Grid.Column="1" Visibility="Hidden">
-                        <Label x:Name="questionLbl" Content="Question" FontSize="55" 
-                           Grid.Column="1" HorizontalAlignment="Center" Height="80" VerticalAlignment="Top"
-                           Foreground="White"></Label>
+                    <StackPanel x:Name="questionAndAnswerStackPanel" Orientation="Vertical" Grid.Column="1" Visibility="Hidden">
+                        <TextBlock x:Name="questionTxtBlock" Text="{Binding Question}" FontSize="40" 
+                           Grid.Column="1" HorizontalAlignment="Center" Height="100" VerticalAlignment="Top"
+                           Foreground="White" Width="1200" TextWrapping="Wrap" TextAlignment="Center"></TextBlock>
                         <StackPanel Orientation="Vertical">
                             <TextBox x:Name="textAnswerTxtBox" Visibility="Visible" Height="40" Width="800" Margin="0,10,0,0"
                                      FontSize="30" HorizontalContentAlignment="Center"></TextBox>
                             <StackPanel x:Name="multipleChoiceAnswerRbStackPanel" Visibility="Hidden">
-                                <RadioButton x:Name="option1rb" Content="Option1" FontSize="30" HorizontalAlignment="Center"
-                                         IsTabStop="False" Foreground="White"></RadioButton>
-                                <RadioButton x:Name="option2rb" Content="Option2" FontSize="30" HorizontalAlignment="Center"
+                                <RadioButton x:Name="option1rb" Content="{Binding Option1}" FontSize="20" HorizontalAlignment="Center"
+                                         IsTabStop="False" Foreground="White" Margin="5"></RadioButton>
+                                <RadioButton x:Name="option2rb" Content="{Binding Option2}" FontSize="20" HorizontalAlignment="Center"
                                          IsTabStop="False" Margin="5"  Foreground="White"></RadioButton>
-                                <RadioButton x:Name="option3rb" Content="Option3" FontSize="30" HorizontalAlignment="Center"
+                                <RadioButton x:Name="option3rb" Content="{Binding Option3}" FontSize="20" HorizontalAlignment="Center"
                                          IsTabStop="False" Margin="5" Foreground="White"></RadioButton>
-                                <RadioButton x:Name="option4rb" Content="Option4" FontSize="30" HorizontalAlignment="Center"
+                                <RadioButton x:Name="option4rb" Content= "{Binding Option4}" FontSize="20" HorizontalAlignment="Center"
                                          IsTabStop="False" Margin="5" Foreground="White"></RadioButton>
-                                <RadioButton x:Name="option5rb" Content="Option5" FontSize="30" HorizontalAlignment="Center"
+                                <RadioButton x:Name="option5rb" Content="{Binding Option5}" FontSize="20" HorizontalAlignment="Center"
                                          IsTabStop="False" Margin="5" Foreground="White"></RadioButton>
-                                <RadioButton x:Name="option6rb" Content="Option6" FontSize="30" HorizontalAlignment="Center"
+                                <RadioButton x:Name="option6rb" Content="{Binding Option6}" FontSize="20" HorizontalAlignment="Center"
                                          IsTabStop="False" Margin="5" Foreground="White"></RadioButton>
-                                
                             </StackPanel>
 
                             <Button x:Name="submitBtn" Content="Submit" FontSize="30" Height="50" Width="250"
