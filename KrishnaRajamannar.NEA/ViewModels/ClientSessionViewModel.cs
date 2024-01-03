@@ -28,6 +28,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
         public string Username;
         public int UserID;
         public int TotalPoints;
+        public int QuestionNumber = 1;
         private DispatcherTimer answerTimer;
         private TimeSpan AnswerTime;
 
@@ -41,6 +42,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
             _clientService.ClientConnected += OnClientConnected;
             _clientService.StartQuizEvent += OnStartQuizEvent;
             _clientService.ProcessServerResponse += OnProcessServerResponse;
+            answerTimer.Tick += AnswerTimer_Tick;
 
         }
 
@@ -300,6 +302,28 @@ namespace KrishnaRajamannar.NEA.ViewModels
             }
         }
 
+        private int _numberOfPointsGained;
+        public int NumberOfPointsGained
+        {
+            get { return _numberOfPointsGained; }
+            set
+            {
+                _numberOfPointsGained = value;
+                RaisePropertyChange("NumberOfPointsGained");
+            }
+        }
+
+        private int _numberOfQuestion;
+        public int NumberOfQuestion 
+        {
+            get { return _numberOfQuestion; }
+            set 
+            {
+                _numberOfQuestion = value;
+                RaisePropertyChange("NumberOfQuestion");
+            }
+        }
+
         #endregion
 
         protected virtual void OnShowTextQuestion(QuestionRecievedEventArgs e) 
@@ -318,13 +342,6 @@ namespace KrishnaRajamannar.NEA.ViewModels
             {
                 handler(this, e);
             }
-        }
-
-        private void DisableAnsweringQuestion() 
-        {
-            TimerEventArgs args = new TimerEventArgs();
-            OnDisableAnsweringQuestion(args);
-
         }
 
         protected virtual void OnDisableAnsweringQuestion(TimerEventArgs e) 
@@ -350,7 +367,10 @@ namespace KrishnaRajamannar.NEA.ViewModels
                         case "SendQuestion":
                             QuestionModel question = JsonSerializer.Deserialize<QuestionModel>(response.Data);
                             // mc question
-                            if (question.Option1 != null)
+
+                            AnswerInput = null;
+
+                            if (question.Option1 != "NULL")
                             {
                                 QuestionRecievedEventArgs args = new QuestionRecievedEventArgs();
                                 OnShowMultipleChoiceQuestion(args);
@@ -360,13 +380,25 @@ namespace KrishnaRajamannar.NEA.ViewModels
                                 QuestionRecievedEventArgs args = new QuestionRecievedEventArgs();
                                 OnShowTextQuestion(args);
                             }
+                            NumberOfQuestion = QuestionNumber;
+                            QuestionNumber++;
                             AssignQuestionValues(question);
                             AssignAnswerTimeValues(question.Duration);
                             answerTimer.Start();
                             break;
                         case "SendCorrectAnswer":
-                            string message = response.Data;
-                            ValidAnswerMessage = message.Replace(@"\r","");
+                            ValidAnswerMessage = response.Data;
+                            RetrieveNumberOfPoints(ValidAnswerMessage);
+
+                            if (NumberOfPointsGained > 0)
+                            {
+                                Message = "Correct Answer!";
+                            }
+                            else 
+                            {
+                                Message = "Incorrect Answer!";
+                            }
+
                             break;
                     }
                 }
@@ -391,7 +423,6 @@ namespace KrishnaRajamannar.NEA.ViewModels
             AnswerTimeLimit = answerTime.ToString();
             AnswerTime = TimeSpan.FromSeconds(answerTime);
             answerTimer.Interval = TimeSpan.FromSeconds(1);
-            answerTimer.Tick += AnswerTimer_Tick;
         }
 
         // need to send event to stop answering when timer is up...
@@ -423,9 +454,17 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
         public void SendAnswer() 
         {
-            DisableAnsweringQuestion();
+            TimerEventArgs args = new TimerEventArgs();
+            OnDisableAnsweringQuestion(args);
             Message = "Times up! Validating Response...";
             _clientService.SendDataToServer(AnswerInput, "SendAnswer", UserID, Username, TotalPoints);
+        }
+
+        public void RetrieveNumberOfPoints(string validAnswerMessage) 
+        {
+            string[] spiltMessage = validAnswerMessage.Split('.');
+            string[] test = spiltMessage[1].Split(' ');
+            NumberOfPointsGained = Convert.ToInt32(test[1]);
         }
 
         public void LoadData(ServerResponse response)

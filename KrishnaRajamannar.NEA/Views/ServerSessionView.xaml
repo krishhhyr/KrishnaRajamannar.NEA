@@ -62,20 +62,15 @@
                     <StackPanel x:Name="multipleQuizReviewStackPanel" Orientation="Horizontal" Grid.Column="1" Visibility="Hidden">
                         <Label Content="Question:" Grid.Column="1" FontSize="20" VerticalAlignment="Center"
                                Margin="5,0,0,0" Foreground="Beige"></Label>
-                        <Label x:Name="numberOfQuestionsLbl" Content="2/6" FontSize="20" VerticalAlignment="Center"
+                        <Label x:Name="numberOfQuestionsLbl" Content="{Binding NumberOfQuestion}" FontSize="20" VerticalAlignment="Center"
                                Foreground="White"></Label>
 
                         <Label Content="Time Limit for Question (In Seconds):" FontSize="20" VerticalAlignment="Center"
                                Margin="10,5,0,5" Foreground="White"></Label>
+
+                        <Label x:Name="questionTimeLimitLbl" Content="{Binding AnswerTimeLimit}" FontSize="20" VerticalAlignment="Center"
+                               Foreground="White"></Label>
                         
-                        <Label x:Name="questionTimeLimitLbl" Content="30" FontSize="20" VerticalAlignment="Center"
-                               Foreground="White"></Label>
-
-                        <Label Content="Number Of Points Gained:" FontSize="20" VerticalAlignment="Center"
-                               Margin="10,5,0,5" Foreground="White"></Label>
-
-                        <Label x:Name="numberOfPointsGained" Content="1000" FontSize="20" VerticalAlignment="Center"
-                               Foreground="White"></Label>
                     </StackPanel>
                     
                     <Button x:Name="startSessionBtn" Content="Start Session" Grid.Column="2"
@@ -102,10 +97,21 @@
                         <Label x:Name="sessionIDLbl" Content="{Binding SessionID}" Grid.Column="1" HorizontalAlignment="Left"
                            VerticalAlignment="Center" FontSize="20" Foreground="White" Margin="5"></Label>
                     </StackPanel>
-                    
-                    
+
+
                     <Label x:Name="messageLbl" Content="{Binding Message}" Grid.Column="1" HorizontalAlignment="Center"
                            VerticalAlignment="Center" FontSize="20" Foreground="#cfcfe8"></Label>
+
+                    <StackPanel x:Name="pointsAndTimeStackPanel" Orientation="Horizontal" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Right"
+                                Visibility="Hidden">
+                        <Label Content="Points Gained:" VerticalAlignment="Center" FontSize="20" Foreground="White" Margin="5,5,0,5"></Label>
+
+                        <Label x:Name="pointsGainedLbl" Content="{Binding NumberOfPointsGained}" VerticalAlignment="Center" FontSize="20" Foreground="White" Margin="0,0,10,0"></Label>
+
+                        <Label Content="Remaining Time To Answer:" VerticalAlignment="Center" FontSize="20" Foreground="White" Margin="0,0,0,0"></Label>
+
+                        <Label x:Name="remainingTimeLbl" Content="{Binding RemainingTimeLimit}" VerticalAlignment="Center" FontSize="20" Foreground="White" Margin="0,5,5,5"></Label>
+                    </StackPanel>
 
                     <Border Background="#a1a1ce" Grid.Column="2">
                         <Button x:Name="startQuizBtn" Content="Start Quiz" FontSize="20" Width="230" 
@@ -127,7 +133,7 @@
                            Grid.Column="1" HorizontalAlignment="Center" Height="100" VerticalAlignment="Top"
                            Foreground="White" Width="1200" TextWrapping="Wrap" TextAlignment="Center"></TextBlock>
                         <StackPanel Orientation="Vertical">
-                            <TextBox x:Name="textAnswerTxtBox" Visibility="Visible" Height="40" Width="800" Margin="0,10,0,0"
+                            <TextBox x:Name="textAnswerTxtBox" Text="{Binding TextAnswerInput}" Visibility="Visible" Height="40" Width="800" Margin="0,10,0,0"
                                      FontSize="30" HorizontalContentAlignment="Center"></TextBox>
                             <StackPanel x:Name="multipleChoiceAnswerRbStackPanel" Visibility="Hidden">
                                 <RadioButton x:Name="option1rb" Content="{Binding Option1}" FontSize="20" HorizontalAlignment="Center"
@@ -145,7 +151,11 @@
                             </StackPanel>
 
                             <Button x:Name="submitBtn" Content="Submit" FontSize="30" Height="50" Width="250"
-                                    Margin="50" Background="WhiteSmoke"></Button>
+                                    Margin="50" Background="WhiteSmoke" Click="submitBtn_Click"></Button>
+
+                            <Label x:Name="validAnswerMessageLbl" Content="{Binding ValidAnswerMessage}" Grid.Column="3" HorizontalAlignment="Center"
+                           VerticalAlignment="Center" FontSize="20" Foreground="#cfcfe8"></Label>
+
                         </StackPanel>
                     </StackPanel>
                     <Border Background="#a1a1ce" Grid.Column="2">
