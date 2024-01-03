@@ -20,6 +20,7 @@ namespace KrishnaRajamannar.NEA.Services.Connection
         //Create a event handler 
         public event ClientConnectedEventHandler ClientConnected;
         public event StartQuizEventHandler StartQuizEvent;
+        public event EndQuizEventHandler EndQuizEvent;
         public event ProcessServerResponseEventHandler ProcessServerResponse;
 
         private string sessionID;
@@ -65,6 +66,11 @@ namespace KrishnaRajamannar.NEA.Services.Connection
                                     argsStartQuiz.ServerResponse = response;
                                     OnStartQuizButtonPressed(argsStartQuiz);
                                     break;
+                                case "EndQuiz":
+                                    EndQuizEventArgs argsEndQuiz = new EndQuizEventArgs();
+                                    argsEndQuiz.ServerResponse = response;
+                                    OnEndQuiz(argsEndQuiz);
+                                    break;
                                 default:
                                     ProcessServerResponseEventArgs argsProcessServerResponse = new ProcessServerResponseEventArgs();
                                     argsProcessServerResponse.ServerResponse = response;
@@ -107,6 +113,16 @@ namespace KrishnaRajamannar.NEA.Services.Connection
                 handler(this, e);
             }
         }
+
+        protected virtual void OnEndQuiz(EndQuizEventArgs e) 
+        {
+            EndQuizEventHandler handler = EndQuizEvent;
+            if (handler != null) 
+            {
+                handler(this, e);
+            }
+        }
+
 
         public string ConnectToServer(string username, int userId, string ipAddressConnect, int portNumberConnect, string sessionId)
         {

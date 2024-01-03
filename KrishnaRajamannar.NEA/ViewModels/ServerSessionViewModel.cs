@@ -34,6 +34,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
         private readonly IServerService _serverService;
         private readonly ISessionService _sessionService;
         private readonly IQuizService _quizService;
+        private readonly IMultiplayerReviewQuizService _multiplayerReviewQuizService;
         private readonly IQuestionService _questionService;
         private readonly IUserService _userService;
 
@@ -46,22 +47,29 @@ namespace KrishnaRajamannar.NEA.ViewModels
         public int NumberOfQuestions;
         public int QuestionNumber = 0;
         private DispatcherTimer answerTimer;
-        private DispatcherTimer sessionTime;
         private TimeSpan AnswerTime;
+        private DispatcherTimer sessionTimer;
+        private TimeSpan SessionTime;
 
-        public ServerSessionViewModel(IServerService serverService, ISessionService sessionService, IQuizService quizService, IQuestionService questionService, IUserService userService)
+        public ServerSessionViewModel(IServerService serverService, ISessionService sessionService, IQuizService quizService, 
+            IQuestionService questionService, IUserService userService, IMultiplayerReviewQuizService multiplayerReviewQuizService)
         {
             answerTimer = new DispatcherTimer();
+            sessionTimer = new DispatcherTimer();
 
             _serverService = serverService;
             _sessionService = sessionService;
             _quizService = quizService;
             _questionService = questionService;
             _userService = userService;
+            _multiplayerReviewQuizService = multiplayerReviewQuizService;
 
             _serverService.ProcessClientResponse += OnProcessClientResponse;
             answerTimer.Tick += AnswerTimer_Tick;
+            //sessionTimer.Tick += SessionTimer_Tick;
         }
+
+
 
         private void OnProcessClientResponse(object sender, ProcessClientResponseEventArgs e)
         {
@@ -69,6 +77,17 @@ namespace KrishnaRajamannar.NEA.ViewModels
         }
 
         #region Properties
+
+        private string _timeOfSession;
+        public string TimeOfSession
+        {
+            get { return _timeOfSession; }
+            set
+            {
+                _timeOfSession = value;
+                RaisePropertyChange("TimeOfSession");
+            }
+        }
 
         private int _numberOfQuestion;
         public int NumberOfQuestion
@@ -605,6 +624,18 @@ namespace KrishnaRajamannar.NEA.ViewModels
             Option6 = questionData.Option6;
         }
 
+        //private void AssignSessionTimeValues() 
+        //{
+        //    //SessionTime = TimeSpan.FromSeconds();
+        //    sessionTimer.Interval = TimeSpan.FromSeconds(int.Parse(ConditionValue));
+        //    sessionTimer.Start();
+        //}
+
+        //private void SessionTimer_Tick(object? sender, EventArgs e)
+        //{
+        //    TimeOfSession = sessionTimer.Interval.ToString();
+        //}
+
         private void AssignAnswerTimeValues(int answerTime)
         {
             AnswerTimeLimit = answerTime.ToString();
@@ -643,11 +674,13 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 ValidAnswerMessage = $"Correct Answer. {CurrentQuestion.NumberOfPoints} points have been awarded!";
                 Message = "Correct Answer!";
                 _userService.UpdatePoints(UserID, TotalPoints);
+                _multiplayerReviewQuizService.InsertMultiplayerQuizFeedbackData(SessionID, UserID, CurrentQuestion.Question, CurrentQuestion.Answer, true);
             }
             else
             {
                 Message = "Incorrect Answer!";
                 ValidAnswerMessage = $"Answer was {CurrentQuestion.Answer}. 0 points have been awarded!";
+                _multiplayerReviewQuizService.InsertMultiplayerQuizFeedbackData(SessionID, UserID, CurrentQuestion.Question, CurrentQuestion.Answer, false);
             }
 
             SendNextQuestion();
@@ -680,17 +713,21 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 int numberOfPointsGained = totalPoints + CurrentQuestion.NumberOfPoints;
                 message = $"Correct Answer. {CurrentQuestion.NumberOfPoints} points have been awarded!";
                 _userService.UpdatePoints(userID, totalPoints);
+                _multiplayerReviewQuizService.InsertMultiplayerQuizFeedbackData(SessionID, userID, CurrentQuestion.Question, CurrentQuestion.Answer, true);
             }
             else
             {
                 message = $"Answer was {CurrentQuestion.Answer}. 0 points have been awarded!";
+                _multiplayerReviewQuizService.InsertMultiplayerQuizFeedbackData(SessionID, userID, CurrentQuestion.Question, CurrentQuestion.Answer, true);
             }
 
             _serverService.SendDataToClients(message, "SendCorrectAnswer");
         }
 
+        // pass event called end session?
         public void StopServer() 
         {
+            _serverService.SendDataToClients("EndQuiz", "EndQuiz");
            _serverService.StopServer();
 
         }

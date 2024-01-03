@@ -21,6 +21,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
         public event PropertyChangedEventHandler? PropertyChanged;
         public event QuestionRecievedEventHandler TextQuestionRecieved;
         public event QuestionRecievedEventHandler MultipleChoiceQuestionRecieved;
+        public event ShowSessionParameterWindowEventHandler ShowMultipleQuizFeedbackWindow;
         public event TimerEventHandler AnswerTimerFinished;
         private readonly IClientService _clientService;
         private readonly ISessionService _sessionService;
@@ -39,11 +40,17 @@ namespace KrishnaRajamannar.NEA.ViewModels
             //There can be only one instance worker thread that process client service
             _clientService = new ClientService();
             answerTimer = new DispatcherTimer();
+            answerTimer.Tick += AnswerTimer_Tick;
             _clientService.ClientConnected += OnClientConnected;
             _clientService.StartQuizEvent += OnStartQuizEvent;
             _clientService.ProcessServerResponse += OnProcessServerResponse;
-            answerTimer.Tick += AnswerTimer_Tick;
+            _clientService.EndQuizEvent += OnEndQuizEvent;
 
+        }
+
+        private void OnEndQuizEvent(object sender, EndQuizEventArgs e)
+        {
+            OnShowMultipleQuizFeedbackWindow(e);
         }
 
         private void OnProcessServerResponse(object sender, Events.ProcessServerResponseEventArgs e)
@@ -348,6 +355,15 @@ namespace KrishnaRajamannar.NEA.ViewModels
         {
             TimerEventHandler handler = AnswerTimerFinished;
             if (handler != null) 
+            {
+                handler(this, e);
+            }
+        }
+
+        protected virtual void OnShowMultipleQuizFeedbackWindow(ShowSessionParameterWindowEventArgs e)
+        {
+            ShowSessionParameterWindowEventHandler handler = ShowMultipleQuizFeedbackWindow;
+            if (handler != null)
             {
                 handler(this, e);
             }

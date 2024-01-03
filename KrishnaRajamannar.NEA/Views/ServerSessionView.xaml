@@ -70,7 +70,13 @@
 
                         <Label x:Name="questionTimeLimitLbl" Content="{Binding AnswerTimeLimit}" FontSize="20" VerticalAlignment="Center"
                                Foreground="White"></Label>
-                        
+
+                        <Label Content="Session Time (in Minutes):" FontSize="20" VerticalAlignment="Center"
+                               Margin="10,5,0,5" Foreground="White"></Label>
+
+                        <Label x:Name="sessionTimeLbl" Content="{Binding TimeOfSession}" FontSize="20" VerticalAlignment="Center"
+                               Foreground="White"></Label>
+
                     </StackPanel>
                     
                     <Button x:Name="startSessionBtn" Content="Start Session" Grid.Column="2"
