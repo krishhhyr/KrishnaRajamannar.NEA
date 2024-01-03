@@ -219,6 +219,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
             args.IsShown = true;
             args.UserID = _userid;
             args.Username = _username;
+            args.TotalPoints = _totalpoints;
             OnShowHostSessionWindow(args);
 
         }

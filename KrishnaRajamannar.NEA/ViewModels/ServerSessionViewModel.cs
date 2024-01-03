@@ -21,6 +21,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace KrishnaRajamannar.NEA.ViewModels
 {
@@ -29,6 +30,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
         public event PropertyChangedEventHandler? PropertyChanged;
         public event QuestionRecievedEventHandler TextQuestionRecieved;
         public event QuestionRecievedEventHandler MultipleChoiceQuestionRecieved;
+        public event TimerEventHandler AnswerTimerFinished;
         private readonly IServerService _serverService;
         private readonly ISessionService _sessionService;
         private readonly IQuizService _quizService;
@@ -41,17 +43,24 @@ namespace KrishnaRajamannar.NEA.ViewModels
         IList<QuizModel> Quizzes = new List<QuizModel>();
         IList<QuestionModel> Questions = new List<QuestionModel>();
         QuestionModel CurrentQuestion = new QuestionModel();
-        public int NumberOfQuestions; 
+        public int NumberOfQuestions;
+        public int QuestionNumber = 0;
+        private DispatcherTimer answerTimer;
+        private DispatcherTimer sessionTime;
+        private TimeSpan AnswerTime;
 
         public ServerSessionViewModel(IServerService serverService, ISessionService sessionService, IQuizService quizService, IQuestionService questionService, IUserService userService)
         {
-            _serverService = serverService;            
+            answerTimer = new DispatcherTimer();
+
+            _serverService = serverService;
             _sessionService = sessionService;
             _quizService = quizService;
             _questionService = questionService;
             _userService = userService;
 
             _serverService.ProcessClientResponse += OnProcessClientResponse;
+            answerTimer.Tick += AnswerTimer_Tick;
         }
 
         private void OnProcessClientResponse(object sender, ProcessClientResponseEventArgs e)
@@ -60,6 +69,17 @@ namespace KrishnaRajamannar.NEA.ViewModels
         }
 
         #region Properties
+
+        private int _numberOfQuestion;
+        public int NumberOfQuestion
+        {
+            get { return _numberOfQuestion; }
+            set
+            {
+                _numberOfQuestion = value;
+                RaisePropertyChange("NumberOfQuestion");
+            }
+        }
 
         private List<string> _quizTitles;
         public List<string> QuizTitles
@@ -80,17 +100,17 @@ namespace KrishnaRajamannar.NEA.ViewModels
             {
                 _endQuizConditions = value;
                 RaisePropertyChange("EndQuizConditions");
+            }
         }
-    }
         private string _selectedQuiz;
         public string SelectedQuiz
-    {
+        {
             get { return _selectedQuiz; }
             set
-        {
+            {
                 _selectedQuiz = value;
                 RaisePropertyChange("SelectedQuiz");
-        }
+            }
         }
         private string _selectedCondition;
         public string SelectedCondition
@@ -100,7 +120,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
             {
                 _selectedCondition = value;
                 RaisePropertyChange("SelectedCondition");
-        }
+            }
         }
         private string _conditionValue;
         public string ConditionValue
@@ -110,7 +130,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
             {
                 _conditionValue = value;
                 RaisePropertyChange("ConditionValue");
-        }
+            }
         }
         private int _sessionID;
         public int SessionID
@@ -131,17 +151,17 @@ namespace KrishnaRajamannar.NEA.ViewModels
             {
                 _message = value;
                 RaisePropertyChange("Message");
-        }
+            }
         }
 
-        private string _pointsGained;
-        public string PointsGained 
+        private string _validAnswerMessage;
+        public string ValidAnswerMessage
         {
-            get { return _pointsGained; }
-            set 
+            get { return _validAnswerMessage; }
+            set
             {
-                _pointsGained = value;
-                RaisePropertyChange("PointsGained");
+                _validAnswerMessage = value;
+                RaisePropertyChange("ValidAnswerMessage");
             }
         }
 
@@ -153,7 +173,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
             {
                 _users = value;
                 RaisePropertyChange("Users");
-        }       
+            }
         }
 
         private string _numberOfUsersJoined;
@@ -178,14 +198,25 @@ namespace KrishnaRajamannar.NEA.ViewModels
             }
         }
 
-        private string _answerInput;
-        public string AnswerInput
+        private string _textanswerInput;
+        public string TextAnswerInput
         {
-            get { return _answerInput; }
+            get { return _textanswerInput; }
             set
             {
-                _answerInput = value;
-                RaisePropertyChange("AnswerInput");
+                _textanswerInput = value;
+                RaisePropertyChange("TextAnswerInput");
+            }
+        }
+
+        private string _multipleChoiceanswerInput;
+        public string MultipleChoiceAnswerInput
+        {
+            get { return _multipleChoiceanswerInput; }
+            set
+            {
+                _multipleChoiceanswerInput = value;
+                RaisePropertyChange("MultipleChoiceAnswerInput");
             }
         }
 
@@ -266,6 +297,39 @@ namespace KrishnaRajamannar.NEA.ViewModels
             }
         }
 
+        private string _remainingTimeLimit;
+        public string RemainingTimeLimit
+        {
+            get { return _remainingTimeLimit; }
+            set
+            {
+                _remainingTimeLimit = value;
+                RaisePropertyChange("RemainingTimeLimit");
+            }
+        }
+
+        private string _answerTimeLimit;
+        public string AnswerTimeLimit
+        {
+            get { return _answerTimeLimit; }
+            set
+            {
+                _answerTimeLimit = value;
+                RaisePropertyChange("AnswerTimeLimit");
+            }
+        }
+
+        private int _numberOfPointsGained;
+        public int NumberOfPointsGained
+        {
+            get { return _numberOfPointsGained; }
+            set
+            {
+                _numberOfPointsGained = value;
+                RaisePropertyChange("NumberOfPointsGained");
+            }
+        }
+
         public void RaisePropertyChange(string propertyname)
         {
             if (PropertyChanged != null)
@@ -277,12 +341,6 @@ namespace KrishnaRajamannar.NEA.ViewModels
         #endregion
 
         #region Events
-        private void ShowTextQuestion()
-        {
-            QuestionRecievedEventArgs args = new QuestionRecievedEventArgs();
-            OnShowTextQuestion(args);
-
-        }
 
         protected virtual void OnShowTextQuestion(QuestionRecievedEventArgs e)
         {
@@ -293,16 +351,18 @@ namespace KrishnaRajamannar.NEA.ViewModels
             }
         }
 
-        private void ShowMultipleChoiceQuestion()
-        {
-            QuestionRecievedEventArgs args = new QuestionRecievedEventArgs();
-            OnShowMultipleChoiceQuestion(args);
-
-        }
-
         protected virtual void OnShowMultipleChoiceQuestion(QuestionRecievedEventArgs e)
         {
             QuestionRecievedEventHandler handler = MultipleChoiceQuestionRecieved;
+            if (handler != null)
+            {
+                handler(this, e);
+            }
+        }
+
+        protected virtual void OnDisableAnsweringQuestion(TimerEventArgs e)
+        {
+            TimerEventHandler handler = AnswerTimerFinished;
             if (handler != null)
             {
                 handler(this, e);
@@ -328,8 +388,8 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 {
                     SessionID = sessionID;
                     valid = true;
+                }
             }
-        }
             return sessionID;
         }
 
@@ -347,7 +407,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
         // This retrieves the IP address of the host's machine 
         // Used to know which IP address other users should connect to for the multiplayer quiz. 
         private string GetIPAddress()
-            {
+        {
             string IPAddress = Dns.GetHostEntry(Dns.GetHostName()).AddressList[1].ToString();
             return IPAddress;
         }
@@ -359,13 +419,13 @@ namespace KrishnaRajamannar.NEA.ViewModels
             int portNumber = 0;
             bool valid = false;
             while (valid == false)
-        {
+            {
                 // Randomising between 49152 and 65535 is used as these ports are not assigned to anything.
                 // Known as Dynamic Ports, they are used for temporary/private connections.
                 portNumber = random.Next(49152, 65536);
                 // Checks if the port number has not previously been generated and stored in the DB.
                 if (_sessionService.IsPortNumberExist(portNumber) == false)
-            {
+                {
                     valid = true;
                 }
             }
@@ -401,7 +461,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
             foreach (var quiz in Quizzes)
             {
                 if ((SelectedQuiz == quiz.QuizTitle) && (int.Parse(ConditionValue) <= quiz.NumberOfQuestions))
-        {
+                {
                     valid = true;
                     return valid;
                 }
@@ -419,11 +479,11 @@ namespace KrishnaRajamannar.NEA.ViewModels
         // time has passed.
         // This checks if the input is between 5 and 60 minutes.
         private bool ValidateTimeInput()
-            {
+        {
             if ((int.Parse(ConditionValue) >= 5) && (int.Parse(ConditionValue) <= 60))
-                {
+            {
                 return true;
-                }
+            }
             else
             {
                 Message = "Invalid input. Enter a value between 5 and 60 minutes.";
@@ -434,17 +494,17 @@ namespace KrishnaRajamannar.NEA.ViewModels
         // Used to insert the session data into the Session table in the database. 
         // This also calls a function to start the server for the TCP/IP connection.
         public bool StartSession()
-                {
+        {
             bool valid = false;
 
             if (SelectedCondition == "Number of Questions")
-                    {
+            {
                 valid = ValidateNumberOfQuestionsInput();
             }
             else
-                        {
+            {
                 valid = ValidateTimeInput();
-                        }
+            }
 
             if (valid == true)
             {
@@ -454,18 +514,18 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 _sessionService.InsertSessionData(SessionID, SelectedQuiz, SelectedCondition, ConditionValue
                 , ipAddress, portNumber, 36);
                 _serverService.StartServer(Username, ipAddress, portNumber);
-                Message = "Session started";
+                Message = "Session Started.";
 
                 return true;
-                    }
+            }
             return false;
-                }
+        }
 
         #endregion
 
         // Sends the first question + time to answer? to all clients 
 
-        private void ProcessClientResponse(ClientResponse response) 
+        private void ProcessClientResponse(ClientResponse response)
         {
             if (response != null)
             {
@@ -476,46 +536,63 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 }
             }
         }
-        
-        
+
+
         public void StartQuiz()
         {
-            Message = "Quiz Started";
+            Message = "Quiz Started.";
 
-            foreach (QuizModel quiz in Quizzes) 
+            foreach (QuizModel quiz in Quizzes)
             {
-                if (quiz.QuizTitle == SelectedQuiz) 
+                if (quiz.QuizTitle == SelectedQuiz)
                 {
-                    Questions = _questionService.GetQuestions(quiz.QuizID); 
+                    Questions = _questionService.GetQuestions(quiz.QuizID);
                 }
             }
 
-            NumberOfQuestions = Questions.Count;
-
-            QuestionModel firstQuestion = Questions.First();
+            QuestionModel firstQuestion = Questions[QuestionNumber];
             CurrentQuestion = firstQuestion;
             string questionData = JsonSerializer.Serialize<QuestionModel>(firstQuestion);
             _serverService.SendDataToClients(questionData, "SendQuestion");
             DisplayQuestion(firstQuestion);
-
-            }
-
-        public QuizModel RandomiseQuiz(QuizModel quiz)
-        {
-            return quiz;
+            NumberOfQuestion = QuestionNumber + 1;
         }
 
-        private void DisplayQuestion(QuestionModel question) 
+        private bool CheckEndQuiz()
         {
-            if (question.Option1 != null)
+            if ((SelectedCondition == "Number of Questions") && (QuestionNumber >= int.Parse(ConditionValue)))
             {
-                ShowMultipleChoiceQuestion();
+                Message = "No more questions left to review.";
+                return true;
             }
-            else 
+            //else if ((SelectedCondition == "Time Limit") && (sessionTime == ConditionValue))
+            //{
+            //    Message = "Session Time has been reached.";
+            //    return true;
+            //}
+            else
             {
-                ShowTextQuestion();
+                return false;
+            }
+        }
+
+
+        private void DisplayQuestion(QuestionModel question)
+        {
+
+            if (question.Option1 != "NULL")
+            {
+                QuestionRecievedEventArgs args = new QuestionRecievedEventArgs();
+                OnShowMultipleChoiceQuestion(args);
+            }
+            else
+            {
+                QuestionRecievedEventArgs args = new QuestionRecievedEventArgs();
+                OnShowTextQuestion(args);
             }
             AssignQuestionValues(question);
+            AssignAnswerTimeValues(question.Duration);
+            answerTimer.Start();
         }
         private void AssignQuestionValues(QuestionModel questionData)
         {
@@ -528,34 +605,85 @@ namespace KrishnaRajamannar.NEA.ViewModels
             Option6 = questionData.Option6;
         }
 
-        public void ValidateServerAnswer() 
+        private void AssignAnswerTimeValues(int answerTime)
         {
-            if (CurrentQuestion.Answer == AnswerInput) 
+            AnswerTimeLimit = answerTime.ToString();
+            AnswerTime = TimeSpan.FromSeconds(answerTime);
+            answerTimer.Interval = TimeSpan.FromSeconds(1);
+        }
+
+        private void AnswerTimer_Tick(object? sender, EventArgs e)
+        {
+            if (AnswerTime == TimeSpan.Zero)
             {
-                _pointsGained = _pointsGained + CurrentQuestion.NumberOfPoints;
-                Message = $"Correct Answer! You have gained {CurrentQuestion.NumberOfPoints} points!";
-                _userService.UpdatePoints(UserID, int.Parse(_pointsGained));
+                answerTimer.Stop();
+                SendAnswer();
             }
-            else 
+            else
             {
-                Message = $"Answer was {CurrentQuestion.Answer}. You have gained 0 points!";
+                AnswerTime = AnswerTime.Add(TimeSpan.FromSeconds(-1));
+                RemainingTimeLimit = AnswerTime.Seconds.ToString();
             }
+        }
+
+        public void SendAnswer()
+        {
+            TimerEventArgs args = new TimerEventArgs();
+            OnDisableAnsweringQuestion(args);
+            Message = "Times up! Validating Response...";
+            ValidateServerAnswer();
+        }
+
+        public void ValidateServerAnswer()
+        {
+            if ((CurrentQuestion.Answer == TextAnswerInput) || (CurrentQuestion.Answer == MultipleChoiceAnswerInput))
+            {
+                NumberOfPointsGained = NumberOfPointsGained + CurrentQuestion.NumberOfPoints;
+                TotalPoints = TotalPoints + CurrentQuestion.NumberOfPoints;
+                ValidAnswerMessage = $"Correct Answer. {CurrentQuestion.NumberOfPoints} points have been awarded!";
+                Message = "Correct Answer!";
+                _userService.UpdatePoints(UserID, TotalPoints);
+            }
+            else
+            {
+                Message = "Incorrect Answer!";
+                ValidAnswerMessage = $"Answer was {CurrentQuestion.Answer}. 0 points have been awarded!";
+            }
+
+            SendNextQuestion();
+        }
+
+
+        private void SendNextQuestion() 
+        {
+            QuestionNumber++;
+            if (CheckEndQuiz() == false)
+            {
+                NumberOfQuestion = QuestionNumber + 1;
+                QuestionModel question = Questions[QuestionNumber];
+                CurrentQuestion = question;
+                string questionData = JsonSerializer.Serialize<QuestionModel>(question);
+                _serverService.SendDataToClients(questionData, "SendQuestion");
+                TextAnswerInput = null;
+                DisplayQuestion(question);
+            }
+            
         }
 
         public void ValidateClientAnswer(string? answer, int userID, string username, int totalPoints) 
         {
-            string? clientAnswer = answer.Replace(@" ", string.Empty);
             string message = "";
 
-            if (CurrentQuestion.Answer == clientAnswer)
+            if (CurrentQuestion.Answer == answer)
             {
+                NumberOfPointsGained = CurrentQuestion.NumberOfPoints;
                 int numberOfPointsGained = totalPoints + CurrentQuestion.NumberOfPoints;
-                message = $"Correct Answer! You have gained {CurrentQuestion.NumberOfPoints} points!";
+                message = $"Correct Answer. {CurrentQuestion.NumberOfPoints} points have been awarded!";
                 _userService.UpdatePoints(userID, totalPoints);
             }
             else
             {
-                message = $"Answer: {CurrentQuestion.Answer}. You have gained 0 points!";
+                message = $"Answer was {CurrentQuestion.Answer}. 0 points have been awarded!";
             }
 
             _serverService.SendDataToClients(message, "SendCorrectAnswer");
@@ -564,6 +692,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
         public void StopServer() 
         {
            _serverService.StopServer();
+
         }
     }
 }

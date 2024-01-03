@@ -117,7 +117,7 @@ namespace KrishnaRajamannar.NEA.Services.Database
                     SELECT COUNT(*)
                     FROM 
                     (
-	                    SELECT TextQuestion.Question, TextQuestion.Answer, NULL AS Option1, NULL AS Option2, NULL AS Option3, NULL AS Option4, NULL AS Option5, NULL AS Option6, TextQuestion.Duration, TextQuestion.NumberOfPoints
+                        SELECT TextQuestion.Question, TextQuestion.Answer, NULL AS Option1, NULL AS Option2, NULL AS Option3, NULL AS Option4, NULL AS Option5, NULL AS Option6, TextQuestion.Duration, TextQuestion.NumberOfPoints
                         FROM Quiz, QuizTextQuestionLink, TextQuestion
                         WHERE Quiz.QuizID = QuizTextQuestionLink.QuizID AND QuizTextQuestionLink.TextQuestionID = TextQuestion.TextQuestionID AND Quiz.QuizID = @QuizID
 
