@@ -37,7 +37,8 @@
                         <ColumnDefinition Width="*"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
                     <Button x:Name="backBtn" Content="Back" Grid.Column="0"
-                            FontSize="20" Background="WhiteSmoke" Margin="5" Height="40"></Button>
+                            FontSize="20" Background="WhiteSmoke" Margin="5" Height="40"
+                            Click="backBtn_Click"></Button>
                     <StackPanel x:Name="sessionDataStackPanel" Orientation="Horizontal" Grid.Column="1" Visibility="Visible">
                         <Label Content="Select a Quiz to Review:" Grid.Column="1" FontSize="20"
                             Width="230" HorizontalAlignment="Left" VerticalContentAlignment="Center"

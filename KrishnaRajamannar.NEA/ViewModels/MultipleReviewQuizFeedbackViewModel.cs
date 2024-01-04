@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace KrishnaRajamannar.NEA.ViewModels
 {
-    public class MultipleQuizReviewViewModel
+    public class MultipleReviewQuizFeedbackViewModel
     {
-
+        public int UserID;
+        public int SessionID;
     }
 }

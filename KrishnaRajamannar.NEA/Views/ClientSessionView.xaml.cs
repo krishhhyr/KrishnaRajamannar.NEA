@@ -22,6 +22,8 @@ namespace KrishnaRajamannar.NEA.Views
     /// </summary>
     public partial class ClientSessionView : Window
     {
+        private MultipleReviewFeedbackWindow multipleReviewQuizFeedbackWindow;
+
         private ClientSessionViewModel _clientSessionViewModel;
         public ClientSessionView(ClientSessionViewModel clientSessionViewModel)
         {
@@ -34,7 +36,16 @@ namespace KrishnaRajamannar.NEA.Views
             _clientSessionViewModel.TextQuestionRecieved += _clientSessionViewModel_TextQuestionRecieved;
             _clientSessionViewModel.MultipleChoiceQuestionRecieved += _clientSessionViewModel_MultipleChoiceQuestionRecieved;
             _clientSessionViewModel.AnswerTimerFinished += _clientSessionViewModel_AnswerTimerFinished;
+            _clientSessionViewModel.ShowMultipleQuizFeedbackWindow += OnShowMultipleQuizFeedbackWindow;
 
+        }
+
+        private void OnShowMultipleQuizFeedbackWindow(object sender, Events.ShowSessionParameterWindowEventArgs e)
+        {
+            _clientSessionViewModel.MultipleReviewQuizFeedbackViewModel.SessionID = int.Parse(e.ServerResponse.SessionId);
+            _clientSessionViewModel.MultipleReviewQuizFeedbackViewModel.UserID = _clientSessionViewModel.UserID;
+            multipleReviewQuizFeedbackWindow = new MultipleReviewFeedbackWindow(_clientSessionViewModel.MultipleReviewQuizFeedbackViewModel);
+            multipleReviewQuizFeedbackWindow.Show();
         }
 
         private void _clientSessionViewModel_AnswerTimerFinished(object sender, Events.TimerEventArgs e)
@@ -115,6 +126,8 @@ namespace KrishnaRajamannar.NEA.Views
             {
                 if (radioButton.IsChecked == true) 
                 {
+                    radioButton.IsEnabled = false;
+                    radioButton.IsChecked = false;
                     _clientSessionViewModel.AnswerInput = radioButton.Content.ToString();
                 }
             }
