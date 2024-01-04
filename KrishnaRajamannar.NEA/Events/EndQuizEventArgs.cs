@@ -9,7 +9,7 @@ namespace KrishnaRajamannar.NEA.Events
 {
     public class EndQuizEventArgs
     {
-        ServerResponse ServerResponse { get; set; }
+       public ServerResponse ServerResponse { get; set; }
     }
     public delegate void EndQuizEventHandler(Object sender, EndQuizEventArgs e);
 }
