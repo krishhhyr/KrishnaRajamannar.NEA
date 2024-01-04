@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 
 namespace KrishnaRajamannar.NEA.Services.Database
 {
-    public record ConnectionData(string ipadress, int port);
     public class SessionService : ISessionService
     {
         const string connectionString = $"Data Source=KRISHNASXPS\\SQLEXPRESS;Initial Catalog=quizApp;Persist Security Info=True;User ID=sa;Password=passw0rd;TrustServerCertificate=True";

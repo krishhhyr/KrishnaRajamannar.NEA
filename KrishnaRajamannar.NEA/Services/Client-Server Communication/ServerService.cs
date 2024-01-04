@@ -150,6 +150,7 @@ namespace KrishnaRajamannar.NEA.Services.Connection
             IList<UserSessionData> userDetails = _userSessionService.GetUserSessionDetails(userSessionData);
             // Creates a new object to pass the selected Quiz, the other users connected to client
             // and host name
+
             sessionData.HostName = _hostname;
             sessionData.UserSessions = userDetails;
             // Expressing the type of data so that the Client can process the request accordingly
@@ -209,6 +210,13 @@ namespace KrishnaRajamannar.NEA.Services.Connection
 
         public void StopServer()
         {
+            foreach (var client in clients) 
+            {
+                client.Close();
+                client.Dispose();
+            }
+
+
             server.Stop();
             source.Cancel();
             source.Dispose();

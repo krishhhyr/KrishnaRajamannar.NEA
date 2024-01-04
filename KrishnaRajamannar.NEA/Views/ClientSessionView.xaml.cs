@@ -51,21 +51,6 @@ namespace KrishnaRajamannar.NEA.Views
                 option5rb.IsEnabled = false;
                 option6rb.IsEnabled = false;
 
-                List<RadioButton> radioButtons = new List<RadioButton>();
-                radioButtons.Add(option1rb);
-                radioButtons.Add(option2rb);
-                radioButtons.Add(option3rb);
-                radioButtons.Add(option4rb);
-                radioButtons.Add(option5rb);
-                radioButtons.Add(option6rb);
-
-                foreach (RadioButton radioButton in radioButtons)
-                {
-                    if (radioButton.IsChecked == true)
-                    {
-                        _clientSessionViewModel.AnswerInput = radioButton.Content.ToString();
-                    }
-                }
             });
         }
 
@@ -78,6 +63,15 @@ namespace KrishnaRajamannar.NEA.Views
                 textAnswerTxtBox.Visibility = Visibility.Hidden;
                 multipleQuizReviewStackPanel.Visibility = Visibility.Visible;
                 sessionDetailsStackPanel.Visibility = Visibility.Hidden;
+                pointsAndTimeLbl.Visibility = Visibility.Visible;
+
+                submitBtn.IsEnabled = true;
+                option1rb.IsEnabled = true;
+                option2rb.IsEnabled = true;
+                option3rb.IsEnabled = true;
+                option4rb.IsEnabled = true;
+                option5rb.IsEnabled = true;
+                option6rb.IsEnabled = true;
             });
         }
 
@@ -90,6 +84,10 @@ namespace KrishnaRajamannar.NEA.Views
                 multipleChoiceAnswerRbStackPanel.Visibility = Visibility.Hidden;
                 multipleQuizReviewStackPanel.Visibility = Visibility.Visible;
                 sessionDetailsStackPanel.Visibility = Visibility.Hidden;
+                pointsAndTimeLbl.Visibility = Visibility.Visible;
+
+                submitBtn.IsEnabled = true;
+                textAnswerTxtBox.IsEnabled = true;
             });
         }
 
@@ -120,11 +118,6 @@ namespace KrishnaRajamannar.NEA.Views
                     _clientSessionViewModel.AnswerInput = radioButton.Content.ToString();
                 }
             }
-        }
-
-        private void submitBtn_Click_1(object sender, RoutedEventArgs e)
-        {
-
         }
     }
 }

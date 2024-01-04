@@ -113,7 +113,8 @@
             <Label x:Name="messageLbl" Content="{Binding Message}" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center"
                            VerticalAlignment="Center" FontSize="20" Foreground="#cfcfe8"></Label>
 
-            <StackPanel x:Name="pointsAndTimeLbl" Orientation="Horizontal" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Right">
+            <StackPanel x:Name="pointsAndTimeLbl" Orientation="Horizontal" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Right"
+                        Visibility="Hidden">
                 <Label Content="Points Gained:" VerticalAlignment="Center" FontSize="20" Foreground="White" Margin="5,5,0,5"></Label>
                 
                 <Label x:Name="pointsGainedLbl" Content="{Binding NumberOfPointsGained}" VerticalAlignment="Center" FontSize="20" Foreground="White" Margin="0,0,10,0"></Label>
