@@ -184,14 +184,14 @@ namespace KrishnaRajamannar.NEA.ViewModels
             }
         }
 
-        private ObservableCollection<UserSessionData> _users = new ObservableCollection<UserSessionData>();
-        public ObservableCollection<UserSessionData> Users
+        private ObservableCollection<UserSessionData> _joinedUsers = new ObservableCollection<UserSessionData>();
+        public ObservableCollection<UserSessionData> JoinedUsers
         {
-            get { return _users; }
+            get { return _joinedUsers; }
             set
             {
-                _users = value;
-                RaisePropertyChange("Users");
+                _joinedUsers = value;
+                RaisePropertyChange("JoinedUsers");
             }
         }
 
@@ -552,6 +552,11 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 {
                     UserSessionData userData = JsonSerializer.Deserialize<UserSessionData>(response.UserData);
                     ValidateClientAnswer(response.Data, userData.UserID, userData.Username, userData.TotalPoints);
+
+                    System.Windows.Application.Current.Dispatcher.Invoke(System.Windows.Threading.DispatcherPriority.Normal, (Action)delegate ()
+                    {
+                        SendNextQuestion();
+                    });
                 }
             }
         }
@@ -683,7 +688,6 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 _multiplayerReviewQuizService.InsertMultiplayerQuizFeedbackData(SessionID, UserID, CurrentQuestion.Question, CurrentQuestion.Answer, false);
             }
 
-            SendNextQuestion();
         }
 
 
@@ -707,6 +711,8 @@ namespace KrishnaRajamannar.NEA.ViewModels
         {
             string message = "";
 
+            ValidateServerAnswer();
+
             if (CurrentQuestion.Answer == answer)
             {
                 NumberOfPointsGained = CurrentQuestion.NumberOfPoints;
@@ -722,6 +728,14 @@ namespace KrishnaRajamannar.NEA.ViewModels
             }
 
             _serverService.SendDataToClients(message, "SendCorrectAnswer");
+
+
+            Dispatcher.CurrentDispatcher.BeginInvoke(() =>
+            {
+                
+            });
+
+            
         }
 
         // pass event called end session?

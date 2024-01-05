@@ -24,12 +24,12 @@ namespace KrishnaRajamannar.NEA.Views
         private readonly ViewSessionInfoViewModel _viewSessionInfoViewModel;
 
         private MultipleQuizReview _multipleQuizReview;
-        private readonly MultipleQuizReviewViewModel _multipleQuizReviewViewModel;
+        private readonly MultipleReviewQuizFeedbackViewModel _multipleReviewQuizFeedbackViewModel;
         public ViewSessionInformation(ViewSessionInfoViewModel viewSessionInfoViewModel)
         {           
             InitializeComponent();
             _viewSessionInfoViewModel = viewSessionInfoViewModel;
-            _multipleQuizReviewViewModel = App.ServiceProvider.GetService<MultipleQuizReviewViewModel>();
+            _multipleReviewQuizFeedbackViewModel = App.ServiceProvider.GetService<MultipleReviewQuizFeedbackViewModel>();
 
             this.DataContext = _viewSessionInfoViewModel;
 
@@ -47,7 +47,7 @@ namespace KrishnaRajamannar.NEA.Views
             if (e.ServerResponse != null)
             {
                 //_multipleQuizReviewViewModel.LoadData(e.ServerResponse);
-                _multipleQuizReview = new MultipleQuizReview(_multipleQuizReviewViewModel); ;
+                _multipleQuizReview = new MultipleQuizReview(_multipleReviewQuizFeedbackViewModel); ;
                 _multipleQuizReview.ShowDialog();
             }
         }

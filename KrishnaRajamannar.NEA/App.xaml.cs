@@ -10,6 +10,7 @@ using KrishnaRajamannar.NEA.Models;
 using KrishnaRajamannar.NEA.Services;
 using KrishnaRajamannar.NEA.Services.Connection;
 using KrishnaRajamannar.NEA.Services.Database;
+using KrishnaRajamannar.NEA.Services.Database_Management;
 using KrishnaRajamannar.NEA.Services.Interfaces;
 using KrishnaRajamannar.NEA.ViewModels;
 using KrishnaRajamannar.NEA.Views;
@@ -40,6 +41,7 @@ namespace KrishnaRajamannar.NEA
             //services.AddSingleton<IClientService, ClientService>();
             services.AddSingleton<IServerService, ServerService>();
             services.AddSingleton<IUserSessionService, UserSessionService>();
+            services.AddSingleton<IMultiplayerReviewQuizService, MultiplayerReviewQuizService>();
             services.AddSingleton<UserConnectionService>();
             services.AddSingleton(typeof(UserModel));
             services.AddSingleton(typeof(QuestionModel));
@@ -72,7 +74,7 @@ namespace KrishnaRajamannar.NEA
             services.AddTransient(typeof(JoinSessionViewModel));
             services.AddTransient(typeof(IndependentReviewQuizModel));
             services.AddTransient(typeof(ViewSessionInfoViewModel));
-            services.AddTransient(typeof(MultipleQuizReviewViewModel));
+            services.AddTransient(typeof(MultipleReviewQuizFeedbackViewModel));
 
             services.AddTransient(typeof(ServerSessionViewModel));
             services.AddTransient(typeof(ClientSessionViewModel));
