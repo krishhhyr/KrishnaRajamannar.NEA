@@ -184,14 +184,14 @@ namespace KrishnaRajamannar.NEA.ViewModels
             }
         }
 
-        private ObservableCollection<UserSessionData> _users = new ObservableCollection<UserSessionData>();
-        public ObservableCollection<UserSessionData> Users
+        private ObservableCollection<UserSessionData> _joinedUsers = new ObservableCollection<UserSessionData>();
+        public ObservableCollection<UserSessionData> JoinedUsers
         {
-            get { return _users; }
+            get { return _joinedUsers; }
             set
             {
-                _users = value;
-                RaisePropertyChange("Users");
+                _joinedUsers = value;
+                RaisePropertyChange("JoinedUsers");
             }
         }
 

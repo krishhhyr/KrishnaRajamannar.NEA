@@ -152,14 +152,14 @@ namespace KrishnaRajamannar.NEA.ViewModels
             }
         }
 
-        private List<UserSessionData> _userSessionData = new List<UserSessionData>();
-        public List<UserSessionData> UserSessionData
+        private List<UserSessionData> _joinedUsers = new List<UserSessionData>();
+        public List<UserSessionData> JoinedUsers
         {
-            get { return _userSessionData; }
+            get { return _joinedUsers; }
             set
             {
-                _userSessionData = value;
-                RaisePropertyChange("UserSessionData");
+                _joinedUsers = value;
+                RaisePropertyChange("JoinedUsers");
             }
         }
 
@@ -488,11 +488,13 @@ namespace KrishnaRajamannar.NEA.ViewModels
         {
             string[] spiltMessage = validAnswerMessage.Split('.');
             string[] test = spiltMessage[1].Split(' ');
-            NumberOfPointsGained = Convert.ToInt32(test[1]);
+            NumberOfPointsGained = NumberOfPointsGained + Convert.ToInt32(test[1]);
         }
 
         public void LoadData(ServerResponse response)
         {
+            List<string> test = new List<string>(); 
+
             if (response != null)
             {
                 SessionId = response.SessionId;
@@ -509,13 +511,13 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
                         if (data.UserSessions.Any())
                         {
-                            List<string> users = new List<string>();
 
-                            UserSessionData.Clear();
-                            
+                            JoinedUsers.Clear();
+
                             //_userSessionData.AddRange(data.UserSessions);
-                            UserSessionData = data.UserSessions.ToList();
-                            NumberofJoinedUsers = _userSessionData.Count;
+                            JoinedUsers = data.UserSessions.ToList();
+
+                            NumberofJoinedUsers = JoinedUsers.Count;
                         }
                     }
                 }
