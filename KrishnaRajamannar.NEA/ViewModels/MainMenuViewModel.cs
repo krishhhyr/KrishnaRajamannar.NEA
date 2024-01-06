@@ -1,36 +1,23 @@
 ﻿using KrishnaRajamannar.NEA.Events;
-using KrishnaRajamannar.NEA.Models;
-using KrishnaRajamannar.NEA.Models.Dto;
 using KrishnaRajamannar.NEA.Services;
-using KrishnaRajamannar.NEA.Services.Interfaces;
-using KrishnaRajamannar.NEA.Views;
-using System;
-using System.CodeDom;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Diagnostics.Eventing.Reader;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 
 namespace KrishnaRajamannar.NEA.ViewModels
 {
+    // Inherits the INotifyPropertyChanged interface
     public class MainMenuViewModel : INotifyPropertyChanged
     {
+        // Part of INotifyPropertyChanged
         public event PropertyChangedEventHandler? PropertyChanged;
 
+        // Events used to display new windows and pass data through these windows
         public event ShowAccountParameterWindowEventHandler ShowViewQuizzesWindow;
         public event ShowWindowEventHandler ShowLeaderboardWindow;
-        public event ShowAccountParameterWindowEventHandler ShowHostSessionWindow;
-        public event ShowAccountParameterWindowEventHandler ShowJoinSessionWindow;
-
-        public event ShowSessionParameterWindowEventHandler ShowClientSessionWindow;
-
+        public event ShowAccountParameterWindowEventHandler ShowServerSessionWindow;
         public event ShowWindowEventHandler ShowAccountLoginWindow;
         public event HideWindowEventHandler HideMainMenuWindow;
 
+        // ViewModels which will be used to pass data through the new windows
         public AccountLoginViewModel AccountLoginViewModel;
         public ViewQuizzesViewModel ViewQuizzesViewModel;
         public ViewLeaderboardViewModel ViewLeaderboardViewModel;
@@ -39,29 +26,24 @@ namespace KrishnaRajamannar.NEA.ViewModels
         public ServerSessionViewModel ServerSessionViewModel;
         public ClientSessionViewModel ClientSessionViewModel;
 
+        // Uses the ISessionService to check if the session ID inputted exists in the DB
         private readonly ISessionService _sessionService;
-        //private readonly IClientService _clientService;
 
         public MainMenuViewModel(ISessionService sessionService)
         {
+            _sessionService = sessionService;
+
             AccountLoginViewModel = App.ServiceProvider.GetService(typeof(AccountLoginViewModel)) as AccountLoginViewModel;
             ViewQuizzesViewModel = App.ServiceProvider.GetService(typeof(ViewQuizzesViewModel)) as ViewQuizzesViewModel;
             ViewLeaderboardViewModel = App.ServiceProvider.GetService(typeof(ViewLeaderboardViewModel)) as ViewLeaderboardViewModel;
-            //HostSessionViewModel = App.ServiceProvider.GetService(typeof(HostSessionViewModel)) as HostSessionViewModel;
-            //JoinSessionViewModel = App.ServiceProvider.GetService(typeof(JoinSessionViewModel)) as JoinSessionViewModel;
-
             ServerSessionViewModel = App.ServiceProvider.GetService(typeof(ServerSessionViewModel)) as ServerSessionViewModel;
             ClientSessionViewModel = App.ServiceProvider.GetService(typeof(ClientSessionViewModel)) as ClientSessionViewModel;
-
-            _sessionService = sessionService;
-            //_clientService = clientService;
-
-            //_clientService.ClientConnected += OnClientConnected;
-
         }
 
         #region Properties
 
+        // Binds with the UI to display the User ID of the user who has logged in
+        // This data was passed from the Account Login window through an event
         private int _userid;
         public int UserID
         {
@@ -72,6 +54,8 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 RaisePropertyChange("UserID");
             }
         }
+        // Binds with the UI to display the username of the user who has logged in
+        // This data was passed from the Account Login window through an event
         private string _username;
         public string Username
         {
@@ -82,6 +66,8 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 RaisePropertyChange("Username");
             }
         }
+        // Binds with the UI to display the number of total points gained of the user who has logged in
+        // This data was passed from the Account Login window through an event
         private int _totalpoints;
         public int TotalPoints
         {
@@ -92,6 +78,8 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 RaisePropertyChange("TotalPoints");
             }
         }
+        // Binds to the UI to retrieve the session ID that the user has inputted
+        // when attempting to join a session
         private int _sessionID;
         public int SessionID
         {
@@ -102,6 +90,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 RaisePropertyChange("SessionID");
             }
         }
+        // Binds to the UI to display error messages when inputting the session ID
         private string _message;
         public string Message
         {
@@ -124,30 +113,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
         #region Events
 
-        // Event for when a client is first connected to the server
-        // This passes the data sent from the client to a function which displays the client window
-        private void OnClientConnected(object sender, ClientConnectedEventArgs e)
-        {
-            ShowClientSession(e.ServerResponse);
-        }
-
-        private void ShowClientSession(ServerResponse response)
-        {
-            ShowSessionParameterWindowEventArgs args = new ShowSessionParameterWindowEventArgs();
-            args.IsShown = true;
-            args.ServerResponse = response;
-            OnShowClientSessionWindow(args);
-        }
-
-        protected virtual void OnShowClientSessionWindow(ShowSessionParameterWindowEventArgs e)
-        {
-            ShowSessionParameterWindowEventHandler handler = ShowClientSessionWindow;
-            if (handler != null)
-            {
-                handler(this, e);
-            }
-        }
-
+        // This is used to hide the main menu once a new window is displayed
         public void HideMainMenu()
         {
             HideWindowEventArgs args = new HideWindowEventArgs();
@@ -164,6 +130,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
             }
         }
 
+        // If a user logs out, this is used to show the Account Login windo
         public void ShowAccountLogin()
         {
             ShowWindowEventArgs args = new ShowWindowEventArgs();
@@ -198,6 +165,8 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 handler(this, e);
             }
         }
+        // ShowLeaderboard() and OnShowLeaderboardWindow() are both events used to display the leaderboard window
+        // if the user presses View Leaderboard in the main menu
         public void ShowLeaderboard()
         {
             ShowWindowEventArgs args = new ShowWindowEventArgs();
@@ -213,36 +182,20 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 handler(this, e);
             }
         }
-        public void ShowHostSession()
+        // This is used to pass the user data from the Main Menu Window to the ServerSession window
+        public void ShowServerSession()
         {
             ShowAccountParameterWindowEventArgs args = new ShowAccountParameterWindowEventArgs();
             args.IsShown = true;
             args.UserID = _userid;
             args.Username = _username;
             args.TotalPoints = _totalpoints;
-            OnShowHostSessionWindow(args);
+            OnServerSessionWindow(args);
 
         }
-        protected virtual void OnShowHostSessionWindow(ShowAccountParameterWindowEventArgs e)
+        protected virtual void OnServerSessionWindow(ShowAccountParameterWindowEventArgs e)
         {
-            ShowAccountParameterWindowEventHandler handler = ShowHostSessionWindow;
-            if (handler != null)
-            {
-                handler(this, e);
-            }
-        }
-        public void ShowJoinSession()
-        {
-            ShowAccountParameterWindowEventArgs args = new ShowAccountParameterWindowEventArgs();
-            args.IsShown = true;
-            args.UserID = _userid;
-            args.Username = _username;
-            OnShowJoinSessionWindow(args);
-
-        }
-        protected virtual void OnShowJoinSessionWindow(ShowAccountParameterWindowEventArgs e)
-        {
-            ShowAccountParameterWindowEventHandler handler = ShowJoinSessionWindow;
+            ShowAccountParameterWindowEventHandler handler = ShowServerSessionWindow;
             if (handler != null)
             {
                 handler(this, e);
@@ -251,6 +204,8 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
         #endregion
 
+        // This is used to validate the session ID which entered by users to join a session
+        // It calls the sessionService to check whether the session ID entered actually exists in the DB
         public bool ValidateSessionID() 
         {
             if (_sessionService.IsSessionIDExist(SessionID) != true) 
@@ -261,25 +216,5 @@ namespace KrishnaRajamannar.NEA.ViewModels
             Message = "Connecting...";
             return true;
         }
-
-        //public bool JoinSession() 
-        //{
-        //    if (_sessionService.IsSessionIDExist(SessionID) != true)
-        //    {
-        //        ConnectionMessage = "Session ID not found";
-        //        return false;
-        //    }
-        //    else
-        //    {
-        //        (string, int) connectionInfo = _sessionService.GetConnectionData(SessionID);
-
-        //        string ipAddressConnect = connectionInfo.Item1;
-        //        int portNumberConnect = connectionInfo.Item2;
-
-        //        _clientService.ConnectToServer(Username, UserID, ipAddressConnect, portNumberConnect, SessionID.ToString());
-        //        ConnectionMessage = "Connecting...";
-        //        return true;
-        //    }
-        //}
     }
 }
