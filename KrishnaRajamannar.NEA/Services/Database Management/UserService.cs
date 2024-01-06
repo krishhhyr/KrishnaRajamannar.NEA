@@ -1,18 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using System.Security.Cryptography;
+﻿using KrishnaRajamannar.NEA.Models;
 using Microsoft.Data.SqlClient;
-using KrishnaRajamannar.NEA.Models;
+using System.Collections.Generic;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace KrishnaRajamannar.NEA.Services.Database
 {
     // This inherits from the UserService interface
     public class UserService : IUserService
     {
+        // Connection string used to connect to the SQL Server
         const string connectionString = $"Data Source=KRISHNASXPS\\SQLEXPRESS;Initial Catalog=quizApp;Persist Security Info=True;User ID=sa;Password=passw0rd;TrustServerCertificate=True";
 
         public UserService()
@@ -20,6 +17,7 @@ namespace KrishnaRajamannar.NEA.Services.Database
 
         }
 
+        // This retrieves the username of a user given their userID
         public string GetUsername(int userID)
         {
             string username = "";
@@ -62,6 +60,7 @@ namespace KrishnaRajamannar.NEA.Services.Database
             command.CommandText = sqlQuery;
             command.Parameters.AddWithValue("@Username", _username);
             var data = command.ExecuteReader();
+            // Checks if there is any data in the DB for that user
             if (data.Read() == false)
             {
                 userDetails.Add(new UserModel()
