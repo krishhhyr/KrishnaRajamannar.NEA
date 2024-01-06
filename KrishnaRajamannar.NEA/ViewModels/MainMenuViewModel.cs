@@ -183,7 +183,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
             }
         }
         // This is used to pass the user data from the Main Menu Window to the ServerSession window
-        public void ShowServerSession()
+        public void ShowServerSession() 
         {
             ShowAccountParameterWindowEventArgs args = new ShowAccountParameterWindowEventArgs();
             args.IsShown = true;
