@@ -50,7 +50,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
         private void OnEndQuizEvent(object sender, EndQuizEventArgs e)
         {
-            OnShowMultipleQuizFeedbackWindow(e);
+            //OnShowMultipleQuizFeedbackWindow(e);
         }
 
         private void OnProcessServerResponse(object sender, Events.ProcessServerResponseEventArgs e)
