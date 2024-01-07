@@ -2,12 +2,10 @@
 using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace KrishnaRajamannar.NEA.Services.Database
 {
+    // Inherits the IQuestionService Interface
     public class QuestionService : IQuestionService
     {
         // A string which defines the data source for the SQL Server database.
@@ -53,17 +51,11 @@ namespace KrishnaRajamannar.NEA.Services.Database
 
             using SqlConnection connection = new SqlConnection(connectionString);
             connection.Open();
-
             var command = connection.CreateCommand();
-
             command.CommandText = sqlQuery;
-
             command.Parameters.AddWithValue("@QuizID", quizID);
-
             var data = command.ExecuteReader();
-
             // This IF statement represents if no question is found in a quiz when executing the query.
-
             while (data.Read())
             {
                 question = data.GetString(0);
@@ -76,7 +68,7 @@ namespace KrishnaRajamannar.NEA.Services.Database
                     // If it is not, it assigns the value to the respective option in the array.
                     if (data.IsDBNull(i + 1))
                     {
-                        options[i - 1] = "NULL";
+                        options[i - 1] = "";
                     }
                     else
                     {
@@ -131,15 +123,10 @@ namespace KrishnaRajamannar.NEA.Services.Database
 
             using SqlConnection connection = new SqlConnection(connectionString);
             connection.Open();
-
             var command = connection.CreateCommand();
-
             command.CommandText = sqlQuery;
-
             command.Parameters.AddWithValue("@QuizID", quizID);
-
             var data = command.ExecuteReader();
-
             while (data.Read())
             {
                 numberOfQuestions = data.GetInt32(0);
@@ -150,10 +137,6 @@ namespace KrishnaRajamannar.NEA.Services.Database
             return numberOfQuestions;
         }
         #endregion
-
-        //NOTE: Need to check if a question exists!
-
-        // A region which groups services targeting only questions with a text question type.
 
         #region Text Question Services
 
@@ -176,11 +159,8 @@ namespace KrishnaRajamannar.NEA.Services.Database
             command.Parameters.AddWithValue("@Duration", duration);
             command.Parameters.AddWithValue("@NumberOfPoints", numberOfPoints);
             command.Parameters.AddWithValue("@QuizID", quizID);
-
             command.ExecuteNonQuery();
-
             InsertTextQuestionLink(quizID);
-
             connection.Close();
         }
 
@@ -201,15 +181,11 @@ namespace KrishnaRajamannar.NEA.Services.Database
             connection.Open();
             var command = connection.CreateCommand();
             command.CommandText = sqlQuery;
-
             command.Parameters.AddWithValue("@QuizID", quizID);
             command.Parameters.AddWithValue("@TextQuestionID", textQuestionID);
-
             command.ExecuteNonQuery();
-
             connection.Close();
         }
-
 
         // Function which uses aggregate SQL functions to get the text question ID of the most recent question added to the database.
         // This is used to insert values into QuizTextQuestionLink which requires the Quiz ID and the Text Question ID
@@ -266,8 +242,6 @@ namespace KrishnaRajamannar.NEA.Services.Database
 
             connection.Close();
         }
-
-
         // This gets the ID of a TextQuestion
         public int GetTextQuestionID(string question, string answer, int quizID)
         {
@@ -313,15 +287,6 @@ namespace KrishnaRajamannar.NEA.Services.Database
         {
             Dictionary<string, string> options = new Dictionary<string, string>();
 
-            // Option 1 and option 2 cannot be null so this checks whether these variables are null or not
-            //if (option1 == null || option2 == null)
-            //{
-            //    Dictionary<string, string> nullOptions = new Dictionary<string, string>();
-
-            //    // Returns an empty dictionary
-            //    return nullOptions;
-            //}
-
             options.Add("Option1", option1);
             options.Add("Option2", option2);
             options.Add("Option3", option3);
@@ -352,6 +317,9 @@ namespace KrishnaRajamannar.NEA.Services.Database
             command.Parameters.AddWithValue("@Question", question);
             command.Parameters.AddWithValue("@Option1", options["Option1"]);
             command.Parameters.AddWithValue("@Option2", options["Option2"]);
+
+            // For Option3 to Option6, this just checks if the value is null
+            // if it is null, input a null value in the database
 
             if (options["Option3"] == null)
             {
@@ -413,15 +381,11 @@ namespace KrishnaRajamannar.NEA.Services.Database
 
             using SqlConnection connection = new SqlConnection(connectionString);
             connection.Open();
-
             var command = connection.CreateCommand();
             command.CommandText = sqlQuery;
-
             command.Parameters.AddWithValue("@QuizID", quizID);
             command.Parameters.AddWithValue("@MCQuestionID", mcQuestionID);
-
             command.ExecuteNonQuery();
-
             connection.Close();
         }
 
@@ -439,19 +403,15 @@ namespace KrishnaRajamannar.NEA.Services.Database
 
             using SqlConnection connection = new SqlConnection(connectionString);
             connection.Open();
-
             var command = connection.CreateCommand();
             command.CommandText = sqlQuery;
-
             var data = command.ExecuteReader();
-
             while (data.Read())
             {
                 mcQuestionID = data.GetInt32(0);
                 return mcQuestionID;
             }
             connection.Close();
-
             return mcQuestionID;
         }
 
@@ -471,14 +431,10 @@ namespace KrishnaRajamannar.NEA.Services.Database
 
             using SqlConnection connection = new SqlConnection(connectionString);
             connection.Open();
-
             var command = connection.CreateCommand();
             command.CommandText = sqlQuery;
-
             command.Parameters.AddWithValue("@MCQuestionID", mcQuestionID);
-
             command.ExecuteNonQuery();
-
             connection.Close();
         }
 
@@ -499,16 +455,12 @@ namespace KrishnaRajamannar.NEA.Services.Database
 
             using SqlConnection connection = new SqlConnection(connectionString);
             connection.Open();
-
             var command = connection.CreateCommand();
             command.CommandText = sqlQuery;
-
             command.Parameters.AddWithValue("@Question", question);
             command.Parameters.AddWithValue("@Answer", answer);
             command.Parameters.AddWithValue("@QuizID", quizID);
-
             var data = command.ExecuteReader();
-
             while (data.Read())
             {
                 mcQuestionID = data.GetInt32(0);

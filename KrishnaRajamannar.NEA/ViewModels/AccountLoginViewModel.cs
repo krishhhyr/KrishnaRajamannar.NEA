@@ -1,37 +1,23 @@
 ﻿using KrishnaRajamannar.NEA.Events;
 using KrishnaRajamannar.NEA.Models;
 using KrishnaRajamannar.NEA.Services;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 
 namespace KrishnaRajamannar.NEA.ViewModels
 {
+    // Class inherits INotifyPropertyChanged interface which is used to notify users that the values
+    // of properties have changed
     public class AccountLoginViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
-
-        public event ShowMessageEventHandler ShowMessage;
-
         public event ShowAccountParameterWindowEventHandler ShowMainMenuWindow;
-
         public event ShowWindowEventHandler ShowAccountCreationWindow;
-
         public event HideWindowEventHandler HideAccountLoginWindow;
-
+        // An interface which uses UserService which handles action relating to the UserDetails table in DB
         private readonly IUserService _userService;
-
         private readonly UserModel _userModel;
-
         public AccountCreationViewModel AccountCreationViewModel;
-
-        //public MainMenuViewModel MainMenuViewModel;
-
-        //public ViewQuizzesViewModel ViewQuizzesViewModel;
 
         public int UserID;
         public int TotalPoints;
@@ -42,12 +28,9 @@ namespace KrishnaRajamannar.NEA.ViewModels
             _userModel = userModel;
 
             AccountCreationViewModel = App.ServiceProvider.GetService(typeof(AccountCreationViewModel)) as AccountCreationViewModel;
-
-            //MainMenuViewModel = App.ServiceProvider.GetService(typeof(MainMenuViewModel)) as MainMenuViewModel;
-            //ViewQuizzesViewModel = App.ServiceProvider.GetService(typeof(ViewQuizzesViewModel)) as ViewQuizzesViewModel;
         }
 
-
+        // Binds the username with the UI to retrieve the username from the UI
         private string _username;
         public string Username
         {
@@ -58,6 +41,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 RaisePropertyChange("Username");
             }
         }
+        // Binds the password with the UI to retrieve the username from the UI
         private string _password;
         public string Password
         {
@@ -68,6 +52,22 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 RaisePropertyChange("Password");
             }
         }
+
+        // Binds the message label with the UI to notify the user
+        // if the login was successful or not
+        private string _message;
+        public string Message 
+        {
+            get { return _message; }
+            set 
+            {
+                _message = value;
+                RaisePropertyChange("Message");
+            }
+        }
+
+        // Used to notify the UI if any property has been changed
+        // Used for data binding
         public void RaisePropertyChange(string propertyname)
         {
             if (PropertyChanged != null)
@@ -75,11 +75,12 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyname));
             }
         }
-        private void ShowMessageDialog(string message)
+        public void ShowAccountCreation()
         {
-            ShowMessageEventArgs args = new ShowMessageEventArgs();
-            args.Message = message;
-            OnShowMessage(args);
+            ShowWindowEventArgs args = new ShowWindowEventArgs();
+            args.IsShown = true;
+            OnShowAccountCreationWindow(args);
+
         }
         private void HideAccountLogin() 
         {
@@ -87,6 +88,8 @@ namespace KrishnaRajamannar.NEA.ViewModels
             args.IsHidden = true;
             OnHideAccountLoginWindow(args);
         }
+        // Used to show the main menu after a user has logged in
+        // Passes the user details on to be displayed in the main menu window
         private void ShowMainMenu() 
         {
             ShowAccountParameterWindowEventArgs args = new ShowAccountParameterWindowEventArgs();
@@ -96,21 +99,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
             args.TotalPoints = TotalPoints;
             OnShowMainMenuWindow(args);
         }
-        private void ShowAccountCreation() 
-        {
-            ShowWindowEventArgs args = new ShowWindowEventArgs();
-            args.IsShown = true;
-            OnShowAccountCreationWindow(args);
-        }
-        // Raises an event
-        protected virtual void OnShowMessage(ShowMessageEventArgs e)
-        {
-            ShowMessageEventHandler handler = ShowMessage;
-            if (handler != null)
-            {
-                handler(this, e);
-            }
-        }
+        // Raises an event to close the Account Login window
         protected virtual void OnHideAccountLoginWindow(HideWindowEventArgs e) 
         {
             HideWindowEventHandler handler = HideAccountLoginWindow;
@@ -119,6 +108,8 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 handler(this, e);
             }
         }
+
+        // Raises an event to show the Main Menu window
         protected virtual void OnShowMainMenuWindow(ShowAccountParameterWindowEventArgs e) 
         {
             ShowAccountParameterWindowEventHandler handler = ShowMainMenuWindow;
@@ -127,6 +118,8 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 handler(this, e);   
             }
         }
+
+        // Raises an event to show the Account Creation window
         protected virtual void OnShowAccountCreationWindow(ShowWindowEventArgs e) 
         {
             ShowWindowEventHandler handler = ShowAccountCreationWindow;
@@ -135,68 +128,73 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 handler(this, e);
             }
         }
-        public void DisplayAccountCreationWindow()
-        {
-            ShowAccountCreation();
-        }
         public void GetUserDetails(string username)
         {
             IList<UserModel> userDetails = new List<UserModel>();
 
             userDetails = _userService.GetUserDetails(username);
 
-            _userModel.UserID = userDetails.Last().UserID;
-            _userModel.Username = userDetails.Last().Username;
-            _userModel.HashedPassword = userDetails.Last().HashedPassword;
-            _userModel.TotalPoints = userDetails.Last().TotalPoints;
+            _userModel.UserID = userDetails[0].UserID;
+            _userModel.Username = userDetails[0].Username;
+            _userModel.HashedPassword = userDetails[0].HashedPassword;
+            _userModel.TotalPoints = userDetails[0].TotalPoints;
+
+            // Assigns information to variables to pass onto other windows
+            UserID = (int)_userModel.UserID;
+            Username = _userModel.Username;
+            TotalPoints = (int)_userModel.TotalPoints;
         }
 
+        // Used to validate the overall login for users 
+        // Calls an event to show the main menu in the case of successful logins
+        // Displays error messages
         public void Login()
         {
-            if (!(Username != null) && (Password != null)) 
-            {
-                ShowMessageDialog("Enter valid input.");
-            }
-            else 
+            // Checks if the username or password does not have an empty value
+            if ((((Username != "") || (Password != "")) || ((Username != null) || (Password != null)))) 
             {
                 GetUserDetails(Username);
-
-                if (ValidateUserNameLogin(Username) != true)
+                if ((ValidateUserNameLogin(Username) == true) && (ValidatePasswordLogin(Password) == true))
                 {
-                    ShowMessageDialog("Username does not exist.");
-                }
-                else if (ValidatePasswordLogin(Username, Password) != true)
-                {
-                    ShowMessageDialog("Invalid password.");
-                }
-                else
-                {
-                    UserID = (int)_userModel.UserID;
-                    Username = _userModel.Username;
-                    TotalPoints = (int)_userModel.TotalPoints;
-
-                    ShowMessageDialog("Account Login successful");
-
+                    // Retrieves all the user information about the user
+                    Message = "Account Login successful";
+                    // Procedures which hide the Account Login window and display the Main Menu window
                     ShowMainMenu();
                     HideAccountLogin();
                 }
             }
+            else 
+            {
+                Message = "Enter a valid input.";
+            }
         }
+        // Checks if the username exists in the database
         public bool ValidateUserNameLogin(string username)
         {
-            if (_userModel.Username != null)
+            if (_userService.IsUserExists(username) != true)
             {
-                return true;
+                Message = "Username does not exist";
+                return false;
             }
-            return false;
+            return true;
         }
-        public bool ValidatePasswordLogin(string username, string password)
+
+        // Used to check if the password matches the hashed password found in the database
+        // Hashes the entered password and checks against the password found in the DB
+        public bool ValidatePasswordLogin(string password)
         {
-            if (_userService.HashPassword(password) == _userModel.HashedPassword)
+            if ((Password != null) || (Password != "")) 
             {
+                if (_userService.HashPassword(password) != _userModel.HashedPassword)
+                {
+                    Message = "Invalid password";
+                    return false;
+                }
+                
                 return true;
             }
             return false;
+            
         }
     }
 }

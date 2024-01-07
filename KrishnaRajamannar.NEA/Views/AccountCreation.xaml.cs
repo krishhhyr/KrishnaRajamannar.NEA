@@ -1,17 +1,5 @@
 ﻿using KrishnaRajamannar.NEA.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace KrishnaRajamannar.NEA.Views
 {
@@ -30,22 +18,20 @@ namespace KrishnaRajamannar.NEA.Views
          
             this.DataContext = _accountCreationViewModel;
 
-            _accountCreationViewModel.ShowMessage += _accountCreationViewModel_ShowMessage;
+            // Subscribes to the HideAccountCreationWindow event
             accountCreationViewModel.HideAccountCreationWindow += AccountCreationViewModel_HideAccountCreationWindow;
         }
 
+        // Hides the window once either the Back button is pressed or the Create button is pressed and there are valid user inputs
         private void AccountCreationViewModel_HideAccountCreationWindow(object sender, Events.HideWindowEventArgs e)
         {
             this.Hide();   
         }
 
-        private void _accountCreationViewModel_ShowMessage(object sender, Events.ShowMessageEventArgs e)
-        {
-            MessageBox.Show(e.Message);
-        }
-
+        // Once the Create button is clicked, the program validates the inputs and stores valid user inputs into the DB
         private void createAccBtn_Click(object sender, RoutedEventArgs e)
         {
+            // Used as data binding does not work for password boxes
             _accountCreationViewModel.Password = initialPasswordInputTxt.Password;
             _accountCreationViewModel.RetypedPassword = secondPasswordInputTxt.Password;
 
@@ -54,6 +40,7 @@ namespace KrishnaRajamannar.NEA.Views
 
         private void backBtn_Click(object sender, RoutedEventArgs e)
         {
+            // Hides the Account Creation window once the back button is pressed
             _accountCreationViewModel.CloseAccountCreationWindow();
         }
     }
