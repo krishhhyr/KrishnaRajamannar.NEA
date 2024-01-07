@@ -1,19 +1,9 @@
 ﻿using KrishnaRajamannar.NEA.Models;
-using KrishnaRajamannar.NEA.Services;
 using KrishnaRajamannar.NEA.ViewModels;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using System.Windows.Threading;
 
 namespace KrishnaRajamannar.NEA.Views
@@ -37,7 +27,6 @@ namespace KrishnaRajamannar.NEA.Views
 
             this.DataContext = _independentReviewViewModel;
 
-            _independentReviewViewModel.ShowMessage += _independentReviewViewModel_ShowMessage;
             independentReviewViewModel.HideIndependentReviewQuizWindow += IndependentReviewViewModel_HideIndependentReviewQuizWindow;
             independentReviewViewModel.ShowIndependentReviewFeedbackWindow += IndependentReviewViewModel_ShowIndependentReviewFeedbackWindow;
         }
@@ -71,24 +60,17 @@ namespace KrishnaRajamannar.NEA.Views
         // This is used if the user submits a text-based answer.
         private void textAnswerBtn_Click(object sender, RoutedEventArgs e)
         {
-            IList<IndependentReviewQuizModel> questions = _independentReviewViewModel.GetQuestionsInOrder();
-
-            _independentReviewViewModel.ValidateAnswer(questions);
-
-            if (!(_independentReviewViewModel.AnswerInput == "") || (_independentReviewViewModel.AnswerInput == null))
+            if (_independentReviewViewModel.ValidateAnswer() == true) 
             {
-                correctTextAnswerLbl.Content = _independentReviewViewModel.CorrectAnswer;
-                pointsAwardedLbl.Content = $"Points Awarded: {_independentReviewViewModel.PointsGained}";
-
                 nextBtn.Visibility = Visibility.Visible;
                 textAnswerBtn.Visibility = Visibility.Hidden;
-            }
+            }   
         }
 
         // This is used if the user submits a multiple-choice based answer.
         private void multipleChoiceAnswerBtn_Click(object sender, RoutedEventArgs e)
         {
-            IList<IndependentReviewQuizModel> questions = _independentReviewViewModel.GetQuestionsInOrder();
+            //IList<IndependentReviewQuizModel> questions = _independentReviewViewModel.GetQuestionsInOrder();
 
             List<RadioButton> radioButtons = new List<RadioButton>();
             radioButtons.Add(option1rb);
@@ -105,28 +87,11 @@ namespace KrishnaRajamannar.NEA.Views
                 if (button.IsChecked == true)
                 {
                     _independentReviewViewModel.AnswerInput = Convert.ToString(button.Content);
-
-                    _independentReviewViewModel.ValidateAnswer(questions);
-
                     break;
                 }
             }
 
-            // This displays the correct answer with a green foreground for the radio buttons.
-            foreach (RadioButton button in radioButtons)
-            {
-                if (Convert.ToString(button.Content) == _independentReviewViewModel.CorrectAnswer)
-                {
-                    button.Foreground = new SolidColorBrush(Colors.Green);
-                    break;
-                }
-            }
-
-            pointsAwardedLbl.Content = $"Points Awarded: {_independentReviewViewModel.PointsGained}";
-
-            // If the answer input is not empty, the next button is displaying
-            // Allowing the users to view the next question.
-            if ((_independentReviewViewModel.AnswerInput != "") || (_independentReviewViewModel.AnswerInput != null))
+            if (_independentReviewViewModel.ValidateAnswer() == true) 
             {
                 nextBtn.Visibility = Visibility.Visible;
                 multipleChoiceAnswerBtn.Visibility = Visibility.Hidden;
@@ -143,44 +108,24 @@ namespace KrishnaRajamannar.NEA.Views
             multipleChoiceAnswerBtn.Visibility = Visibility.Visible;
 
             // This displays how many points were now awarded, having answered a question.
-            pointsAwardedLbl.Content = $"Points Awarded: {_independentReviewViewModel.PointsGained}";
+            //pointsAwardedLbl.Content = $"Points Awarded: {_independentReviewViewModel.PointsGained}";
 
             answerTxtBox.Text = "";
             correctTextAnswerLbl.Content = "";
 
             _independentReviewViewModel.SendQuestion(questions);
 
-            if (_independentReviewViewModel.IsQuestionTextBasedQuestion(questions) != true)
+            if (_independentReviewViewModel.IsQuestionTextBasedQuestion() != true)
             {
                 textAnswerStackPanel.Visibility = Visibility.Visible;
                 multipleChoiceAnswerStackPanel.Visibility = Visibility.Hidden;
             }
             else 
             {
-                List<RadioButton> radioButtons = new List<RadioButton>();
-                radioButtons.Add(option1rb);
-                radioButtons.Add(option2rb);
-                radioButtons.Add(option3rb);
-                radioButtons.Add(option4rb);
-                radioButtons.Add(option5rb);
-                radioButtons.Add(option6rb);
+                _independentReviewViewModel.SendOptions();
 
-                foreach (RadioButton button in radioButtons)
-                {
-                    button.Foreground = new SolidColorBrush(Colors.Black);
-                    button.IsChecked = false;
-                }
-
-                List<string?> options = _independentReviewViewModel.SendOptions(questions);
                 textAnswerStackPanel.Visibility = Visibility.Hidden;
-                multipleChoiceAnswerStackPanel.Visibility = Visibility.Visible;
-
-                option1rb.Content = options[0];
-                option2rb.Content = options[1];
-                option3rb.Content = options[2];
-                option4rb.Content = options[3];
-                option5rb.Content = options[4];
-                option6rb.Content = options[5];
+                multipleChoiceAnswerStackPanel.Visibility = Visibility.Visible;S
             }
         }
 
