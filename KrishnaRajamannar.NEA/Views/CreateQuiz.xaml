@@ -5,31 +5,39 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:KrishnaRajamannar.NEA.Views"
         mc:Ignorable="d"
-        Title="CreateQuiz" Height="150" Width="400" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"></ColumnDefinition>
-            <ColumnDefinition Width="Auto"></ColumnDefinition>
-            <ColumnDefinition Width="2*"></ColumnDefinition>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="3*"></RowDefinition>
-            <RowDefinition Height="3*"></RowDefinition>
-        </Grid.RowDefinitions>
+        Title="CreateQuiz" Height="200" Width="400" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
 
-        <TextBlock x:Name="quizTitleTextBlock" Text="Quiz Title:" FontSize="20" VerticalAlignment="Top" HorizontalAlignment="Right" 
-                   Margin="10,20,0,0" FontFamily="Segoe UI Light"></TextBlock>
+    <Border Background="#7474b0" BorderBrush="AntiqueWhite" BorderThickness="2">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition Width="2*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="3*"></RowDefinition>
+                <RowDefinition Height="3*"></RowDefinition>
+                <RowDefinition Height="3*"></RowDefinition>
+            </Grid.RowDefinitions>
 
-        <TextBox x:Name="quizTitleTxtBox" Text="{Binding QuizTitle}" Grid.Column="1" Grid.Row="0" VerticalAlignment="Top" 
+            <TextBlock x:Name="quizTitleTextBlock" Text="Quiz Title:" FontSize="20" VerticalAlignment="Top" HorizontalAlignment="Right" 
+                   Margin="10,20,0,0" FontFamily="Segoe UI Light" Foreground="White" TextAlignment="Center"></TextBlock>
+
+            <TextBox x:Name="quizTitleTxtBox" Text="{Binding QuizTitle}" Grid.Column="1" Grid.Row="0" VerticalAlignment="Top" 
                  HorizontalAlignment="Left" Height="30" Width="180" Margin="10,20,10,0" 
                  FontSize="16" TextAlignment="Center"></TextBox>
 
-        <Button x:Name="createBtn" Content="Create" Grid.Column="1" Grid.Row="1" 
+            <Button x:Name="createBtn" Content="Create" Grid.Column="1" Grid.Row="1" 
                 FontSize="16" Margin="10,10,10,10" FontFamily="Segoe UI Light" BorderBrush="Black" 
-                Foreground="White" Background="#FFABADB3" Click="createBtn_Click"></Button>
+                Foreground="White" Background="#a1a1ce" Click="createBtn_Click"></Button>
 
-        <Button x:Name="cancelBtn" Content="Cancel" Grid.Column="2" Grid.Row="2" 
+            <Button x:Name="cancelBtn" Content="Cancel" Grid.Column="2" Grid.Row="1" 
                 FontSize="16" Margin="0,10,10,10" BorderBrush="Black" Foreground="Black" 
                 Background="#FFFFFEFE" FontFamily="Segoe UI Light" Click="cancelBtn_Click"></Button>
-    </Grid>
+
+            <Label x:Name="messageLbl" Content="{Binding Message}" Grid.Column="1" Grid.Row="2" 
+                FontSize="16" Margin="0,10,10,10" Foreground="#cfcfe8" VerticalAlignment="Center"
+                   HorizontalAlignment="Center" FontFamily="Segoe UI Light"></Label>
+        </Grid>
+    </Border>
 </Window>

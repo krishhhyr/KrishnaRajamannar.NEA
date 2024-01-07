@@ -1,21 +1,5 @@
-﻿using KrishnaRajamannar.NEA.Services;
-using KrishnaRajamannar.NEA.ViewModels;
-//using log4net;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
+﻿using KrishnaRajamannar.NEA.ViewModels;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace KrishnaRajamannar.NEA.Views
 {
@@ -24,8 +8,6 @@ namespace KrishnaRajamannar.NEA.Views
     /// </summary>
     public partial class AccountLogin : Window
     {
-        //private static readonly ILog log = LogManager.GetLogger(typeof(AccountLogin));
-
         private AccountCreation accountCreation;
         private MainMenu mainMenu;
 
@@ -39,32 +21,36 @@ namespace KrishnaRajamannar.NEA.Views
             _accountLoginViewModel = accountLoginViewModel;
             _mainMenuViewModel = mainMenuViewModel;
 
+            // Assigns the context for data binding
             this.DataContext = _accountLoginViewModel;
 
-            _accountLoginViewModel.ShowMessage += _accountLoginViewModel_ShowMessage;
+            // Subscribing to an event which is used to display message boxes;
 
             accountLoginViewModel.ShowAccountCreationWindow += AccountLoginViewModel_ShowAccountCreationWindow;
             accountLoginViewModel.ShowMainMenuWindow += AccountLoginViewModel_ShowMainMenuWindow;
             accountLoginViewModel.HideAccountLoginWindow += AccountLoginViewModel_HideAccountLoginWindow;
-            this.Title = $"Account Login ({App.Configuration.GetSection("Runtime").Value})";  
         }
 
         private void AccountLoginViewModel_HideAccountLoginWindow(object sender, Events.HideWindowEventArgs e)
         {
+            // Used to close the current window
             this.Hide();   
         }
 
         private void AccountLoginViewModel_ShowMainMenuWindow(object sender, Events.ShowAccountParameterWindowEventArgs e)
         {
+            // Assigns the values of the AccountLoginViewModel to the MainMenuViewModel
+
             _mainMenuViewModel.UserID = e.UserID;
             _mainMenuViewModel.Username = e.Username;
             _mainMenuViewModel.TotalPoints = e.TotalPoints;
-            //log.Info("Showing MainMenu");
+            // Creates a new instance of Main Menu and passes the ViewModel with the newly assigned values
             mainMenu = new MainMenu(_mainMenuViewModel);
-
+            // Shows this instance
             mainMenu.ShowDialog();
         }
 
+        // Shows the account creation window
         private void AccountLoginViewModel_ShowAccountCreationWindow(object sender, Events.ShowWindowEventArgs e)
         {
            accountCreation = new AccountCreation(_accountLoginViewModel.AccountCreationViewModel);
@@ -72,18 +58,16 @@ namespace KrishnaRajamannar.NEA.Views
            accountCreation.ShowDialog();
         }
 
-        private void _accountLoginViewModel_ShowMessage(object sender, Events.ShowMessageEventArgs e)
-        {
-            MessageBox.Show(e.Message);
-        }
         private void LoginBtn_Click(object sender, RoutedEventArgs e)
         {
+            // Used as password boxes are not supported with data binding 
             _accountLoginViewModel.Password = passwordInputTxt.Password;
             _accountLoginViewModel.Login();
         }
         private void registerBtn_Click(object sender, RoutedEventArgs e)
         {
-            _accountLoginViewModel.DisplayAccountCreationWindow();
+            // Used to display the account creation page when a user presses the Register button
+            _accountLoginViewModel.ShowAccountCreation();
         }
     }
 }

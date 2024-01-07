@@ -1,12 +1,9 @@
 ﻿using KrishnaRajamannar.NEA.Events;
 using KrishnaRajamannar.NEA.Models;
 using KrishnaRajamannar.NEA.Services;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace KrishnaRajamannar.NEA.ViewModels
 {
@@ -14,30 +11,22 @@ namespace KrishnaRajamannar.NEA.ViewModels
     {
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        public event ShowMessageEventHandler ShowMessage;
-
+        // Set of events used to handle showing/hiding different windows 
         public event ShowQuizParameterWindowEventHandler ShowIndependentReviewQuizWindow;
-
         public event ShowQuizParameterWindowEventHandler ShowIndependentReviewFeedbackWindow;
-
         public event ShowQuizParameterWindowEventHandler ShowCreateQuestionWindow;
-
         public event ShowAccountParameterWindowEventHandler ShowCreateQuizWindow;
-
         public event HideWindowEventHandler HideViewQuizzesWindow;
 
         private readonly IQuizService _quizService;
-
         private readonly IQuestionService _questionService;
 
         public CreateQuizViewModel CreateQuizViewModel;
-
         public CreateQuestionViewModel CreateQuestionViewModel;
-
         public IndependentReviewViewModel IndependentReviewViewModel;   
-
         public IndependentReviewQuizFeedbackViewModel IndependentReviewFeedbackViewModel;
 
+        // Variables which were used to retrieve data from the MainMenuViewModel
         public int UserID;
         public int QuizID;
 
@@ -52,8 +41,9 @@ namespace KrishnaRajamannar.NEA.ViewModels
             IndependentReviewFeedbackViewModel = App.ServiceProvider.GetService(typeof(IndependentReviewQuizFeedbackViewModel)) as IndependentReviewQuizFeedbackViewModel;
         }
 
+        // Used to identify which quiz that the user has selected 
+        // Used to load the questions of that quiz and review the quiz
         private QuizModel _selectedQuiz;
-
         public QuizModel SelectedQuiz
         {
             get { return _selectedQuiz; }
@@ -63,8 +53,9 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 RaisePropertyChange("SelectedQuiz");
             }
         }
+        // Used to identify which question that the user has selected within a quiz
+        // Used to delete the selected question from the quiz 
         private QuestionModel _selectedQuestion;
-
         public QuestionModel SelectedQuestion
         {
             get { return _selectedQuestion; }
@@ -72,6 +63,20 @@ namespace KrishnaRajamannar.NEA.ViewModels
             {
                 _selectedQuestion = value;
                 RaisePropertyChange("SelectedQuestion");
+            }
+        }
+
+        // Used to display messages to users about the status of processing 
+        // for the quizzes and question
+        // Used to notify users about whether a quiz/question has been deleted
+        private string _message;
+        public string Message
+        {
+            get { return _message; }
+            set
+            {
+                _message = value;
+                RaisePropertyChange("Message");
             }
         }
 
@@ -83,19 +88,18 @@ namespace KrishnaRajamannar.NEA.ViewModels
             }
         }
 
-        private void ShowMessageDialog(string message)
-        {
-            ShowMessageEventArgs args = new ShowMessageEventArgs();
-            args.Message = message;
-            OnShowMessage(args);
-        }
-        private void HideViewQuizzes()
+        // HideViewQuizzes() and OnHideViewQuizzesWindow are part of an event used to 
+        // hide the ViewQuizzes window once a new window has been displayed
+        public void HideViewQuizzes()
         {
             HideWindowEventArgs args = new HideWindowEventArgs();
             args.IsHidden = true;
             OnHideViewQuizzesWindow(args);
         }
-        private void ShowIndependentReviewQuiz()
+        // ShowIndependentReviewQuiz and OnShowIndependentReviewWindow are part of an event used to 
+        // show the IndependentReviewQuiz window which pass the quizID and the userID to 
+        // identify which quiz that the user would like to review
+        public void ShowIndependentReviewQuiz()
         {
             ShowQuizParameterWindowEventArgs args = new ShowQuizParameterWindowEventArgs();
             args.IsShown = true;
@@ -103,35 +107,35 @@ namespace KrishnaRajamannar.NEA.ViewModels
             args.UserID = UserID;
             OnShowIndependentReviewQuizWindow(args);
         }
-        private void ShowIndependentReviewFeedback()
+        // ShowIndependentReviewFeedback and OnShowIndependentReviewFeedbackWindow are part of an event used to 
+        // show the IndependentReviewFeedback window which pass the quizID of the quiz selected by the user
+        // which is used to identify which quiz feedback to display
+        public void ShowIndependentReviewFeedback()
         {
             ShowQuizParameterWindowEventArgs args = new ShowQuizParameterWindowEventArgs();
             args.IsShown = true;
             args.QuizID = SelectedQuiz.QuizID;
             OnShowIndependentReviewFeedbackWindow(args);
         }
-        private void ShowCreateQuiz()
+        // ShowCreateQuiz and OnShowCreateQuizWindow are part of an event used to 
+        // show the CreateQuiz window which pass the user ID of the quiz selected by the user
+        // which is used to identify which user is creating the new quiz
+        public void ShowCreateQuiz()
         {
             ShowAccountParameterWindowEventArgs args = new ShowAccountParameterWindowEventArgs();
             args.IsShown = true;
             args.UserID = UserID;
             OnShowCreateQuizWindow(args);
         }
-        private void ShowCreateQuestion()
+        // ShowCreateQuestion and OnShowCreateQuestopmWindow are part of an event used to 
+        // show the CreateQuestion window which pass the quiz ID of the quiz selected by the user
+        // which is used to identify which quiz will store the new question
+        public void ShowCreateQuestion()
         {
             ShowQuizParameterWindowEventArgs args = new ShowQuizParameterWindowEventArgs();
             args.IsShown = true;
             args.QuizID = SelectedQuiz.QuizID;
-
             OnShowCreateQuestionWindow(args);
-        }
-        protected virtual void OnShowMessage(ShowMessageEventArgs e)
-        {
-            ShowMessageEventHandler handler = ShowMessage;
-            if (handler != null)
-            {
-                handler(this, e);
-            }
         }
         protected virtual void OnHideViewQuizzesWindow(HideWindowEventArgs e)
         {
@@ -173,90 +177,91 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 handler(this, e);
             }
         }
-        public void CloseViewQuizzesWindow() 
-        {
-            HideViewQuizzes();
-        }
-        public void DisplayIndependentReviewQuizWindow() 
-        {
-            ShowIndependentReviewQuiz();
-        }
-        public void DisplayIndependentReviewFeedbackWindow() 
-        {
-            ShowIndependentReviewFeedback();
-        }
-        public void DisplayCreateQuizWindow() 
-        {
-            ShowCreateQuiz();
-        }
-        public void DisplayCreateQuestionWindow() 
-        {
-            ShowCreateQuestion();   
-        }
 
+        // Used to retrieve all the quizzes from the DB for the user 
+        // and store them as a list of objects
         public IList<QuizModel> LoadQuiz()
         {
-
             return _quizService.GetQuiz(UserID);
         }
         public IList<QuizModel> DeleteQuiz()
         {
+            // Checks if the user has selected a quiz to delete
             if (SelectedQuiz != null)
             {
                 return LoadQuiz();
             }
-
-            _quizService.DeleteQuiz(SelectedQuiz.QuizID, SelectedQuiz.QuizTitle, SelectedQuiz.UserID);
-
-            ShowMessageDialog("Quiz Deleted.");
-
-            return LoadQuiz();
+            else 
+            {
+                // Calls the quizService to delete the selected quiz
+                _quizService.DeleteQuiz(SelectedQuiz.QuizID, SelectedQuiz.QuizTitle, SelectedQuiz.UserID);
+                // Displays a message to users to notify them that the quiz has been deleted
+                Message = "Quiz Deleted.";
+                // Reloads the list of quizzes after deleting a quiz
+                return LoadQuiz();
+            }
         }
+        // Used to load the questions in the data grid for a selected quiz
         public IList<QuestionModel> LoadQuestions()
         {
-            if (SelectedQuiz == null)
+            // Checks if the user has selected a quiz to load the questions for
+            if (SelectedQuiz != null)
+            {
+                // Used to return an IList of all the questions for the selected quiz
+                return _questionService.GetQuestions(SelectedQuiz.QuizID);
+            }
+            else 
             {
                 return null;
             }
-
-            return _questionService.GetQuestions(SelectedQuiz.QuizID);
         }
         public IList<QuestionModel> DeleteQuestions()
         {
-            if (SelectedQuestion == null)
+            // Checks if the user has actually selected a question
+            if (SelectedQuestion != null)
+            {
+                // Creates a list of options for the selected question
+                List<string?> options = new List<string?>();
+
+                options.Add(SelectedQuestion.Option1);
+                options.Add(SelectedQuestion.Option2);
+                options.Add(SelectedQuestion.Option3);
+                options.Add(SelectedQuestion.Option4);
+                options.Add(SelectedQuestion.Option5);
+                options.Add(SelectedQuestion.Option6);
+
+                // Checks if all the options have the same value (i.e NULL)
+                bool isOptionsNull = options.Distinct().Count() == 1;
+
+                int quizID = SelectedQuiz.QuizID;
+
+                // if all the options have the same value, it means that the quesion must be a text-based question
+                // Otherwise, it's a multiple-choice based question
+                if (isOptionsNull != true)
+                {
+                    // Deletes the question from the multiple choice table
+                    _questionService.DeleteMultipleChoiceQuestion(SelectedQuestion.Question, SelectedQuestion.Answer, SelectedQuiz.QuizID);
+
+                    // Updates the number of questions in the table
+                    _quizService.UpdateNumberOfQuestions(_questionService.GetNumberOfQuestions(quizID), quizID);
+                }
+                else 
+                {
+                    // Deletes the question from the text question table
+                    _questionService.DeleteTextQuestion(SelectedQuestion.Question, SelectedQuestion.Answer, SelectedQuiz.QuizID);
+
+                    _quizService.UpdateNumberOfQuestions(_questionService.GetNumberOfQuestions(quizID), quizID);
+                }
+                // Notifies users that the question has been deleted
+                Message = "Question Deleted.";
+                // Reloads the questions in the quiz selected
+                return LoadQuestions();
+            }
+            else 
             {
                 return null;
             }
-
-            List<string?> options = new List<string?>();
-
-            options.Add(SelectedQuestion.Option1);
-            options.Add(SelectedQuestion.Option2);
-            options.Add(SelectedQuestion.Option3);
-            options.Add(SelectedQuestion.Option4);
-            options.Add(SelectedQuestion.Option5);
-            options.Add(SelectedQuestion.Option6);
-
-            // https://www.techiedelight.com/check-if-all-items-are-same-in-a-list-in-csharp/
-            bool isOptionsNull = options.Distinct().Count() == 1;
-
-            int quizID = SelectedQuiz.QuizID;
-
-            if (isOptionsNull == false)
-            {
-                _questionService.DeleteMultipleChoiceQuestion(SelectedQuestion.Question, SelectedQuestion.Answer, SelectedQuiz.QuizID);
-
-                _quizService.UpdateNumberOfQuestions(_questionService.GetNumberOfQuestions(quizID), quizID);
-            }
-            if (isOptionsNull == true)
-            {
-                _questionService.DeleteTextQuestion(SelectedQuestion.Question, SelectedQuestion.Answer, SelectedQuiz.QuizID);
-
-                _quizService.UpdateNumberOfQuestions(_questionService.GetNumberOfQuestions(quizID), quizID);
-            }
-
-            ShowMessageDialog("Question Deleted.");
-            return _questionService.GetQuestions(quizID);
+            
         }
     }
 }

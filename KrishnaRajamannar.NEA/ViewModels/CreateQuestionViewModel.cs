@@ -1,41 +1,29 @@
-﻿using KrishnaRajamannar.NEA.Services.Database;
-using System;
+﻿using KrishnaRajamannar.NEA.Services;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 
 namespace KrishnaRajamannar.NEA.ViewModels
 {
     public class CreateQuestionViewModel : INotifyPropertyChanged
     {
-        public QuestionService _questionService { get; set; }
+        public event PropertyChangedEventHandler? PropertyChanged;
+        private readonly IQuestionService _questionService;
+        private readonly IQuizService _quizService;
+        private readonly IIndependentReviewQuizService _independentReviewQuizService;
 
-        public QuizService _quizService { get; set; }
-
-        public IndependentReviewQuizService _independentReviewQuizService { get; set;}
-
+        // Used to identify which quiz that the user is creating new questions for
+        // This data is passed from the ViewQuizzes window through an event
         public int QuizID;
 
-        public CreateQuestionViewModel()
+        public CreateQuestionViewModel(IQuestionService questionService, IQuizService quizService, IIndependentReviewQuizService independentReviewQuizService)
         {
-            _questionService = new QuestionService();
-            _quizService = new QuizService();
-            _independentReviewQuizService = new IndependentReviewQuizService();
+            _questionService = questionService;
+            _quizService = quizService;
+            _independentReviewQuizService = independentReviewQuizService;
         }
 
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        public void RaisePropertyChange(string propertyname)
-        {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyname));
-            }
-        }
-
+        // Binds with the UI
+        // Used to retrieve the user input for a question
         private string _question;
         public string Question
         {
@@ -46,6 +34,8 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 RaisePropertyChange("Question");
             }
         }
+        // Binds with the UI
+        // Used to retrieve the input of the answer for a question
         private string _answer;
         public string Answer
         {
@@ -56,6 +46,10 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 RaisePropertyChange("Answer");
             }
         }
+        // Option 1 to Option 6 are used to retrieve the inputs of the options
+        // for a multiple choice based question 
+        // They can be null as not all options need to be used
+
         private string? _option1;
         public string? Option1
         {
@@ -116,6 +110,9 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 RaisePropertyChange("Option6");
             }
         }
+        // Binds with the UI
+        // Used to retrieve the input of the time duration
+        // which is how long users have to answer a question (in seconds)
         private int _duration;
         public int Duration
         {
@@ -126,6 +123,9 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 RaisePropertyChange("Duration");
             }
         }
+        // Binds with the UI
+        // Used to retrieve the input of the number of points 
+        // which can be awarded when answering a question correctly
         private int _numberOfPoints;
         public int NumberOfPoints
         {
@@ -136,148 +136,141 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 RaisePropertyChange("NumberOfPoints");
             }
         }
+        // Binds with the UI
+        // Used to display error messages when creating a question
+        private string _message;
+        public string Message
+        {
+            get { return _message; }
+            set
+            {
+                _message = value;
+                RaisePropertyChange("Message");
+            }
+        }
+        // Used to notify the UI of any changes in the values of properties
+        public void RaisePropertyChange(string propertyname)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyname));
+            }
+        }
 
+        // Used to check if the user has entered a value for the question 
         public bool ValidateQuestion()
         {
-            if (Question == null)
+            if (Question != null)
             {
-                MessageBox.Show("A question must be inputted.");
-                return false;
+                return true;
             }
-            return true;
+            Message = "A question must be inputted.";
+            return false;
         }
         public bool ValidateAnswer()
         {
-            if (Answer == null)
+            if (Answer != null)
             {
-                MessageBox.Show("An answer must be inputted.");
+                Message = "An answer must be inputted.";
                 return false;
             }
-            return true;
+            return false;
         }
+        // Used to ensure that option 1 and option 2 are not empty 
+        // when creating a mutliple-choice based question
         public bool ValidateOptions() 
-        {
-            if (!(Option1 != null) || (Option2 != null))
+        { 
+            if ((Option1 != null) || (Option2 != null))
             {
-                MessageBox.Show("Options 1 and 2 must have an answer"); 
-                return false;
+                return true;
             }
-            return true;
+            Message = "Options 1 and 2 must have an answer";
+            return false;
         }
+        // Used to ensure that points inputs are between 1 and 5
         public bool ValidateNumberOfPoints()
         {
-            if (!(NumberOfPoints >= 1) && (NumberOfPoints <= 5))
+            if (NumberOfPoints != 0) 
             {
-                MessageBox.Show("The number of points must be between 1 and 5.");
+                if ((NumberOfPoints >= 1) && (NumberOfPoints <= 5))
+                {
+                    return true;
+                }
+                Message = "The number of points must be between 1 and 5.";
                 return false;
             }
-            return true;
+            Message = "The number of points cannot be 0.";
+            return false;
         }
+        // Used to ensure that duration input (how long users have to answer the question)
+        // is within 10 seconds and 5 minutes
         public bool ValidateDuration() 
         {
-            if (!(Duration > 10) && (Duration <= 300)) 
+            if (Duration != 0) 
             {
-                MessageBox.Show("The time duration must be between 10 seconds and 5 minutes.");
+                if ((Duration >= 10) && (Duration <= 300))
+                {
+                    return true;
+                }
+                Message = "The time duration must be between 10 seconds and 300 seconds.";
                 return false;
             }
-            return true;
+            Message = "The time duration cannot be 0.";
+            return false;
         }
-
+        // Used to validate a text-based question
         public bool ValidateStandardInputs() 
         {
-            if ((ValidateQuestion() == false) || (ValidateAnswer() == false) || (ValidateNumberOfPoints() == false) || (ValidateDuration() == false)) 
+            if ((ValidateQuestion() != true) || (ValidateAnswer() != true) || (ValidateNumberOfPoints() != true) || (ValidateDuration() != true)) 
             {
                 return false;
             }
             return true;
         }
-
-        public void _CreateTextQuestion(int quizID) 
+        // Checks if the inputs are valid for a text-based question
+        // Inserts the question data into the text question table in DB
+        // Gets ID of question and then also inserts data into quiz feedback table
+        public bool CreateTextQuestion() 
         {
             if (ValidateStandardInputs() == true)
             {
-                _questionService.CreateTextQuestion(Question, Answer, Duration, NumberOfPoints, quizID);
+                _questionService.CreateTextQuestion(Question, Answer, Duration, NumberOfPoints, QuizID);
 
-                _quizService.UpdateNumberOfQuestions(_questionService.GetNumberOfQuestions(quizID), quizID);
+                _quizService.UpdateNumberOfQuestions(_questionService.GetNumberOfQuestions(QuizID), QuizID);
 
-                int textQuestionID = _questionService.GetTextQuestionID(Question, Answer, quizID);
+                int textQuestionID = _questionService.GetTextQuestionID(Question, Answer, QuizID);
 
-                _independentReviewQuizService.InsertTextQuestionQuizFeedback(textQuestionID, NumberOfPoints, quizID);
+                _independentReviewQuizService.InsertTextQuestionQuizFeedback(textQuestionID, NumberOfPoints, QuizID);
 
-                MessageBox.Show("Successful Text Question Creation.", "Question Creation");
+                Message = "Successful Text Question Creation.";
+                return true;
             }
+            return false;
         }
-
-        public void _CreateMultipleChoiceQuestion(int quizID) 
+        // Checks if the inputs and options are valid for a multiple-choice-based question
+        // Inserts the question data into the multiple choice question table in DB
+        // Gets ID of question and then also inserts data into quiz feedback table
+        public bool CreateMultipleChoiceQuestion() 
         {
             if ((ValidateStandardInputs() == true) && (ValidateOptions() == true)) 
             {
                 Dictionary<string, string> options = new Dictionary<string, string>();
 
+                // Converts all 6 options into a Dictionary to prevent too many parameters for one procedure/function
                 options = _questionService.GetOptions(Option1, Option2, Option3, Option4, Option5, Option6);
 
-                _questionService.CreateMultipleChoiceQuestion(Question, Answer, Duration, NumberOfPoints, quizID, options);
+                _questionService.CreateMultipleChoiceQuestion(Question, Answer, Duration, NumberOfPoints, QuizID, options);
 
-                _quizService.UpdateNumberOfQuestions(_questionService.GetNumberOfQuestions(quizID), quizID);
+                _quizService.UpdateNumberOfQuestions(_questionService.GetNumberOfQuestions(QuizID), QuizID);
 
-                int MCQuestionID = _questionService.GetMultipleChoiceQuestionID(Question, Answer, quizID);
+                int MCQuestionID = _questionService.GetMultipleChoiceQuestionID(Question, Answer, QuizID);
 
-                _independentReviewQuizService.InsertMultipleChoiceQuestionQuizFeedback(MCQuestionID, NumberOfPoints, quizID);
+                _independentReviewQuizService.InsertMultipleChoiceQuestionQuizFeedback(MCQuestionID, NumberOfPoints, QuizID);
 
-                MessageBox.Show("Successful Multiple Choice Question Creation.", "Question Creation");
+                Message = "Successful Multiple Choice Question Creation.";
+                return true;    
             }
-        }
-
-
-
-        public void CreateTextQuestion(int quizID) 
-        {
-            if ((ValidateQuestion() == false) || (ValidateAnswer() == false)) 
-            {
-                MessageBox.Show("A question or an answer has not been inputted. Try again.", "Question Creation");
-            } 
-            if ((ValidateNumberOfPoints() == false) || (ValidateDuration() == false))
-            {
-                MessageBox.Show("The number of points must be between 1-5. The duration must not be 0. Try again.", "Question Creation");
-            }
-            _questionService.CreateTextQuestion(Question, Answer, Duration, NumberOfPoints, quizID);
-
-            _quizService.UpdateNumberOfQuestions(_questionService.GetNumberOfQuestions(quizID), quizID);
-
-            int textQuestionID = _questionService.GetTextQuestionID(Question, Answer, quizID);
-
-            _independentReviewQuizService.InsertTextQuestionQuizFeedback(textQuestionID, NumberOfPoints, quizID);
-
-            MessageBox.Show("Successful Text Question Creation.", "Question Creation");
-        }
-        public void CreateMultipleChoiceQuestion(int quizID) 
-        {
-            if ((ValidateQuestion() == false) || (ValidateAnswer() == false))
-            {
-                MessageBox.Show("A question or an answer has not been inputted. Try again.", "Question Creation");
-            }
-            if (ValidateOptions() == false) 
-            {
-                MessageBox.Show("Option 1 and Option 2 must not be empty. Try again.", "Question Creation");
-            }
-            if ((ValidateNumberOfPoints() == false) || (ValidateDuration() == false))
-            {
-                MessageBox.Show("The number of points must be between 1-5. The duration must not be 0. Try again.", "Question Creation");
-            }
-            
-            Dictionary<string, string> options = new Dictionary<string, string>();
-
-            options = _questionService.GetOptions(Option1, Option2, Option3, Option4, Option5, Option6);
-
-            _questionService.CreateMultipleChoiceQuestion(Question, Answer, Duration, NumberOfPoints, quizID, options);
-
-            _quizService.UpdateNumberOfQuestions(_questionService.GetNumberOfQuestions(quizID), quizID);
-
-            int MCQuestionID = _questionService.GetMultipleChoiceQuestionID(Question, Answer, quizID);
-
-            _independentReviewQuizService.InsertMultipleChoiceQuestionQuizFeedback(MCQuestionID, NumberOfPoints, quizID);
-
-            MessageBox.Show("Successful Multiple Choice Question Creation.", "Question Creation");
+            return false;
         }
     }
 }

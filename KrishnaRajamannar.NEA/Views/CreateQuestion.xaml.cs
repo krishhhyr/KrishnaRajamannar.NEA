@@ -1,17 +1,6 @@
 ﻿using KrishnaRajamannar.NEA.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace KrishnaRajamannar.NEA.Views
 {
@@ -20,17 +9,16 @@ namespace KrishnaRajamannar.NEA.Views
     /// </summary>
     public partial class CreateQuestion : Window
     {
-        int quizID;
-
-        CreateQuestionViewModel _createQuestionviewModel = new CreateQuestionViewModel();
+        CreateQuestionViewModel _createQuestionviewModel;
 
         public CreateQuestion(CreateQuestionViewModel createQuestionViewModel)
         {
-            //quizID = _quizID;
             InitializeComponent();
+            _createQuestionviewModel = createQuestionViewModel;
             this.DataContext = _createQuestionviewModel;
         }
 
+        // Closes the current window if the back button is pressed
         private void backBtn_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
@@ -38,18 +26,21 @@ namespace KrishnaRajamannar.NEA.Views
 
         private void questionTypeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            // Checks if the user has selected a question type from the combo box
             if (questionTypeComboBox.SelectedItem != null)
             {
                 string? selection = questionTypeComboBox.SelectedItem.ToString();
+                // Checks if the user has selected the text-based question type
                 if (selection == "System.Windows.Controls.ComboBoxItem: Text Question")
                 {
+                    // If users have, the stack panel to create a text question is displayed
                     if (textQuestionStackPanel != null)
                     {
                         multipleChoiceStackPanel.Visibility = Visibility.Hidden;
                         textQuestionStackPanel.Visibility = Visibility.Visible;
                     }
-                    else { return; }
                 }
+                // Otherwise, the multiple choice stack panel is displayed
                 else
                 {
                     if (multipleChoiceStackPanel != null)
@@ -57,22 +48,28 @@ namespace KrishnaRajamannar.NEA.Views
                         textQuestionStackPanel.Visibility = Visibility.Hidden;
                         multipleChoiceStackPanel.Visibility = Visibility.Visible;
                     }
-                    else { return; }
                 }
             }
-            else { return; }
         }
 
+        // If the create question button is pressed in the text-based question stack panel
+        // The inputs for that question type are validated. If the inputs are valid, the window is then closed
         private void createTextQuestionBtn_Click(object sender, RoutedEventArgs e)
         {
-            _createQuestionviewModel._CreateTextQuestion(quizID);
-            this.Close();  
+            if (_createQuestionviewModel.CreateTextQuestion() == true) 
+            {
+                this.Close();
+            }
         }
 
+        // If the create question button is pressed in the multiple-choice based question stack panel
+        // The inputs for that question type are validated. If the inputs are valid, the window is then closed
         private void mcCreateQuestion_Click(object sender, RoutedEventArgs e)
         {
-            _createQuestionviewModel._CreateMultipleChoiceQuestion(quizID);
-            this.Close();
+            if (_createQuestionviewModel.CreateMultipleChoiceQuestion() == true) 
+            {
+                this.Close();
+            }
         }
     }
 }

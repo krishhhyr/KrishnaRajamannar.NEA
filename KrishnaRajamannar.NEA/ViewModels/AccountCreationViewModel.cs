@@ -1,32 +1,21 @@
 ﻿using KrishnaRajamannar.NEA.Events;
 using KrishnaRajamannar.NEA.Services;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 
 namespace KrishnaRajamannar.NEA.ViewModels
 {
+    // Inherites the INotifyPropertyChanged interface
     public class AccountCreationViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
-
-        public event ShowMessageEventHandler ShowMessage;
-
-        //public event ShowWindowEventHandler ShowAccountLoginWindow;
-
         public event HideWindowEventHandler HideAccountCreationWindow;
-
         private readonly IUserService _userService;
-
         public AccountCreationViewModel(IUserService userService)
         {
             _userService = userService;
         }
 
+        // Binds with the UI to recieve the username input directly 
         private string _username;
         public string Username
         {
@@ -37,6 +26,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 RaisePropertyChange("Username");
             }
         }
+        // Binds with the UI to recieve the password input  
         private string _password;
         public string Password
         {
@@ -47,6 +37,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 RaisePropertyChange("Password");
             }
         }
+        // Binds with the UI to recieve the retyped password input  
         private string _retypedPassword;
         public string RetypedPassword 
         {
@@ -57,6 +48,20 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 RaisePropertyChange("RetypedPassword");
             }
         }
+        // Binds with the UI to display the error messages
+        // Used to display whether the account creation was successful or not
+        private string _message;
+        public string Message
+        {
+            get { return _message; }
+            set
+            {
+                _message = value;
+                RaisePropertyChange("Message");
+            }
+        }
+
+        // Used to notify the UI for any changes in the values of properties
         public void RaisePropertyChange(string propertyname)
         {
             if (PropertyChanged != null)
@@ -64,28 +69,16 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyname));
             }
         }
-        private void ShowMessageDialog(string message)
-        {
-            ShowMessageEventArgs args = new ShowMessageEventArgs();
-            args.Message = message;
 
-            OnShowMessage(args);
-        }
-        private void HideAccountCreation()
+        public void CloseAccountCreationWindow()
         {
             HideWindowEventArgs args = new HideWindowEventArgs();
             args.IsHidden = true;
             OnHideAccountCreationWindow(args);
         }
-        protected virtual void OnShowMessage(ShowMessageEventArgs e)
-        {
-            ShowMessageEventHandler handler = ShowMessage;
 
-            if (handler != null)
-            {
-                handler(this, e);
-            }
-        }
+        // An event which hides the account creation window if the back button is pressed
+        // of if the user successfully creates an account
         protected virtual void OnHideAccountCreationWindow(HideWindowEventArgs e)
         {
             HideWindowEventHandler handler = HideAccountCreationWindow;
@@ -96,43 +89,39 @@ namespace KrishnaRajamannar.NEA.ViewModels
         }
         public void Creation()
         {
+            // Checks if the username, password and retyped password is not empty
             if (!(Username != null) && (Password != null) && (RetypedPassword != null))
             {
-                ShowMessageDialog("Enter valid input.");
+                Message = "Enter valid input.";
             }
             else 
             {
-                if ((ValidateUsernameCreation(Username) == true) && (ValidatePasswordCreation(Password, RetypedPassword) == true))
+                if ((ValidateUsernameCreation() == true) && (ValidatePasswordCreation() == true))
                 {
-                    //call services to create the account 
+                    //Stores the user data into the database
                     _userService.CreateUser(Username, Password);
 
-                    ShowMessageDialog("Account Creation Successful");
+                    Message = "Account Creation Successful";
 
-                    HideAccountCreation();
+                    CloseAccountCreationWindow();
                 }
             }
 
 
         }
-        public void CloseAccountCreationWindow() 
+    
+        private bool ValidateUsernameCreation()
         {
-            HideAccountCreation();
-        }
-        public bool ValidateUsernameCreation(string username)
-        {
-            if (username == null)
+            // Checks if the username inputted is between 4 -15 characters
+            if (!(Username.Length >= 4) && (Username.Length <= 15))
             {
-                return false;
-            } 
-
-            if (!(username.Length >= 4) && (username.Length <= 15))
-            {
-                ShowMessageDialog("Username must be between 4-15 characters.");
+                Message = "Username must be between 4-15 characters.";
             }
-            else if (!(_userService.IsUserExists(username) == false))
+            // Checks if the username has not already been created and 
+            // stored in the DB
+            else if ((_userService.IsUserExists(Username) != false))
             {
-                ShowMessageDialog("Username already exists.");
+                Message = "Username already exists.";
             }
             else 
             {
@@ -140,26 +129,21 @@ namespace KrishnaRajamannar.NEA.ViewModels
             }
             return false;
         }
-        public bool ValidatePasswordCreation(string password, string retypedPassword)
+        private bool ValidatePasswordCreation()
         {
-            if (password == null) 
+            if (!(Password.Length > 8) && (Password.Length < 15))
             {
+                Message = "Password must be between 8-15 characters.";
                 return false;
             }
-
-            if (!(password.Length > 8) && (password.Length < 15))
+            else if (IsPasswordContainsNumber(Password) != true)
             {
-                ShowMessageDialog("Password must be between 8-15 characters.");
+                Message = "Password must have a number.";
                 return false;
             }
-            else if (!(IsPasswordContainsNumber(password) == true))
+            else if (!(IsPasswordsMatch(Password, RetypedPassword)))
             {
-                ShowMessageDialog("Password must have a number.");
-                return false;
-            }
-            else if (!(IsPasswordsMatch(password, retypedPassword)))
-            {
-                ShowMessageDialog("Passwords entered do not match.");
+                Message = "Passwords entered do not match.";
                 return false;
             }
             else 
@@ -167,6 +151,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 return true;
             }
         }
+        // Checks if the password has a number 
         private static bool IsPasswordContainsNumber(string password)
         {
             char[] digits = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
@@ -183,6 +168,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
             }
             return false;
         }
+        // Checks if the passwords inputted match each other 
         private static bool IsPasswordsMatch(string initialPassword, string retypedPassword)
         {
             if (initialPassword != retypedPassword)

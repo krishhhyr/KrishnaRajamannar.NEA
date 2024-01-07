@@ -1,21 +1,5 @@
-﻿
-using KrishnaRajamannar.NEA.Models;
-using KrishnaRajamannar.NEA.Services;
-using KrishnaRajamannar.NEA.ViewModels;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using KrishnaRajamannar.NEA.ViewModels;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace KrishnaRajamannar.NEA.Views
 {
@@ -24,23 +8,18 @@ namespace KrishnaRajamannar.NEA.Views
     /// </summary>
     public partial class MainMenu : Window
     {
+        // These are used to show the new windows once a user presses a button
         private ViewLeaderboard viewLeaderboard;
-        private HostSession hostSession;
-        private JoinSession joinSession;
-        private AccountLogin accountLogin;
         private ViewQuizzes viewQuizzes;
-
         private ServerSessionView serverSessionView;
         private ClientSessionView clientSessionView;
 
         private readonly MainMenuViewModel _mainMenuViewModel;
-        private readonly ClientSessionViewModel _clientSessionViewModel;
         public MainMenu(MainMenuViewModel mainMenuViewModel)
         {
             InitializeComponent();
 
             _mainMenuViewModel = mainMenuViewModel;
-            _clientSessionViewModel = App.ServiceProvider.GetService<ClientSessionViewModel>();
 
             this.DataContext = _mainMenuViewModel;
 
@@ -48,36 +27,11 @@ namespace KrishnaRajamannar.NEA.Views
 
             _mainMenuViewModel.ShowViewQuizzesWindow += MainMenuViewModel_ShowViewQuizzesWindow;
             _mainMenuViewModel.ShowLeaderboardWindow += MainMenuViewModel_ShowLeaderboardWindow;
-            _mainMenuViewModel.ShowHostSessionWindow += MainMenuViewModel_ShowHostSessionWindow;
-            //_mainMenuViewModel.ShowJoinSessionWindow += MainMenuViewModel_ShowJoinSessionWindow;
-            //_mainMenuViewModel.ShowClientSessionWindow += OnShowClientSessionWindow;
-
-
+            _mainMenuViewModel.ShowServerSessionWindow += MainMenuViewModel_ShowServerSessionWindow;
         }
 
-        //private void OnShowClientSessionWindow(object sender, Events.ShowSessionParameterWindowEventArgs e)
-        //{
-        //    if (e.ServerResponse != null)
-        //    {
-        //        _clientSessionViewModel.LoadData(e.ServerResponse);
-        //        clientSessionView = new ClientSessionView(_clientSessionViewModel); ;
-        //        clientSessionView.ShowDialog();
-        //    }
-        //}
-
-        //private void MainMenuViewModel_ShowJoinSessionWindow(object sender, Events.ShowAccountParameterWindowEventArgs e)
-        //{
-            
-           
-        //}
-
-        private void MainMenuViewModel_ShowHostSessionWindow(object sender, Events.ShowAccountParameterWindowEventArgs e)
+        private void MainMenuViewModel_ShowServerSessionWindow(object sender, Events.ShowAccountParameterWindowEventArgs e)
         {
-            //_mainMenuViewModel.HostSessionViewModel.UserID = e.UserID;
-            //_mainMenuViewModel.HostSessionViewModel.Username = e.Username;
-            //hostSession = new HostSession(_mainMenuViewModel.HostSessionViewModel);
-            //hostSession.ShowDialog();
-
             _mainMenuViewModel.ServerSessionViewModel.UserID = e.UserID;
             _mainMenuViewModel.ServerSessionViewModel.Username = e.Username;
             _mainMenuViewModel.ServerSessionViewModel.TotalPoints = e.TotalPoints;
@@ -100,9 +54,10 @@ namespace KrishnaRajamannar.NEA.Views
             viewLeaderboard.ShowDialog();
         }
 
+        // Used to hide the Main Menu
         private void MainMenuViewModel_HideMainMenuWindow(object sender, Events.HideWindowEventArgs e)
         {
-            this.Close();
+            this.Hide();
         }
 
         private void logOutBtn_Click(object sender, RoutedEventArgs e)
@@ -113,21 +68,30 @@ namespace KrishnaRajamannar.NEA.Views
 
         private void viewQuizzesBtn_Click(object sender, RoutedEventArgs e)
         {
+            _mainMenuViewModel.HideMainMenu();
             _mainMenuViewModel.ShowViewQuizzes();
         }
 
         private void leaderboardBtn_Click(object sender, RoutedEventArgs e)
-        {   
+        {
+            _mainMenuViewModel.HideMainMenu();
             _mainMenuViewModel.ShowLeaderboard();
         }
 
+        // This hides the current window (Main Menu) and displays the ClientSession window
         private void hostSessionBtn_Click(object sender, RoutedEventArgs e)
         {
-           _mainMenuViewModel.ShowHostSession();
+            _mainMenuViewModel.HideMainMenu();
+            _mainMenuViewModel.ShowServerSession();
         }
 
+        // When users press Join Session, the Session ID inputted is validated and if it is valid,
+        // the user data (of the user logged in) is passed to the ClientSessionViewModel 
+        // and that window is displayed
         private void joinSessionBtn_Click(object sender, RoutedEventArgs e)
         {
+            _mainMenuViewModel.HideMainMenu();
+
             if (_mainMenuViewModel.ValidateSessionID() == true) 
             {
                 _mainMenuViewModel.ClientSessionViewModel.SessionId = _mainMenuViewModel.SessionID.ToString();

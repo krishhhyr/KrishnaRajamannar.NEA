@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace KrishnaRajamannar.NEA.Models
+﻿namespace KrishnaRajamannar.NEA.Models
 {
     // A class which defines the properties that a question can have.
     public class QuestionModel
