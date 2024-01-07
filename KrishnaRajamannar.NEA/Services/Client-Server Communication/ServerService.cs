@@ -212,14 +212,16 @@ namespace KrishnaRajamannar.NEA.Services.Connection
         {
             foreach (var client in clients) 
             {
-                client.Close();
-                client.Dispose();
+                if (client.Connected == true) 
+                {
+                    client.Close();
+                }
             }
 
 
             server.Stop();
             source.Cancel();
-            source.Dispose();
+            //source.Dispose();
         }
     }
 }

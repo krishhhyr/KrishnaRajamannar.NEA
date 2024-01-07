@@ -129,5 +129,10 @@ namespace KrishnaRajamannar.NEA.Views
                 }
             }
         }
+
+        private void backBtn_Click(object sender, RoutedEventArgs e)
+        {
+            _serverSessionViewModel.StopServer();
+        }
     }
 }

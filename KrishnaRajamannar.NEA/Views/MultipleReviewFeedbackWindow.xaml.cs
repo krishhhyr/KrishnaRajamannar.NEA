@@ -16,16 +16,16 @@ using System.Windows.Shapes;
 namespace KrishnaRajamannar.NEA.Views
 {
     /// <summary>
-    /// Interaction logic for MultipleQuizReview.xaml
+    /// Interaction logic for MultipleReviewFeedbackWindow.xaml
     /// </summary>
-    public partial class MultipleQuizReview : Window
+    public partial class MultipleReviewFeedbackWindow : Window
     {
-        private MultipleReviewQuizFeedbackViewModel _multipleReviewQuizFeedbackViewModel;
+        private readonly MultipleReviewQuizFeedbackViewModel _multipleReviewQuizFeedbackViewModel;
 
-        public MultipleQuizReview(MultipleReviewQuizFeedbackViewModel multipleQuizReviewViewModel)
+        public MultipleReviewFeedbackWindow(MultipleReviewQuizFeedbackViewModel multipleReviewQuizFeedbackViewModel)
         {
             InitializeComponent();
-            _multipleReviewQuizFeedbackViewModel = multipleQuizReviewViewModel;
+            _multipleReviewQuizFeedbackViewModel = multipleReviewQuizFeedbackViewModel;
         }
     }
 }
