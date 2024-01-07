@@ -5,125 +5,135 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:KrishnaRajamannar.NEA.Views"
         mc:Ignorable="d"
-        Title="CreateQuestion" Height="750" Width="1000" WindowStartupLocation="CenterScreen" FontFamily="Segoe UI Light"> 
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"></ColumnDefinition>
-            <ColumnDefinition Width="10*"></ColumnDefinition>
-            <ColumnDefinition Width="1*"></ColumnDefinition>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="1*"></RowDefinition>
-            <RowDefinition Height="10*"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
-        </Grid.RowDefinitions>
+        Title="CreateQuestion" Height="800" Width="1000" WindowStartupLocation="CenterScreen" FontFamily="Segoe UI Light" ResizeMode="NoResize">
 
-        <Button x:Name="backBtn" Content="Back" Height="35" Width="80" Margin="10" 
-                FontSize="20" Foreground="Black" Background="White" 
+    <Border Background="#7474b0" BorderBrush="AntiqueWhite" BorderThickness="2">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition Width="10*"></ColumnDefinition>
+                <ColumnDefinition Width="1*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"></RowDefinition>
+                <RowDefinition Height="10*"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+            </Grid.RowDefinitions>
+
+            <Button x:Name="backBtn" Content="Back" Height="35" Width="80" Margin="10" 
+                FontSize="20" Foreground="Black" Background="WhiteSmoke" 
                 BorderBrush="Black" Click="backBtn_Click"></Button>
-        
-        <StackPanel x:Name="questionTypeStackPanel" Orientation="Horizontal" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center">
 
-            <ComboBox x:Name="questionTypeComboBox" Grid.Column="1" Grid.Row="0" Height="35"
+            <StackPanel x:Name="questionTypeStackPanel" Orientation="Horizontal" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center">
+
+                <ComboBox x:Name="questionTypeComboBox" Grid.Column="1" Grid.Row="0" Height="35"
                       Width="250" SelectedIndex="0" SelectedItem="0" FontSize="20"
                       HorizontalContentAlignment="Center" SelectionChanged="questionTypeComboBox_SelectionChanged">
 
-                <ComboBoxItem Content="Text Question"></ComboBoxItem>
-                <ComboBoxItem Content="Multiple Choice Question"></ComboBoxItem>
+                    <ComboBoxItem Content="Text Question"></ComboBoxItem>
+                    <ComboBoxItem Content="Multiple Choice Question"></ComboBoxItem>
 
-            </ComboBox>
-            
-        </StackPanel>
+                </ComboBox>
 
-        <StackPanel x:Name="textQuestionStackPanel" Orientation="Vertical" Grid.Column="1" Grid.Row="1" 
-                    Height="600" Visibility="Visible">
-            <TextBlock Text="Question:" FontSize="20" Margin="10"></TextBlock>
-
-            <TextBox x:Name="textQuestionInput" Text="{Binding Question}" Height="35" Width="750" 
-                     Margin="10,0,0,0" HorizontalAlignment="Left" VerticalContentAlignment="Center" FontSize="20"></TextBox>
-
-            <TextBlock Text="Answer:" FontSize="20" Margin="10"></TextBlock>
-
-            <TextBox x:Name="textAnswerInput" Text="{Binding Answer}" Height="35" Width="750" 
-                     Margin="10,0,0,0" HorizontalAlignment="Left" VerticalContentAlignment="Center" FontSize="20"></TextBox>
-
-            <TextBlock Text="Number of Points for Question:" FontSize="20" Margin="10"></TextBlock>
-
-            <TextBox x:Name="textQuestionPointsInput" Text="{Binding NumberOfPoints}" Height="35" Width="750" 
-                     Margin="10,0,0,0" HorizontalAlignment="Left" VerticalContentAlignment="Center" FontSize="20"></TextBox>
-
-            <TextBlock Text="Time Limit for Question (in Seconds):" FontSize="20" Margin="10"></TextBlock>
-
-            <TextBox x:Name="textQuestionDurationInput" Text="{Binding Duration}" Height="35" Width="750" 
-                     Margin="10,0,0,20" HorizontalAlignment="Left" VerticalContentAlignment="Center" FontSize="20"></TextBox>
-
-            <Button x:Name="createTextQuestionBtn" Content="Create Question" Height="35" Width="250" 
-                    FontSize="20" HorizontalAlignment="Center" Margin="10" Click="createTextQuestionBtn_Click">
-            </Button>
-            
-        </StackPanel>
-
-        <StackPanel x:Name="multipleChoiceStackPanel" Orientation="Vertical" Grid.Column="1" Grid.Row="1" Visibility="Hidden">
-            <TextBlock Text="Question:" FontSize="20" Margin="10"></TextBlock>
-
-            <TextBox x:Name="mcQuestionInput" Text="{Binding Question}" Height="35" Width="750" 
-                     Margin="10,0,0,0" HorizontalAlignment="Left" VerticalContentAlignment="Center" FontSize="20"></TextBox>
-
-            <TextBlock Text="Correct Option (Type in Full Answer):" FontSize="20" Margin="10"></TextBlock>
-
-            <TextBox x:Name="mcAnswerInput" Text="{Binding Answer}" Height="35" Width="750" 
-                     Margin="10,0,0,0" HorizontalAlignment="Left" VerticalContentAlignment="Center" FontSize="20"></TextBox>
-
-            <StackPanel Orientation="Horizontal" Width="825">
-                <StackPanel Orientation="Vertical" HorizontalAlignment="Left">
-                    <TextBlock Text="Option 1:" FontSize="20" Margin="10"></TextBlock>
-
-                    <TextBox x:Name="option1Input" Text="{Binding Option1}" Height="35" Width="350" 
-                             Margin="10,0,0,0" HorizontalAlignment="Left" VerticalContentAlignment="Center" FontSize="20"></TextBox>
-
-                    <TextBlock Text="Option 3:" FontSize="20" Margin="10"></TextBlock>
-
-                    <TextBox x:Name="option3Input" Text="{Binding Option3}" Height="35" Width="350" 
-                             Margin="10,0,0,0" HorizontalAlignment="Left" VerticalContentAlignment="Center" FontSize="20"></TextBox>
-
-                    <TextBlock Text="Option 5:" FontSize="20" Margin="10"></TextBlock>
-
-                    <TextBox x:Name="option5Input" Text="{Binding Option5}" Height="35" Width="350" 
-                             Margin="10,0,0,0" HorizontalAlignment="Left" VerticalContentAlignment="Center" FontSize="20"></TextBox>
-                </StackPanel>
-                
-                <StackPanel Orientation="Vertical" Margin="37,0,0,0">
-                    <TextBlock Text="Option 2:" FontSize="20" Margin="10"/>
-
-                    <TextBox x:Name="option2Input" Text="{Binding Option2}" Height="35" Width="350" 
-                             Margin="10,0,0,0" HorizontalAlignment="Left" VerticalContentAlignment="Center" FontSize="20"/>
-
-                    <TextBlock Text="Option 4:" FontSize="20" Margin="10"/>
-
-                    <TextBox x:Name="option4Input" Text="{Binding Option4}" Height="35" Width="350" 
-                             Margin="10,0,0,0" HorizontalAlignment="Left" VerticalContentAlignment="Center" FontSize="20"/>
-
-                    <TextBlock Text="Option 6:" FontSize="20" Margin="10"/>
-
-                    <TextBox x:Name="option6Input" Text="{Binding Option6}" Height="35" Width="350" 
-                             Margin="10,0,0,0" HorizontalAlignment="Left" VerticalContentAlignment="Center" FontSize="20"/>
-                </StackPanel>
             </StackPanel>
 
-            <TextBlock Text="Number of Points for Question:" FontSize="20" Margin="10"></TextBlock>
+            <StackPanel x:Name="textQuestionStackPanel" Orientation="Vertical" Grid.Column="1" Grid.Row="1" 
+                    Height="600" Visibility="Visible">
+                <TextBlock Text="Question:" FontSize="20" Margin="10" Foreground="White"></TextBlock>
 
-            <TextBox x:Name="mcQuestionPointsInput" Text="{Binding NumberOfPoints}" Height="35" Width="750" 
+                <TextBox x:Name="textQuestionInput" Text="{Binding Question}" Height="35" Width="750" 
                      Margin="10,0,0,0" HorizontalAlignment="Left" VerticalContentAlignment="Center" FontSize="20"></TextBox>
 
-            <TextBlock Text="Time Limit for Question (in Seconds):" FontSize="20" Margin="10"></TextBlock>
+                <TextBlock Text="Answer:" FontSize="20" Margin="10" Foreground="White"></TextBlock>
 
-            <TextBox x:Name="mcQuestionDurationInput" Text="{Binding Duration}" Height="35" Width="750" 
+                <TextBox x:Name="textAnswerInput" Text="{Binding Answer}" Height="35" Width="750" 
+                     Margin="10,0,0,0" HorizontalAlignment="Left" VerticalContentAlignment="Center" FontSize="20"></TextBox>
+
+                <TextBlock Text="Number of Points for Question:" FontSize="20" Margin="10" Foreground="White"></TextBlock>
+
+                <TextBox x:Name="textQuestionPointsInput" Text="{Binding NumberOfPoints}" Height="35" Width="750" 
+                     Margin="10,0,0,0" HorizontalAlignment="Left" VerticalContentAlignment="Center" FontSize="20"></TextBox>
+
+                <TextBlock Text="Time Limit for Question (in Seconds):" FontSize="20" Margin="10"
+                           Foreground="White"></TextBlock>
+
+                <TextBox x:Name="textQuestionDurationInput" Text="{Binding Duration}" Height="35" Width="750" 
+                     Margin="10,0,0,20" HorizontalAlignment="Left" VerticalContentAlignment="Center" FontSize="20"></TextBox>
+
+                <Button x:Name="createTextQuestionBtn" Content="Create Question" Height="35" Width="250" 
+                    FontSize="20" HorizontalAlignment="Center" Margin="10" Click="createTextQuestionBtn_Click"
+                        Foreground="White" Background="#a1a1ce"></Button>
+
+                <Label x:Name="textquestionMessageLbl" Content="{Binding Message}" FontSize="20" Margin="10" VerticalAlignment="Center" 
+                       HorizontalAlignment="Center" Foreground="#cfcfe8"></Label>
+
+            </StackPanel>
+
+            <StackPanel x:Name="multipleChoiceStackPanel" Orientation="Vertical" Grid.Column="1" Grid.Row="1" Visibility="Hidden">
+                <TextBlock Text="Question:" FontSize="20" Margin="10" Foreground="White"></TextBlock>
+
+                <TextBox x:Name="mcQuestionInput" Text="{Binding Question}" Height="35" Width="750" 
+                     Margin="10,0,0,0" HorizontalAlignment="Left" VerticalContentAlignment="Center" FontSize="20"></TextBox>
+
+                <TextBlock Text="Correct Option (Type in Full Answer):" FontSize="20" Margin="10"
+                           Foreground="White"></TextBlock>
+
+                <TextBox x:Name="mcAnswerInput" Text="{Binding Answer}" Height="35" Width="750" 
+                     Margin="10,0,0,0" HorizontalAlignment="Left" VerticalContentAlignment="Center" FontSize="20"></TextBox>
+
+                <StackPanel Orientation="Horizontal" Width="825">
+                    <StackPanel Orientation="Vertical" HorizontalAlignment="Left">
+                        <TextBlock Text="Option 1:" FontSize="20" Margin="10" Foreground="White"></TextBlock>
+
+                        <TextBox x:Name="option1Input" Text="{Binding Option1}" Height="35" Width="350" 
+                             Margin="10,0,0,0" HorizontalAlignment="Left" VerticalContentAlignment="Center" FontSize="20"></TextBox>
+
+                        <TextBlock Text="Option 3:" FontSize="20" Margin="10" Foreground="White"></TextBlock>
+
+                        <TextBox x:Name="option3Input" Text="{Binding Option3}" Height="35" Width="350" 
+                             Margin="10,0,0,0" HorizontalAlignment="Left" VerticalContentAlignment="Center" FontSize="20"></TextBox>
+
+                        <TextBlock Text="Option 5:" FontSize="20" Margin="10" Foreground="White"></TextBlock>
+
+                        <TextBox x:Name="option5Input" Text="{Binding Option5}" Height="35" Width="350" 
+                             Margin="10,0,0,0" HorizontalAlignment="Left" VerticalContentAlignment="Center" FontSize="20"></TextBox>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Vertical" Margin="37,0,0,0">
+                        <TextBlock Text="Option 2:" FontSize="20" Margin="10" Foreground="White"/>
+
+                        <TextBox x:Name="option2Input" Text="{Binding Option2}" Height="35" Width="350" 
+                             Margin="10,0,0,0" HorizontalAlignment="Left" VerticalContentAlignment="Center" FontSize="20"/>
+
+                        <TextBlock Text="Option 4:" FontSize="20" Margin="10" Foreground="White"/>
+
+                        <TextBox x:Name="option4Input" Text="{Binding Option4}" Height="35" Width="350" 
+                             Margin="10,0,0,0" HorizontalAlignment="Left" VerticalContentAlignment="Center" FontSize="20"/>
+
+                        <TextBlock Text="Option 6:" FontSize="20" Margin="10" Foreground="White"/>
+
+                        <TextBox x:Name="option6Input" Text="{Binding Option6}" Height="35" Width="350" 
+                             Margin="10,0,0,0" HorizontalAlignment="Left" VerticalContentAlignment="Center" FontSize="20"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <TextBlock Text="Number of Points for Question:" FontSize="20" Margin="10" Foreground="White"></TextBlock>
+
+                <TextBox x:Name="mcQuestionPointsInput" Text="{Binding NumberOfPoints}" Height="35" Width="750" 
+                     Margin="10,0,0,0" HorizontalAlignment="Left" VerticalContentAlignment="Center" FontSize="20"></TextBox>
+
+                <TextBlock Text="Time Limit for Question (in Seconds):" FontSize="20" Margin="10"
+                           Foreground="White"></TextBlock>
+
+                <TextBox x:Name="mcQuestionDurationInput" Text="{Binding Duration}" Height="35" Width="750" 
                      Margin="10,0,0,10" HorizontalAlignment="Left" VerticalContentAlignment="Center" FontSize="20"></TextBox>
 
-            <Button x:Name="mcCreateQuestion" Content="Create Question" Height="35" Width="250" 
-                    FontSize="20" Margin="10" Click="mcCreateQuestion_Click">
-            </Button>
-        </StackPanel>
-        
-    </Grid>
+                <Button x:Name="mcCreateQuestion" Content="Create Question" Height="35" Width="250" 
+                    FontSize="20" Margin="10" Click="mcCreateQuestion_Click" Foreground="White" Background="#a1a1ce"></Button>
+
+                <Label x:Name="multipleChoiceQuestionMessageLbl" Content="{Binding Message}" FontSize="20" Margin="10" VerticalAlignment="Center" 
+                       HorizontalAlignment="Center" Foreground="#cfcfe8"></Label>
+            </StackPanel>
+        </Grid>
+    </Border>
 </Window>

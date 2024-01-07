@@ -151,19 +151,12 @@ namespace KrishnaRajamannar.NEA.ViewModels
         public void Login()
         {
             // Checks if the username or password does not have an empty value
-            if (((Username != null) && (Password != null))) 
+            if ((((Username != "") || (Password != "")) || ((Username != null) || (Password != null)))) 
             {
-                if (ValidateUserNameLogin(Username) != true)
-                {
-                    Message = "Username does not exist.";
-                }
-                else if (ValidatePasswordLogin(Password) != true)
-                {
-                    Message = "Invalid password.";           }
-                else
+                GetUserDetails(Username);
+                if ((ValidateUserNameLogin(Username) == true) && (ValidatePasswordLogin(Password) == true))
                 {
                     // Retrieves all the user information about the user
-                    GetUserDetails(Username);
                     Message = "Account Login successful";
                     // Procedures which hide the Account Login window and display the Main Menu window
                     ShowMainMenu();
@@ -172,7 +165,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
             }
             else 
             {
-                Message = "Enter a valid input";
+                Message = "Enter a valid input.";
             }
         }
         // Checks if the username exists in the database
@@ -180,6 +173,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
         {
             if (_userService.IsUserExists(username) != true)
             {
+                Message = "Username does not exist";
                 return false;
             }
             return true;
@@ -189,11 +183,18 @@ namespace KrishnaRajamannar.NEA.ViewModels
         // Hashes the entered password and checks against the password found in the DB
         public bool ValidatePasswordLogin(string password)
         {
-            if (_userService.HashPassword(password) != _userModel.HashedPassword)
+            if ((Password != null) || (Password != "")) 
             {
+                if (_userService.HashPassword(password) != _userModel.HashedPassword)
+                {
+                    Message = "Invalid password";
+                    return false;
+                }
+                
                 return true;
             }
             return false;
+            
         }
     }
 }
