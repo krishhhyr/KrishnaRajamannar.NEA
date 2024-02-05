@@ -171,51 +171,41 @@ namespace KrishnaRajamannar.NEA.ViewModels
         {
             if (Answer != null)
             {
-                Message = "An answer must be inputted.";
-                return false;
+                return true;
             }
+            Message = "An answer must be inputted.";
             return false;
         }
         // Used to ensure that option 1 and option 2 are not empty 
         // when creating a mutliple-choice based question
         public bool ValidateOptions() 
         { 
-            if ((Option1 != null) || (Option2 != null))
+            if ((Option1 != null) && (Option2 != null))
             {
                 return true;
             }
-            Message = "Options 1 and 2 must have an answer";
+            Message = "Options 1 and 2 must have an input";
             return false;
         }
         // Used to ensure that points inputs are between 1 and 5
         public bool ValidateNumberOfPoints()
         {
-            if (NumberOfPoints != 0) 
+            if ((NumberOfPoints >= 1) && (NumberOfPoints <= 5))
             {
-                if ((NumberOfPoints >= 1) && (NumberOfPoints <= 5))
-                {
-                    return true;
-                }
-                Message = "The number of points must be between 1 and 5.";
-                return false;
+                return true;
             }
-            Message = "The number of points cannot be 0.";
+            Message = "The number of points must be between 1 and 5.";
             return false;
         }
         // Used to ensure that duration input (how long users have to answer the question)
         // is within 10 seconds and 5 minutes
-        public bool ValidateDuration() 
+        public bool ValidateDuration()
         {
-            if (Duration != 0) 
+            if ((Duration >= 10) && (Duration <= 300))
             {
-                if ((Duration >= 10) && (Duration <= 300))
-                {
-                    return true;
-                }
-                Message = "The time duration must be between 10 seconds and 300 seconds.";
-                return false;
+                return true;
             }
-            Message = "The time duration cannot be 0.";
+            Message = "The time duration must be between 10 seconds and 300 seconds.";
             return false;
         }
         // Used to validate a text-based question

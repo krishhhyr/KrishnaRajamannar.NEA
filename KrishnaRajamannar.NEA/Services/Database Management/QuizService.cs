@@ -92,6 +92,8 @@ namespace KrishnaRajamannar.NEA.Services.Database
         {
             const string sqlQuery =
                 @"
+                    DELETE FROM QuizFeedback
+                    WHERE QuizID = @QuizID
                     DELETE FROM QuizTextQuestionLink
                     WHERE QuizID = @QuizID;
                     DELETE FROM TextQuestion

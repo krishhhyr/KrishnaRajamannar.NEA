@@ -1,17 +1,5 @@
 ﻿using KrishnaRajamannar.NEA.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace KrishnaRajamannar.NEA.Views
 {
@@ -28,7 +16,22 @@ namespace KrishnaRajamannar.NEA.Views
 
             _independentReviewQuizFeedbackViewModel = independentReviewQuizFeedbackViewModel;
 
-            quizFeedbackDataGrid.ItemsSource = _independentReviewQuizFeedbackViewModel.GetQuizzes();
+            // Used to populate the datagrid with the quiz feedback when this window loads
+            quizFeedbackDataGrid.ItemsSource = _independentReviewQuizFeedbackViewModel.GetQuizFeedback();
+
+            independentReviewQuizFeedbackViewModel.HideIndependentReviewFeedbackWindow += IndependentReviewQuizFeedbackViewModel_HideIndependentReviewFeedbackWindow;
+        }
+
+        // Used to close the window when the HideIndependentReviewFeedbackWindow event occurs
+        private void IndependentReviewQuizFeedbackViewModel_HideIndependentReviewFeedbackWindow(object sender, Events.HideWindowEventArgs e)
+        {
+            this.Close();
+        }
+
+        // Happens when the back button is pressed, this window is closed 
+        private void backBtn_Click(object sender, RoutedEventArgs e)
+        {
+            _independentReviewQuizFeedbackViewModel.HideIndependentReviewFeedback();
         }
     }
 }

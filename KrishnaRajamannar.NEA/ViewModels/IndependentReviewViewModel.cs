@@ -1,41 +1,26 @@
 ﻿using KrishnaRajamannar.NEA.Events;
 using KrishnaRajamannar.NEA.Models;
 using KrishnaRajamannar.NEA.Services;
-using Microsoft.Win32;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Reflection.Metadata.Ecma335;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Automation;
-using System.Windows.Navigation;
-using System.Windows.Threading;
 
 namespace KrishnaRajamannar.NEA.ViewModels
 {
     public class IndependentReviewViewModel: INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
-
-        public event ShowMessageEventHandler ShowMessage;
-
         public event ShowQuizParameterWindowEventHandler ShowIndependentReviewFeedbackWindow;
-
         public event HideWindowEventHandler HideIndependentReviewQuizWindow;
 
         private readonly IIndependentReviewQuizService _independentReviewQuizService;
-
         private readonly IUserService _userService;
 
         public IndependentReviewQuizFeedbackViewModel independentReviewQuizFeedbackViewModel;
 
         public int QuizID;
         public int UserID;
-        private int questionNumber = 0;
+        private int QuestionNumber = 0;
+        private IndependentReviewQuizModel CurrentQuestion;
 
         public IndependentReviewViewModel(IIndependentReviewQuizService independentReviewQuizService, IUserService userService)
         {
@@ -43,7 +28,6 @@ namespace KrishnaRajamannar.NEA.ViewModels
             _userService = userService;
 
             independentReviewQuizFeedbackViewModel = App.ServiceProvider.GetService(typeof(IndependentReviewQuizFeedbackViewModel)) as IndependentReviewQuizFeedbackViewModel;
-            _userService = userService;
         }
 
         private string _question;
@@ -56,14 +40,17 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 RaisePropertyChange("Question"); 
             }
         }
-        private string _questionNumberText;
-        public string QuestionNumberText 
+        // Binds with the UI
+        // Used to display the number of the question in the quiz
+        // that's currently being answered 
+        private string _questionNumberInQuiz;
+        public string QuestionNumberInQuiz 
         {
-            get { return _questionNumberText; }
+            get { return _questionNumberInQuiz; }
             set 
             {
-                _questionNumberText = value;
-                RaisePropertyChange("QuestionNumberText");
+                _questionNumberInQuiz = value;
+                RaisePropertyChange("QuestionNumberInQuiz");
             }
         }
         private string _correctAnswer;
@@ -76,6 +63,8 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 RaisePropertyChange("CorrectAnswer");
             }
         }
+        // Used to retrieve the answer that a user has inputted
+        // to a question
         private string _answerInput;
         public string AnswerInput 
         {
@@ -86,6 +75,75 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 RaisePropertyChange("AnswerInput");
             }
         }
+
+        private string _option1;
+        public string Option1
+        {
+            get { return _option1; }
+            set
+            {
+                _option1 = value;
+                RaisePropertyChange("Option1");
+            }
+        }
+
+        private string _option2;
+        public string Option2
+        {
+            get { return _option2; }
+            set
+            {
+                _option2 = value;
+                RaisePropertyChange("Option2");
+            }
+        }
+
+        private string _option3;
+        public string Option3
+        {
+            get { return _option3; }
+            set
+            {
+                _option3 = value;
+                RaisePropertyChange("Option3");
+            }
+        }
+
+        private string _option4;
+        public string Option4
+        {
+            get { return _option4; }
+            set
+            {
+                _option4 = value;
+                RaisePropertyChange("Option4");
+            }
+        }
+
+        private string _option5;
+        public string Option5
+        {
+            get { return _option5; }
+            set
+            {
+                _option5 = value;
+                RaisePropertyChange("Option5");
+            }
+        }
+
+        private string _option6;
+        public string Option6
+        {
+            get { return _option6; }
+            set
+            {
+                _option6 = value;
+                RaisePropertyChange("Option6");
+            }
+        }
+
+        // Used to display how many points a user has gained
+        // when answering questions
         private int _pointsGained;
         public int PointsGained 
         {
@@ -96,19 +154,22 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 RaisePropertyChange("PointsGained");
             }
         }
+        private string _message;
+        public string Message
+        {
+            get { return _message; }
+            set
+            {
+                _message = value;
+                RaisePropertyChange("Message");
+            }
+        }
         public void RaisePropertyChange(string propertyname)
         {
             if (PropertyChanged != null)
             {
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyname));
             }
-        }
-        private void ShowMessageDialog(string message)
-        {
-            ShowMessageEventArgs args = new ShowMessageEventArgs();
-            args.Message = message;
-
-            OnShowMessage(args);
         }
         private void HideIndependentReviewQuiz()
         {
@@ -120,18 +181,11 @@ namespace KrishnaRajamannar.NEA.ViewModels
         {
             ShowQuizParameterWindowEventArgs args = new ShowQuizParameterWindowEventArgs();
             args.IsShown = true;
+            // Used to pass the Quiz ID and PointsGained from this form onto the ReviewFeedback window
             args.QuizID = QuizID;
             OnShowIndependentReviewFeedbackWindow(args);
         }
-        protected virtual void OnShowMessage(ShowMessageEventArgs e)
-        {
-            ShowMessageEventHandler handler = ShowMessage;
 
-            if (handler != null)
-            {
-                handler(this, e);
-            }
-        }
         protected virtual void OnHideIndependentReviewQuizWindow(HideWindowEventArgs e)
         {
             HideWindowEventHandler handler = HideIndependentReviewQuizWindow;
@@ -149,53 +203,71 @@ namespace KrishnaRajamannar.NEA.ViewModels
             }
         }
 
-        public void DisplayIndependentReviewFeedbackWindow() 
-        {
-            ShowIndependentReviewFeedback();
-        }
-
-
         #region SortingQuestions
         public IList<IndependentReviewQuizModel> GetQuestionsInOrder() 
         {
             // Calls a function which returns all the questions for a particular quiz from the database.
             // These questions have not been sorted in order based on the number of points gained when reviewed by users. 
-            IList<IndependentReviewQuizModel> unsortedquestions = _independentReviewQuizService.GetAllQuestions(QuizID);
+            IList<IndependentReviewQuizModel> unsortedQuestions = _independentReviewQuizService.GetAllQuestions(QuizID);
 
             // A list for the number of points which can be initally gained by users when first reviewing a quiz.
             // This values were specified by users during the creation of questions.
             List<int> pointsForQuestion = new List<int>();
 
             // A loop which adds the number of points which could be gained from the questions retrieved into a list. 
-            foreach (IndependentReviewQuizModel question in unsortedquestions) 
+            foreach (IndependentReviewQuizModel question in unsortedQuestions) 
             {
                 // I believe this should be points gained not points for question.
-                pointsForQuestion.Add(question.PointsForQuestion);
+                pointsForQuestion.Add(question.PointsGained);
             }
 
-            // A merge sort algorithm which only sorts number of points gained from smallest to largest.
-            List<int> sortedPoints = MSort(pointsForQuestion);
-
             // A list which is used to find the question associated with the number of points gained. 
-            IList<IndependentReviewQuizModel> sortedquestions = new List<IndependentReviewQuizModel>();
+            IList<IndependentReviewQuizModel> sortedQuestions = new List<IndependentReviewQuizModel>();
 
-            foreach (int point in sortedPoints) 
+            // This is used to check whether an entire quiz has been answered before or not.
+            int notAnsweredQuestionCount = 0;
+
+            // If all the questions have PointsGained as 0 and the Answer Streak is 0,
+            // this means that none of the questions have been answered before. 
+            // Therefore, the quiz has not been answered before 
+            foreach (IndependentReviewQuizModel question in unsortedQuestions)
             {
-                // Used to identify if a question has already been added to the list of sorted questions.
-                IndependentReviewQuizModel recentQuestionAdded = new IndependentReviewQuizModel();
-
-                foreach (IndependentReviewQuizModel question in unsortedquestions) //qs strawberry che 4, nissan 5, chocolate 4, kota 5, 17 3, 21st 1
+                if ((question.PointsGained == 0) && (question.AnswerStreak == 0))
                 {
-                    // If the point from the list of sortedPoints matches the number of points from the list of unsorted questions
-                    // And the question has not already been added, add the question to the list of sorted questions. 
-                    if ((point == question.PointsForQuestion) && (IsQuestionAdded(question.Question, sortedquestions) == false))
+                    notAnsweredQuestionCount++;
+                }
+            }
+
+            // If the quiz has not been answered before, the questions retrieved are returned 
+            // There is no need to sort them as the sorting algorithm sorts questions based on previous responses
+            // (i.e the points gained in previous attempts of the quiz)
+            if (notAnsweredQuestionCount >= unsortedQuestions.Count)
+            {
+                sortedQuestions = unsortedQuestions;
+            }
+            else 
+            {
+                // A merge sort algorithm which only sorts number of points gained from smallest to largest.
+                List<int> sortedPoints = MSort(pointsForQuestion);
+
+                foreach (int point in sortedPoints)
+                {
+                    // Used to identify if a question has already been added to the list of sorted questions.
+                    IndependentReviewQuizModel recentQuestionAdded = new IndependentReviewQuizModel();
+
+                    foreach (IndependentReviewQuizModel question in unsortedQuestions) 
                     {
-                        sortedquestions.Add(question);
-                        recentQuestionAdded = question;
+                        // If the point from the list of sortedPoints matches the number of points from the list of unsorted questions
+                        // And the question has not already been added, add the question to the list of sorted questions. 
+                        if ((point == question.PointsGained) && (IsQuestionAdded(question.Question, sortedQuestions) == false))
+                        {
+                            sortedQuestions.Add(question);
+                            recentQuestionAdded = question;
+                        }
                     }
                 }
             }
-            return sortedquestions;
+            return sortedQuestions;
         }
 
         // Breaks down each element in the points list into individual elements. 
@@ -277,7 +349,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
             return result;
         }
 
-        // Function which checks if a question has already been added to the list of sorted questions. 
+        // Checks if a question has already been added to the list of sorted questions. 
         public bool IsQuestionAdded(string question, IList<IndependentReviewQuizModel> sortedQuestions) 
         {
             foreach (IndependentReviewQuizModel unsortedQuestion in sortedQuestions) 
@@ -295,11 +367,11 @@ namespace KrishnaRajamannar.NEA.ViewModels
         // If all the questions have been answered, the review session ends. 
         public void SendQuestion(IList<IndependentReviewQuizModel> questions) 
         {
-            if (questionNumber >= questions.Count)
+            if (QuestionNumber >= questions.Count)
             {
-                ShowMessageDialog("No more questions to review.");
-                ShowMessageDialog($"You have gained {PointsGained} points in this review session.");
+                Message = ($"No more questions to review. You have gained {PointsGained} points in this review session.");
 
+                // Updates the userDetails table in the DB with the amount of points earned
                 _userService.UpdatePoints(UserID, PointsGained);
 
                 ShowIndependentReviewFeedback();
@@ -307,130 +379,120 @@ namespace KrishnaRajamannar.NEA.ViewModels
             }
             else 
             {
-                IndependentReviewQuizModel question = questions[questionNumber];
+                // Retrieves the current question in the quiz from the object
+                IndependentReviewQuizModel question = questions[QuestionNumber];
+                // Assigns this to CurrentQuestion
+                CurrentQuestion = question;
+                // Used to display question to users
                 Question = question.Question;
-                questionNumber++;
-                QuestionNumberText = $"Question: {questionNumber}/{questions.Count}";
+                QuestionNumber++;
+                // Used to display what question is currently being answered out of how many questions there are
+                QuestionNumberInQuiz = $"{QuestionNumber}/{questions.Count}";
             }
         }
 
-        public bool IsQuestionTextBasedQuestion(IList<IndependentReviewQuizModel> questions) 
+        // Checks the question type
+        // If Option1 is null, this means 
+        public bool IsQuestionTextBasedQuestion() 
         {
-            IndependentReviewQuizModel question = questions[questionNumber - 1];
-
-            if (question.Option1 == "NULL")
-            {
-                return false;
-            }
-            else 
+            if (CurrentQuestion.Option1 == "NULL")
             {
                 return true;
             }
+            else 
+            {
+                return false;
+            }
         }
 
-        // For a multiple-choice based question, this function sends the possible options to the user.
-        public List<string?> SendOptions(IList<IndependentReviewQuizModel> questions)
+        // For a multiple-choice based question, this sends the possible options to the user.
+        public void SendOptions()
         {
-            IndependentReviewQuizModel question = questions[questionNumber - 1];
-
-            List<string?> options = new List<string?>();
-
-            options.Add(question.Option1);
-            options.Add(question.Option2);
-            options.Add(question.Option3);
-            options.Add(question.Option4);
-            options.Add(question.Option5);
-            options.Add(question.Option6);
-
-            return options;
+            Option1 = CurrentQuestion.Option1;
+            Option2 = CurrentQuestion.Option2;
+            Option3 = CurrentQuestion.Option3;
+            Option4 = CurrentQuestion.Option4;
+            Option5 = CurrentQuestion.Option5;
+            Option6 = CurrentQuestion.Option6;
         }
 
         // This function checks whether the user has inputted an answer to a question.
         // Also checks if the answer is correct or not.
         // Also calculates the total number of points gained for the review session. 
-        public void ValidateAnswer(IList<IndependentReviewQuizModel> questions)
+        public bool ValidateAnswer()
         {
-            IndependentReviewQuizModel currentQuestion = questions[questionNumber - 1];
-
             // Checks if a user has not inputted an answer.
             if ((AnswerInput == "") || (AnswerInput == null))
             {
-                MessageBox.Show("Enter a valid input.", "Independent Quiz Review");
+                Message = "Enter a valid input.";
+                return false;
             }
             else 
             {
-                CorrectAnswer = currentQuestion.Answer;
+                CorrectAnswer = CurrentQuestion.Answer;
 
                 bool isCorrect = true;
 
                 if (CorrectAnswer == AnswerInput)
                 {
                     // Calls a function which calculates the number of points gained for the correct answer.
-                    int pointsForCorrectAnswer = CalculatePoints(currentQuestion, isCorrect);
+                    int pointsForCorrectAnswer = CalculatePoints(isCorrect);
 
-                    MessageBox.Show($"Correct. {pointsForCorrectAnswer} points have been awarded.", "Independent Quiz Review");
+                    Message = $"Correct answer. {pointsForCorrectAnswer} points have been awarded.";
                     PointsGained = PointsGained + pointsForCorrectAnswer;
 
                     // Calls the IndependentReviewQuizService which uses an UPDATE command to update whether a question is correct 
                     // And how many points were gained.
-                    _independentReviewQuizService.UpdateQuizFeedback(currentQuestion.FeedbackID, CalculateAnswerStreak(currentQuestion, isCorrect), isCorrect, pointsForCorrectAnswer);
+                    _independentReviewQuizService.UpdateQuizFeedback(CurrentQuestion.FeedbackID, CalculateAnswerStreak(isCorrect), isCorrect, pointsForCorrectAnswer);
                 }
                 // If the answer provided by the user is not correct. 
                 else
                 {
                     isCorrect = false;
-                    int pointsForIncorrectAnswer = CalculatePoints(currentQuestion, isCorrect);
+                    int pointsForIncorrectAnswer = CalculatePoints(isCorrect);
 
                     // Subtracts the number of points for the question from the total number of points gained. 
                     PointsGained = PointsGained - pointsForIncorrectAnswer;
 
-                    _independentReviewQuizService.UpdateQuizFeedback(currentQuestion.FeedbackID, CalculateAnswerStreak(currentQuestion, isCorrect), isCorrect, -pointsForIncorrectAnswer);
-
+                    _independentReviewQuizService.UpdateQuizFeedback(CurrentQuestion.FeedbackID, CalculateAnswerStreak(isCorrect), isCorrect, -pointsForIncorrectAnswer);
+                        
                     // Used as the total number of points cannot be negative. 
                     if (PointsGained <= 0)
                     {
                         PointsGained = 0;
                         // Displays a message to the user indicating that the answer was wrong. 
-                        MessageBox.Show($"Incorrect. 0 points have been awarded.", "Independent Quiz Review");
+                        Message = $"Answer was {CorrectAnswer}. 0 points have been awarded.";
 
                         //return (correctAnswer, totalPoints);
                     }
                     if (PointsGained > 0)
                     {
-                        MessageBox.Show($"Incorrect. {pointsForIncorrectAnswer} points have been deducted.", "Independent Quiz Review");
+                        Message = $"Answer was {CorrectAnswer}. {pointsForIncorrectAnswer} points have been deducted.";
                     }
                 }
+                return true;
             }
         }
         // Used to calculate the number of points which should be awarded to users. 
-        public int CalculatePoints(IndependentReviewQuizModel question, bool isCorrect) 
+        public int CalculatePoints(bool isCorrect) 
         {
-            IndependentReviewQuizModel currentQuestion = question;
 
             // If a question was consecutively answered incorrectly but is now correct. 
-            if ((isCorrect == true) && (question.IsCorrect == false)) 
+            if ((isCorrect == true) && (CurrentQuestion.IsCorrect == false)) 
             {
-                return currentQuestion.PointsForQuestion;
+                return 0;
             }
 
             // If a question was consecutively answered correctly but is now incorrect.
-            if ((isCorrect == false) && (question.IsCorrect == true))
+            if ((isCorrect == false) && (CurrentQuestion.IsCorrect == true))
             {
                 return 0;
             }
             // If the question has not been answered beforehand (i.e if its a new question)
             // Then return the number of points specified by users when creating the question. 
-            if ((currentQuestion.AnswerStreak == 0) || (currentQuestion.PointsGained == 0))
+            if ((CurrentQuestion.AnswerStreak == 0) || (CurrentQuestion.PointsGained == 0))
             {
-                // Used so that the number of points increases based on how many times a question has been answered correctly. 
-
-
-                //note: should be currentQuestion.PointsGained 
-                //should just be currentquestion.answerstreak, no + 1, although if its a new question it will be + 1. 
-                //because the answer streak is currently 0. 
-                //int points = currentQuestion.PointsForQuestion * (currentQuestion.AnswerStreak + 1);
-
-                return currentQuestion.PointsForQuestion;
+                return CurrentQuestion.PointsForQuestion;
             }
             // If the question has been answered beforehand and matches the answer when answered previously,
             // i.e if the question was first answered correctly and now is again answered correctly, 
@@ -438,34 +500,28 @@ namespace KrishnaRajamannar.NEA.ViewModels
             // This represents how if a question is answered consecutively, the number of points gained increases.
             else 
             { 
-                return currentQuestion.PointsForQuestion * (currentQuestion.AnswerStreak + 1);
+                return CurrentQuestion.PointsForQuestion * (CurrentQuestion.AnswerStreak + 1);
             }
-
-            // Used so that the number of points increases based on how many times a question has been answered correctly. 
-            //int points = currentQuestion.PointsForQuestion * (currentQuestion.AnswerStreak + 1);
-            //return points;
         }
         // This is used to calculate the answer streak to a question.
-        public int CalculateAnswerStreak(IndependentReviewQuizModel question, bool isCorrect) 
+        public int CalculateAnswerStreak(bool isCorrect) 
         {
-            IndependentReviewQuizModel currentQuestion = question;
-
             // If a question has not been answered before. 
-            if (currentQuestion.AnswerStreak == 0)
+            if (CurrentQuestion.AnswerStreak == 0)
             {
-                return currentQuestion.AnswerStreak + 1;
+                return CurrentQuestion.AnswerStreak + 1;
             }
             // If the answer does not match the previous response
             // If the answer was correct, but now is not correct
             // Reset the answer streak to 1.
             // This represents if the user has broken an answer streak to a question.
-            else if (isCorrect != question.IsCorrect)
+            else if (isCorrect != CurrentQuestion.IsCorrect)
             {
                 return 1;
             }
             else 
             {
-                return currentQuestion.AnswerStreak + 1;
+                return CurrentQuestion.AnswerStreak + 1;
             }
         }
     }
