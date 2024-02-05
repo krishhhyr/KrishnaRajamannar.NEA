@@ -5,41 +5,44 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:KrishnaRajamannar.NEA.Views"
         mc:Ignorable="d"
-        Title="Leaderboard" Height="700" Width="800" WindowStartupLocation="CenterScreen" 
-        ResizeMode="NoResize" FontFamily="Segoe UI Light">
+        Title="Leaderboard" Height="700" Width="800" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" FontFamily="Segoe UI Light">
 
     <Window.Resources>
         <Style TargetType="DataGridColumnHeader">
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
         </Style>
     </Window.Resources>
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="10"></ColumnDefinition>
-            <ColumnDefinition Width="*"></ColumnDefinition>
-            <ColumnDefinition Width="10"></ColumnDefinition>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
-        </Grid.RowDefinitions>
 
-        <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top">
-            <Button x:Name="backBtn" Content="Back" Grid.Column="1" Grid.Row="1" Height="30" 
+    <Border Background="#a1a1ce" BorderBrush="AntiqueWhite" BorderThickness="2">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="10"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="10"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+            </Grid.RowDefinitions>
+
+            <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top">
+                <Button x:Name="backBtn" Content="Back" Grid.Column="1" Grid.Row="1" Height="30" 
                     Width="75" Margin="10,10,0,5" FontSize="16" Click="backBtn_Click"
-                    Background="White"></Button>
+                    Background="WhiteSmoke"></Button>
 
-            <Button x:Name="refreshBtn" Content="Refresh" Grid.Column="0" Grid.Row="0" Height="30" 
+                <Button x:Name="refreshBtn" Content="Refresh" Grid.Column="0" Grid.Row="0" Height="30" 
                     Width="75" Margin="10,10,0,5" FontSize="16" Click="refreshBtn_Click"
-                    Background="#FFABADB3" Foreground="White" BorderBrush="Black" ></Button>
-        </StackPanel>
+                    Background="#7474b0" Foreground="White" BorderBrush="Black" ></Button>
+            </StackPanel>
 
-        <TextBlock Text="Top 10 Users with the Highest Number of Points" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" 
-                   VerticalAlignment="Center" Margin="10" FontSize="32" FontFamily="Segoe UI Light"></TextBlock>
-        
-        <DataGrid x:Name="leaderboardDataGrid" Grid.Column="1" Grid.Row="2" Height="500" 
-                  Width="600" ColumnWidth="*" Margin="10" CanUserSortColumns="True" 
-                  IsReadOnly="True" FontSize="20" AlternatingRowBackground="AliceBlue"></DataGrid>
-    </Grid>
+            <TextBlock Text="Top 10 Users with the Highest Number of Points" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" 
+                   VerticalAlignment="Center" Margin="10" FontSize="32" FontFamily="Segoe UI Light"
+                       Foreground="White"></TextBlock>
+
+            <DataGrid x:Name="leaderboardDataGrid" Grid.Column="1" Grid.Row="2" Height="500" 
+                  Width="600" ColumnWidth="*" Margin="10" CanUserSortColumns="True"
+                  Background="#7474b0" IsReadOnly="True" FontSize="20" AlternatingRowBackground="#cfcfe8"></DataGrid>
+        </Grid>
+    </Border>
 </Window>

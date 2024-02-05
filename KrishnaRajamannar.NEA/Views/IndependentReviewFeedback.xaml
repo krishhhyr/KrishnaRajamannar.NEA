@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:KrishnaRajamannar.NEA.Views"
         mc:Ignorable="d"
-        Title="IndependentReviewFeedback" Height="800" Width="1200">
+        Title="IndependentReviewFeedback" Height="500" Width="1000" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" FontFamily="Segoe UI Light">
 
     <Window.Resources>
         <Style TargetType="DataGridColumnHeader">
@@ -13,22 +13,26 @@
         </Style>
     </Window.Resources>
 
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"></ColumnDefinition>
-            <ColumnDefinition Width="10*"></ColumnDefinition>
-            <ColumnDefinition Width="95"></ColumnDefinition>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="10*"></RowDefinition>
-            <RowDefinition Height="1*"></RowDefinition>
-        </Grid.RowDefinitions>
+    <Border Background="#a1a1ce" BorderBrush="AntiqueWhite" BorderThickness="2">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition Width="10*"></ColumnDefinition>
+                <ColumnDefinition Width="95"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="10*"></RowDefinition>
+                <RowDefinition Height="1*"></RowDefinition>
+            </Grid.RowDefinitions>
 
-        <Button x:Name="backBtn" Content="Back" Height="30" Width="75" Margin="10" FontSize="16"></Button>
+            <Button x:Name="backBtn" Content="Back" Height="30" Width="75" Margin="10" FontSize="16"
+                    Background="WhiteSmoke" BorderBrush="Black" Click="backBtn_Click"></Button>
 
-        <DataGrid x:Name="quizFeedbackDataGrid" Grid.Column="1" Grid.Row="1" SelectionMode="Single"
-                  CanUserAddRows="False" FontFamily="Segoe UI Light" ColumnWidth="*" FontSize="16">
-        </DataGrid>
-    </Grid>
+            <DataGrid x:Name="quizFeedbackDataGrid" Grid.Column="1" Grid.Row="1" SelectionMode="Single"
+                  CanUserAddRows="False" FontFamily="Segoe UI Light" ColumnWidth="*" FontSize="16" Background="#7474b0"
+                      AlternatingRowBackground="#cfcfe8">
+            </DataGrid>
+        </Grid>
+    </Border>
 </Window>

@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Threading;
 
 namespace KrishnaRajamannar.NEA.Views
 {
@@ -14,10 +13,7 @@ namespace KrishnaRajamannar.NEA.Views
     public partial class IndependentReviewQuiz : Window
     {
         private IndependentReviewFeedback independentReviewFeedback;
-
         private readonly IndependentReviewViewModel _independentReviewViewModel;
-
-        int timeIncrement = 0;
 
         public IndependentReviewQuiz(IndependentReviewViewModel independentReviewViewModel)
         {
@@ -31,6 +27,7 @@ namespace KrishnaRajamannar.NEA.Views
             independentReviewViewModel.ShowIndependentReviewFeedbackWindow += IndependentReviewViewModel_ShowIndependentReviewFeedbackWindow;
         }
 
+        // Shows the next window once the users has answered all the questions
         private void IndependentReviewViewModel_ShowIndependentReviewFeedbackWindow(object sender, Events.ShowQuizParameterWindowEventArgs e)
         {
             _independentReviewViewModel.independentReviewQuizFeedbackViewModel.QuizID = e.QuizID;
@@ -38,28 +35,16 @@ namespace KrishnaRajamannar.NEA.Views
 
             independentReviewFeedback.Show();
         }
-
+        // Used to close the window once a new window is displayed
         private void IndependentReviewViewModel_HideIndependentReviewQuizWindow(object sender, Events.HideWindowEventArgs e)
         {
             this.Close();
         }
 
-        private void _independentReviewViewModel_ShowMessage(object sender, Events.ShowMessageEventArgs e)
-        {
-            MessageBox.Show(e.Message);
-        }
-
-        // This is used to increment the timer.
-        private void timer_tick (object sender, EventArgs e) 
-        {
-           timeIncrement++;
-            
-           timeTakenLbl.Content = $"Time Taken: {timeIncrement} Seconds";
-        }
-
         // This is used if the user submits a text-based answer.
         private void textAnswerBtn_Click(object sender, RoutedEventArgs e)
         {
+            // If users have inputted an answer then the Next button is displayed
             if (_independentReviewViewModel.ValidateAnswer() == true) 
             {
                 nextBtn.Visibility = Visibility.Visible;
@@ -91,6 +76,8 @@ namespace KrishnaRajamannar.NEA.Views
                 }
             }
 
+            // Checks if the user has inputted an answer
+            // If they have, the next button is displayed to users
             if (_independentReviewViewModel.ValidateAnswer() == true) 
             {
                 nextBtn.Visibility = Visibility.Visible;
@@ -107,48 +94,34 @@ namespace KrishnaRajamannar.NEA.Views
             textAnswerBtn.Visibility = Visibility.Visible;
             multipleChoiceAnswerBtn.Visibility = Visibility.Visible;
 
-            // This displays how many points were now awarded, having answered a question.
-            //pointsAwardedLbl.Content = $"Points Awarded: {_independentReviewViewModel.PointsGained}";
-
+            // Used to reset the text boxes and labels for the next question
             answerTxtBox.Text = "";
             correctTextAnswerLbl.Content = "";
 
             _independentReviewViewModel.SendQuestion(questions);
 
-            if (_independentReviewViewModel.IsQuestionTextBasedQuestion() != true)
+            // Checks the question type of the next question
+            // If it is a text-based question, the stack panel to answer that question type is displayed
+            if (_independentReviewViewModel.IsQuestionTextBasedQuestion() == true)
             {
                 textAnswerStackPanel.Visibility = Visibility.Visible;
                 multipleChoiceAnswerStackPanel.Visibility = Visibility.Hidden;
             }
-            else 
+            else
+            // Otherwise, the multiple-choice stack panel is displayed
             {
                 _independentReviewViewModel.SendOptions();
 
                 textAnswerStackPanel.Visibility = Visibility.Hidden;
-                multipleChoiceAnswerStackPanel.Visibility = Visibility.Visible;S
+                multipleChoiceAnswerStackPanel.Visibility = Visibility.Visible;
             }
         }
 
         // This event is used to load the first question to users.
-        // It also starts the timer which increments every second. 
+        // It goes to the Next procedure which display the question
         private void startBtn_Click(object sender, RoutedEventArgs e)
         {
-            //source: https://www.google.com/search?q=adding+a+timer+in+wpf&safe=active&sca_esv=561023782&source=lnms&sa=X&ved=2ahUKEwjD_NaJoIKBAxVOSkEAHTF0DqIQ0pQJegQIAxAC&biw=2133&bih=1032&dpr=0.9#fpstate=ive&vld=cid:44eabde8,vid:QkT8fgoFz3g
-
-            // This creates a new timer.
-            DispatcherTimer timer = new DispatcherTimer();
-
-            // Specifies how the timer should be incremented.
-            timer.Interval = TimeSpan.FromSeconds(1);
-
-            // Calls an event which is used to increment the timer itself.
-            timer.Tick += new EventHandler(timer_tick);
-            timer.Start();
-
-            // Ensures that the start button is hidden once pressed.
             startBtn.Visibility = Visibility.Hidden;
-            // Event which loads questions to users.
-            // In this case, it will load the first question to users.
             nextBtn_Click(sender, e);
         }
     }

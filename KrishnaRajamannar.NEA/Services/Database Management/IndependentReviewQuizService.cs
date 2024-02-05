@@ -1,10 +1,6 @@
 ﻿using KrishnaRajamannar.NEA.Models;
 using Microsoft.Data.SqlClient;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace KrishnaRajamannar.NEA.Services.Database
 {
@@ -17,54 +13,48 @@ namespace KrishnaRajamannar.NEA.Services.Database
 
         }
 
-        //inital insert
+        //Used to insert the question data into the quiz feedback as soon as a text-based question is created
         public void InsertTextQuestionQuizFeedback(int textQuestionID, int pointsForQuestion, int quizID)
         {
             const string sqlQuery =
                 @"
-                    INSERT INTO QuizFeedback(TextQuestionID, MCQuestionID, PointsForQuestion, PointsGained, TimeTaken, IsCorrect, AnswerStreak, QuizID)
-                    VALUES (@TextQuestionID, null, @PointsForQuestion, 0, 0, 0, 0, @QuizID)
+                    INSERT INTO QuizFeedback(TextQuestionID, MCQuestionID, PointsForQuestion, PointsGained, IsCorrect, AnswerStreak, QuizID)
+                    VALUES (@TextQuestionID, null, @PointsForQuestion, 0, 0, 0, @QuizID)
                 ";
 
             using SqlConnection connection = new SqlConnection(connectionString);
             connection.Open();
-
             var command = connection.CreateCommand();
             command.CommandText = sqlQuery;
-
             command.Parameters.AddWithValue("@TextQuestionID", textQuestionID);
             command.Parameters.AddWithValue("@PointsForQuestion", pointsForQuestion);
             command.Parameters.AddWithValue("@QuizID", quizID);
-
             command.ExecuteNonQuery();
-
             connection.Close();
         }
 
-        //inital insert
+        //Used to insert the question data into the quiz feedback as soon as a text-based question is created
         public void InsertMultipleChoiceQuestionQuizFeedback(int MCquestionID, int pointsForQuestion, int quizID)
         {
             const string sqlQuery =
                 @"
-                    INSERT INTO QuizFeedback(TextQuestionID, MCQuestionID, PointsForQuestion, PointsGained, TimeTaken, IsCorrect, AnswerStreak, QuizID)
-                    VALUES (null, @MCQuestionID, @PointsForQuestion, 0, 0, 0, 0, @QuizID)
+                    INSERT INTO QuizFeedback(TextQuestionID, MCQuestionID, PointsForQuestion, PointsGained, IsCorrect, AnswerStreak, QuizID)
+                    VALUES (null, @MCQuestionID, @PointsForQuestion, 0, 0, 0, @QuizID)
                 ";
 
             using SqlConnection connection = new SqlConnection(connectionString);
             connection.Open();
-
             var command = connection.CreateCommand();
             command.CommandText = sqlQuery;
-
             command.Parameters.AddWithValue("@MCQuestionID", MCquestionID);
             command.Parameters.AddWithValue("@PointsForQuestion", pointsForQuestion);
             command.Parameters.AddWithValue("@QuizID", quizID);
-
             command.ExecuteNonQuery();
-
             connection.Close();
         }
 
+        // Used to retrieve all the questions from a quiz to review 
+        // Retrieves how a question has been answered previously (i.e how many points have been awarded before)
         public IList<IndependentReviewQuizModel> GetAllQuestions(int quizID)
         {
             IList<IndependentReviewQuizModel> questionsToReview = new List<IndependentReviewQuizModel>();
@@ -92,12 +82,9 @@ namespace KrishnaRajamannar.NEA.Services.Database
 
             using SqlConnection connection = new SqlConnection(connectionString);
             connection.Open();
-
             var command = connection.CreateCommand();
             command.CommandText = sqlQuery;
-
             command.Parameters.AddWithValue("@QuizID", quizID);
-
             var data = command.ExecuteReader();
 
             while (data.Read())
@@ -138,6 +125,7 @@ namespace KrishnaRajamannar.NEA.Services.Database
 
                 answerStreak = data.GetInt32(12);
 
+                // Adds a new object to the list with the data recently assigned which represents a question to review
                 questionsToReview.Add(new IndependentReviewQuizModel()
                 {
                     FeedbackID = feedbackID,

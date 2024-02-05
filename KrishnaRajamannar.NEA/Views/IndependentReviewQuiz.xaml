@@ -38,11 +38,6 @@
 
                 <Label x:Name="numberOfPointsLbl" Content="{Binding PointsGained}" FontSize="16" VerticalAlignment="Center"
                        Foreground="White"></Label>
-
-                <Label x:Name="timeTakenLbl" Content="Time Taken:" FontSize="16" VerticalAlignment="Center"
-                       Foreground="White"></Label>
-
-                <Label x:Name="timeLbl" Content="Time Taken:" FontSize="16" VerticalAlignment="Center"></Label>
             </StackPanel>
 
             <Label x:Name="questionLbl" Content="{Binding Question}" Grid.Column="1" Grid.Row="1" 
@@ -92,7 +87,6 @@
                 FontSize="16" Height="30" Width="100" 
                 VerticalAlignment="Top" Click="nextBtn_Click" Visibility="Hidden" Margin="228,283,228,0"
                     HorizontalContentAlignment="Center" HorizontalAlignment="Center" Background="WhiteSmoke">
-
             </Button>
 
             <Label x:Name="messageLbl" Content="{Binding Message}" Grid.Column="1" Grid.Row="1" VerticalAlignment="Top" 
@@ -104,6 +98,4 @@
 
         </Grid>
     </Border>
-
-
 </Window>

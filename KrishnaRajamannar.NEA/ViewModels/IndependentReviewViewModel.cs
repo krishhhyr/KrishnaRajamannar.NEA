@@ -181,6 +181,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
         {
             ShowQuizParameterWindowEventArgs args = new ShowQuizParameterWindowEventArgs();
             args.IsShown = true;
+            // Used to pass the Quiz ID and PointsGained from this form onto the ReviewFeedback window
             args.QuizID = QuizID;
             OnShowIndependentReviewFeedbackWindow(args);
         }
@@ -207,42 +208,66 @@ namespace KrishnaRajamannar.NEA.ViewModels
         {
             // Calls a function which returns all the questions for a particular quiz from the database.
             // These questions have not been sorted in order based on the number of points gained when reviewed by users. 
-            IList<IndependentReviewQuizModel> unsortedquestions = _independentReviewQuizService.GetAllQuestions(QuizID);
+            IList<IndependentReviewQuizModel> unsortedQuestions = _independentReviewQuizService.GetAllQuestions(QuizID);
 
             // A list for the number of points which can be initally gained by users when first reviewing a quiz.
             // This values were specified by users during the creation of questions.
             List<int> pointsForQuestion = new List<int>();
 
             // A loop which adds the number of points which could be gained from the questions retrieved into a list. 
-            foreach (IndependentReviewQuizModel question in unsortedquestions) 
+            foreach (IndependentReviewQuizModel question in unsortedQuestions) 
             {
                 // I believe this should be points gained not points for question.
-                pointsForQuestion.Add(question.PointsForQuestion);
+                pointsForQuestion.Add(question.PointsGained);
             }
 
-            // A merge sort algorithm which only sorts number of points gained from smallest to largest.
-            List<int> sortedPoints = MSort(pointsForQuestion);
-
             // A list which is used to find the question associated with the number of points gained. 
-            IList<IndependentReviewQuizModel> sortedquestions = new List<IndependentReviewQuizModel>();
+            IList<IndependentReviewQuizModel> sortedQuestions = new List<IndependentReviewQuizModel>();
 
-            foreach (int point in sortedPoints) 
+            // This is used to check whether an entire quiz has been answered before or not.
+            int notAnsweredQuestionCount = 0;
+
+            // If all the questions have PointsGained as 0 and the Answer Streak is 0,
+            // this means that none of the questions have been answered before. 
+            // Therefore, the quiz has not been answered before 
+            foreach (IndependentReviewQuizModel question in unsortedQuestions)
             {
-                // Used to identify if a question has already been added to the list of sorted questions.
-                IndependentReviewQuizModel recentQuestionAdded = new IndependentReviewQuizModel();
-
-                foreach (IndependentReviewQuizModel question in unsortedquestions) //qs strawberry che 4, nissan 5, chocolate 4, kota 5, 17 3, 21st 1
+                if ((question.PointsGained == 0) && (question.AnswerStreak == 0))
                 {
-                    // If the point from the list of sortedPoints matches the number of points from the list of unsorted questions
-                    // And the question has not already been added, add the question to the list of sorted questions. 
-                    if ((point == question.PointsForQuestion) && (IsQuestionAdded(question.Question, sortedquestions) == false))
+                    notAnsweredQuestionCount++;
+                }
+            }
+
+            // If the quiz has not been answered before, the questions retrieved are returned 
+            // There is no need to sort them as the sorting algorithm sorts questions based on previous responses
+            // (i.e the points gained in previous attempts of the quiz)
+            if (notAnsweredQuestionCount >= unsortedQuestions.Count)
+            {
+                sortedQuestions = unsortedQuestions;
+            }
+            else 
+            {
+                // A merge sort algorithm which only sorts number of points gained from smallest to largest.
+                List<int> sortedPoints = MSort(pointsForQuestion);
+
+                foreach (int point in sortedPoints)
+                {
+                    // Used to identify if a question has already been added to the list of sorted questions.
+                    IndependentReviewQuizModel recentQuestionAdded = new IndependentReviewQuizModel();
+
+                    foreach (IndependentReviewQuizModel question in unsortedQuestions) 
                     {
-                        sortedquestions.Add(question);
-                        recentQuestionAdded = question;
+                        // If the point from the list of sortedPoints matches the number of points from the list of unsorted questions
+                        // And the question has not already been added, add the question to the list of sorted questions. 
+                        if ((point == question.PointsGained) && (IsQuestionAdded(question.Question, sortedQuestions) == false))
+                        {
+                            sortedQuestions.Add(question);
+                            recentQuestionAdded = question;
+                        }
                     }
                 }
             }
-            return sortedquestions;
+            return sortedQuestions;
         }
 
         // Breaks down each element in the points list into individual elements. 
@@ -354,10 +379,14 @@ namespace KrishnaRajamannar.NEA.ViewModels
             }
             else 
             {
+                // Retrieves the current question in the quiz from the object
                 IndependentReviewQuizModel question = questions[QuestionNumber];
+                // Assigns this to CurrentQuestion
                 CurrentQuestion = question;
+                // Used to display question to users
                 Question = question.Question;
                 QuestionNumber++;
+                // Used to display what question is currently being answered out of how many questions there are
                 QuestionNumberInQuiz = $"{QuestionNumber}/{questions.Count}";
             }
         }
@@ -451,7 +480,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
             // If a question was consecutively answered incorrectly but is now correct. 
             if ((isCorrect == true) && (CurrentQuestion.IsCorrect == false)) 
             {
-                return CurrentQuestion.PointsForQuestion;
+                return 0;
             }
 
             // If a question was consecutively answered correctly but is now incorrect.

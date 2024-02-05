@@ -182,22 +182,33 @@ namespace KrishnaRajamannar.NEA.ViewModels
         // and store them as a list of objects
         public IList<QuizModel> LoadQuiz()
         {
-            return _quizService.GetQuiz(UserID);
+            Message = "";
+            IList<QuizModel> quiz = _quizService.GetQuiz(UserID);
+            if (quiz.Count != 0)
+            {
+                return quiz;
+            }
+            else 
+            {
+                Message = "No quizzes have been created. Right click to create a new quiz.";
+                return null;
+            }
         }
         public IList<QuizModel> DeleteQuiz()
         {
             // Checks if the user has selected a quiz to delete
             if (SelectedQuiz != null)
             {
-                return LoadQuiz();
-            }
-            else 
-            {
                 // Calls the quizService to delete the selected quiz
                 _quizService.DeleteQuiz(SelectedQuiz.QuizID, SelectedQuiz.QuizTitle, SelectedQuiz.UserID);
                 // Displays a message to users to notify them that the quiz has been deleted
                 Message = "Quiz Deleted.";
                 // Reloads the list of quizzes after deleting a quiz
+                return LoadQuiz();
+            }
+            else 
+            {
+                Message = "No quiz has been selected to delete.";
                 return LoadQuiz();
             }
         }
@@ -207,11 +218,22 @@ namespace KrishnaRajamannar.NEA.ViewModels
             // Checks if the user has selected a quiz to load the questions for
             if (SelectedQuiz != null)
             {
+                Message = "";
                 // Used to return an IList of all the questions for the selected quiz
-                return _questionService.GetQuestions(SelectedQuiz.QuizID);
+                IList<QuestionModel> questions = _questionService.GetQuestions(SelectedQuiz.QuizID);
+                if (questions.Count != 0)
+                {
+                    return questions;
+                }
+                else 
+                {
+                    Message = "There are no questions within this quiz.";
+                    return null;
+                }
             }
             else 
             {
+                Message = "A quiz has not been selected.";
                 return null;
             }
         }
