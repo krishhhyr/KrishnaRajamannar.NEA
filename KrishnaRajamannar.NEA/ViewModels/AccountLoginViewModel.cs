@@ -134,15 +134,18 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
             userDetails = _userService.GetUserDetails(username);
 
-            _userModel.UserID = userDetails[0].UserID;
-            _userModel.Username = userDetails[0].Username;
-            _userModel.HashedPassword = userDetails[0].HashedPassword;
-            _userModel.TotalPoints = userDetails[0].TotalPoints;
+            if (userDetails[0].UserID != null) 
+            {
+                _userModel.UserID = userDetails[0].UserID;
+                _userModel.Username = userDetails[0].Username;
+                _userModel.HashedPassword = userDetails[0].HashedPassword;
+                _userModel.TotalPoints = userDetails[0].TotalPoints;
 
-            // Assigns information to variables to pass onto other windows
-            UserID = (int)_userModel.UserID;
-            Username = _userModel.Username;
-            TotalPoints = (int)_userModel.TotalPoints;
+                // Assigns information to variables to pass onto other windows
+                UserID = (int)_userModel.UserID;
+                Username = _userModel.Username;
+                TotalPoints = (int)_userModel.TotalPoints;
+            }
         }
 
         // Used to validate the overall login for users 
@@ -151,8 +154,9 @@ namespace KrishnaRajamannar.NEA.ViewModels
         public void Login()
         {
             // Checks if the username or password does not have an empty value
-            if ((((Username != "") || (Password != "")) || ((Username != null) || (Password != null)))) 
+            if (((Username != "") || (Username != null)) && (Password != "")) 
             {
+                // Retrieves the user details from the DB for the username entered if the username is correct
                 GetUserDetails(Username);
                 if ((ValidateUserNameLogin(Username) == true) && (ValidatePasswordLogin(Password) == true))
                 {
@@ -160,7 +164,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
                     Message = "Account Login successful";
                     // Procedures which hide the Account Login window and display the Main Menu window
                     ShowMainMenu();
-                    HideAccountLogin();
+                    //HideAccountLogin();
                 }
             }
             else 

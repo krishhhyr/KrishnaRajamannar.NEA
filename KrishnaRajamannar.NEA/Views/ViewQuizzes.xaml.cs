@@ -98,7 +98,7 @@ namespace KrishnaRajamannar.NEA.Views
         {
             this.quizDataGrid.ItemsSource = _viewQuizzesViewModel.LoadQuiz();
 
-            this.questionDataGrid.ItemsSource = _viewQuizzesViewModel.LoadQuestions();
+            //this.questionDataGrid.ItemsSource = _viewQuizzesViewModel.LoadQuestions();
         }
 
         // Shows the CreateQuestion window once the menu item is pressed

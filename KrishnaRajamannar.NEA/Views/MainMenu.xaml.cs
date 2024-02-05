@@ -68,20 +68,17 @@ namespace KrishnaRajamannar.NEA.Views
 
         private void viewQuizzesBtn_Click(object sender, RoutedEventArgs e)
         {
-            _mainMenuViewModel.HideMainMenu();
             _mainMenuViewModel.ShowViewQuizzes();
         }
 
         private void leaderboardBtn_Click(object sender, RoutedEventArgs e)
         {
-            _mainMenuViewModel.HideMainMenu();
             _mainMenuViewModel.ShowLeaderboard();
         }
 
         // This hides the current window (Main Menu) and displays the ClientSession window
         private void hostSessionBtn_Click(object sender, RoutedEventArgs e)
         {
-            _mainMenuViewModel.HideMainMenu();
             _mainMenuViewModel.ShowServerSession();
         }
 
@@ -90,7 +87,7 @@ namespace KrishnaRajamannar.NEA.Views
         // and that window is displayed
         private void joinSessionBtn_Click(object sender, RoutedEventArgs e)
         {
-            _mainMenuViewModel.HideMainMenu();
+            //_mainMenuViewModel.HideMainMenu();
 
             if (_mainMenuViewModel.ValidateSessionID() == true) 
             {

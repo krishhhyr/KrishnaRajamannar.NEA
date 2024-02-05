@@ -90,11 +90,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
         public void Creation()
         {
             // Checks if the username, password and retyped password is not empty
-            if (!(Username != null) && (Password != null) && (RetypedPassword != null))
-            {
-                Message = "Enter valid input.";
-            }
-            else 
+            if (((Username != null) || (Username != "")) && (Password != "") && (RetypedPassword != ""))
             {
                 if ((ValidateUsernameCreation() == true) && (ValidatePasswordCreation() == true))
                 {
@@ -106,14 +102,16 @@ namespace KrishnaRajamannar.NEA.ViewModels
                     CloseAccountCreationWindow();
                 }
             }
-
-
+            else 
+            {
+                Message = "Enter valid input.";
+            }
         }
     
         private bool ValidateUsernameCreation()
         {
             // Checks if the username inputted is between 4 -15 characters
-            if (!(Username.Length >= 4) && (Username.Length <= 15))
+            if (!((Username.Length >= 4) && (Username.Length <= 15)))
             {
                 Message = "Username must be between 4-15 characters.";
             }
@@ -131,7 +129,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
         }
         private bool ValidatePasswordCreation()
         {
-            if (!(Password.Length > 8) && (Password.Length < 15))
+            if (!((Password.Length >= 8) && (Password.Length <= 15)))
             {
                 Message = "Password must be between 8-15 characters.";
                 return false;
