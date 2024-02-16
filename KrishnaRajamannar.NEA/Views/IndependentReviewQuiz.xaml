@@ -24,7 +24,7 @@
             <Border Background="#7474b0" Grid.Column="1" Grid.Row="1"></Border>
 
             <Button x:Name="endReviewBtn" Content="End Review" FontSize="16" Height="30" Width="100" Margin="10"
-                    Background="WhiteSmoke"></Button>
+                    Background="WhiteSmoke" Click="endReviewBtn_Click"></Button>
 
             <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="0">
                 <Label x:Name="questionNumberLbl" Content="Question:" FontSize="16" VerticalAlignment="Center"

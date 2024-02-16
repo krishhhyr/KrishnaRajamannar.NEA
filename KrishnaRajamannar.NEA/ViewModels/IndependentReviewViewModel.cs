@@ -171,13 +171,13 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyname));
             }
         }
-        private void HideIndependentReviewQuiz()
+        public void HideIndependentReviewQuiz()
         {
             HideWindowEventArgs args = new HideWindowEventArgs();
             args.IsHidden = true;
             OnHideIndependentReviewQuizWindow(args);
         }
-        private void ShowIndependentReviewFeedback() 
+        public void ShowIndependentReviewFeedback() 
         {
             ShowQuizParameterWindowEventArgs args = new ShowQuizParameterWindowEventArgs();
             args.IsShown = true;

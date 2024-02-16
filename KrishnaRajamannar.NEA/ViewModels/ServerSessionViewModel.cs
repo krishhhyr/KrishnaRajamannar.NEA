@@ -499,15 +499,17 @@ namespace KrishnaRajamannar.NEA.ViewModels
         // This checks if the input is between 5 and 60 minutes.
         private bool ValidateTimeInput()
         {
-            if ((int.Parse(ConditionValue) >= 5) && (int.Parse(ConditionValue) <= 60))
+            if (ConditionValue != null) 
             {
-                return true;
-            }
-            else
-            {
+                if ((int.Parse(ConditionValue) >= 5) && (int.Parse(ConditionValue) <= 60))
+                {
+                    return true;
+                }
                 Message = "Invalid input. Enter a value between 5 and 60 minutes.";
                 return false;
             }
+            Message = "Invalid input. Enter a value between 5 and 60 minutes.";
+            return false;
         }
 
         // Used to insert the session data into the Session table in the database. 
@@ -516,27 +518,32 @@ namespace KrishnaRajamannar.NEA.ViewModels
         {
             bool valid = false;
 
-            if (SelectedCondition == "Number of Questions")
+            if (SelectedQuiz != null) 
             {
-                valid = ValidateNumberOfQuestionsInput();
-            }
-            else
-            {
-                valid = ValidateTimeInput();
-            }
+                if (SelectedCondition == "Number of Questions")
+                {
+                    valid = ValidateNumberOfQuestionsInput();
+                }
+                else
+                {
+                    valid = ValidateTimeInput();
+                }
 
-            if (valid == true)
-            {
-                string ipAddress = GetIPAddress();
-                int portNumber = GetPortNumber();
+                if (valid == true)
+                {
+                    string ipAddress = GetIPAddress();
+                    int portNumber = GetPortNumber();
 
-                _sessionService.InsertSessionData(SessionID, SelectedQuiz, SelectedCondition, ConditionValue
-                , ipAddress, portNumber, 36);
-                _serverService.StartServer(Username, ipAddress, portNumber);
-                Message = "Session Started.";
+                    _sessionService.InsertSessionData(SessionID, SelectedQuiz, SelectedCondition, ConditionValue
+                    , ipAddress, portNumber, 36);
+                    _serverService.StartServer(Username, ipAddress, portNumber);
+                    Message = "Session Started.";
 
-                return true;
+                    return true;
+                }
+                return false;
             }
+            Message = "Invalid Input. Enter a valid quiz to review.";
             return false;
         }
 

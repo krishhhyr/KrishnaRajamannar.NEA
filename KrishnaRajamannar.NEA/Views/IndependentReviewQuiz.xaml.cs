@@ -124,5 +124,11 @@ namespace KrishnaRajamannar.NEA.Views
             startBtn.Visibility = Visibility.Hidden;
             nextBtn_Click(sender, e);
         }
+
+        private void endReviewBtn_Click(object sender, RoutedEventArgs e)
+        {
+            _independentReviewViewModel.ShowIndependentReviewFeedback();
+            _independentReviewViewModel.HideIndependentReviewQuiz();
+        }
     }
 }
