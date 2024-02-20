@@ -6,6 +6,7 @@ using KrishnaRajamannar.NEA.Services;
 using KrishnaRajamannar.NEA.Services.Connection;
 using KrishnaRajamannar.NEA.Services.Database;
 using KrishnaRajamannar.NEA.Services.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -22,6 +23,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace KrishnaRajamannar.NEA.ViewModels
 {
@@ -30,6 +32,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
         public event PropertyChangedEventHandler? PropertyChanged;
         public event QuestionRecievedEventHandler TextQuestionRecieved;
         public event QuestionRecievedEventHandler MultipleChoiceQuestionRecieved;
+        public event ShowAccountParameterWindowEventHandler ShowMultipleReviewQuizFeedback;
         public event TimerEventHandler AnswerTimerFinished;
         private readonly IServerService _serverService;
         private readonly ISessionService _sessionService;
@@ -41,17 +44,23 @@ namespace KrishnaRajamannar.NEA.ViewModels
         public int UserID;
         public string Username;
         public int TotalPoints;
+
+        private int SessionTimeLimit = 0;
         IList<QuizModel> Quizzes = new List<QuizModel>();
         IList<QuestionModel> Questions = new List<QuestionModel>();
         QuestionModel CurrentQuestion = new QuestionModel();
+        int Counter = 0;
         public int NumberOfQuestions;
         public int QuestionNumber = 0;
+        private int QuizID;
         private DispatcherTimer answerTimer;
         private TimeSpan AnswerTime;
         private DispatcherTimer sessionTimer;
         private TimeSpan SessionTime;
 
-        public ServerSessionViewModel(IServerService serverService, ISessionService sessionService, IQuizService quizService, 
+        public MultipleReviewQuizFeedbackViewModel MultipleReviewQuizFeedbackViewModel;
+
+        public ServerSessionViewModel(IServerService serverService, ISessionService sessionService, IQuizService quizService,
             IQuestionService questionService, IUserService userService, IMultiplayerReviewQuizService multiplayerReviewQuizService)
         {
             answerTimer = new DispatcherTimer();
@@ -66,10 +75,10 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
             _serverService.ProcessClientResponse += OnProcessClientResponse;
             answerTimer.Tick += AnswerTimer_Tick;
-            //sessionTimer.Tick += SessionTimer_Tick;
+            sessionTimer.Tick += SessionTimer_Tick;
+
+            MultipleReviewQuizFeedbackViewModel = App.ServiceProvider.GetService(typeof(MultipleReviewQuizFeedbackViewModel)) as MultipleReviewQuizFeedbackViewModel;
         }
-
-
 
         private void OnProcessClientResponse(object sender, ProcessClientResponseEventArgs e)
         {
@@ -184,8 +193,8 @@ namespace KrishnaRajamannar.NEA.ViewModels
             }
         }
 
-        private ObservableCollection<UserSessionData> _joinedUsers = new ObservableCollection<UserSessionData>();
-        public ObservableCollection<UserSessionData> JoinedUsers
+        private List<UserSessionData> _joinedUsers = new List<UserSessionData>();
+        public List<UserSessionData> JoinedUsers
         {
             get { return _joinedUsers; }
             set
@@ -195,8 +204,8 @@ namespace KrishnaRajamannar.NEA.ViewModels
             }
         }
 
-        private string _numberOfUsersJoined;
-        public string NumberOfUsersJoined
+        private int _numberOfUsersJoined;
+        public int NumberOfUsersJoined
         {
             get { return _numberOfUsersJoined; }
             set
@@ -316,14 +325,25 @@ namespace KrishnaRajamannar.NEA.ViewModels
             }
         }
 
-        private string _remainingTimeLimit;
-        public string RemainingTimeLimit
+        private string _remainingAnswerTimeLimit;
+        public string RemainingAnswerTimeLimit
         {
-            get { return _remainingTimeLimit; }
+            get { return _remainingAnswerTimeLimit; }
             set
             {
-                _remainingTimeLimit = value;
-                RaisePropertyChange("RemainingTimeLimit");
+                _remainingAnswerTimeLimit = value;
+                RaisePropertyChange("RemainingAnswerTimeLimit");
+            }
+        }
+
+        private string _remainingSessionTimeLimit;
+        public string RemainingSessionTimeLimit
+        {
+            get { return _remainingSessionTimeLimit; }
+            set
+            {
+                _remainingSessionTimeLimit = value;
+                RaisePropertyChange("RemainingSessionTimeLimit");
             }
         }
 
@@ -387,6 +407,16 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 handler(this, e);
             }
         }
+
+        protected virtual void OnShowMultipleReviewQuizFeedback(ShowAccountParameterWindowEventArgs e)
+        {
+            ShowAccountParameterWindowEventHandler handler = ShowMultipleReviewQuizFeedback;
+            if (handler != null)
+            {
+                handler(this, e);
+            }
+        }
+
         #endregion
 
         #region SessionConfiguration
@@ -469,10 +499,23 @@ namespace KrishnaRajamannar.NEA.ViewModels
             _quizTitles = titlesOfQuizzes;
         }
 
+        // Used to retrieve the Quiz ID of the quiz that was selected by the host.
+        private void GetQuizIDOfSelectedQuiz()
+        {
+            foreach (var quiz in Quizzes)
+            {
+                if (SelectedQuiz == quiz.QuizTitle)
+                {
+                    QuizID = quiz.QuizID;
+                }
+            }
+        }
+
         // This validates the input in which the quiz ends if a certain number of 
         // questions has been answered.
         // This checks if the input is below or equal to the number of questions
         // in the quiz selected by the host.
+
         private bool ValidateNumberOfQuestionsInput()
         {
             bool valid = false;
@@ -482,6 +525,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 if ((SelectedQuiz == quiz.QuizTitle) && (int.Parse(ConditionValue) <= quiz.NumberOfQuestions))
                 {
                     valid = true;
+                    QuizID = quiz.QuizID;
                     return valid;
                 }
             }
@@ -499,7 +543,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
         // This checks if the input is between 5 and 60 minutes.
         private bool ValidateTimeInput()
         {
-            if (ConditionValue != null) 
+            if (ConditionValue != null)
             {
                 if ((int.Parse(ConditionValue) >= 5) && (int.Parse(ConditionValue) <= 60))
                 {
@@ -518,8 +562,10 @@ namespace KrishnaRajamannar.NEA.ViewModels
         {
             bool valid = false;
 
-            if (SelectedQuiz != null) 
+            if (SelectedQuiz != null)
             {
+                GetQuizIDOfSelectedQuiz();
+
                 if (SelectedCondition == "Number of Questions")
                 {
                     valid = ValidateNumberOfQuestionsInput();
@@ -535,7 +581,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
                     int portNumber = GetPortNumber();
 
                     _sessionService.InsertSessionData(SessionID, SelectedQuiz, SelectedCondition, ConditionValue
-                    , ipAddress, portNumber, 36);
+                    , ipAddress, portNumber, QuizID);
                     _serverService.StartServer(Username, ipAddress, portNumber);
                     Message = "Session Started.";
 
@@ -568,10 +614,40 @@ namespace KrishnaRajamannar.NEA.ViewModels
             }
         }
 
+        public void LoadData(ClientResponse response)
+        {
+            if (response != null)
+            {
+                if (!string.IsNullOrEmpty(response.Data))
+                {
+                    SessionData data = JsonSerializer.Deserialize<SessionData>(response.Data);
+                    if (data != null)
+                    {
+                        if (data.UserSessions.Any())
+                        {
+
+                            JoinedUsers.Clear();
+
+                            //_userSessionData.AddRange(data.UserSessions);
+                            JoinedUsers = data.UserSessions.ToList();
+
+                            NumberOfUsersJoined = JoinedUsers.Count;
+                        }
+                    }
+                }
+            }
+
+        }
 
         public void StartQuiz()
         {
             Message = "Quiz Started.";
+
+            if (SelectedCondition == "Time Limit")
+            {
+                AssignSessionTimeValues();
+                sessionTimer.Start();
+            }
 
             foreach (QuizModel quiz in Quizzes)
             {
@@ -589,29 +665,10 @@ namespace KrishnaRajamannar.NEA.ViewModels
             NumberOfQuestion = QuestionNumber + 1;
         }
 
-        private bool CheckEndQuiz()
-        {
-            if ((SelectedCondition == "Number of Questions") && (QuestionNumber >= int.Parse(ConditionValue)))
-            {
-                Message = "No more questions left to review.";
-                return true;
-            }
-            //else if ((SelectedCondition == "Time Limit") && (sessionTime == ConditionValue))
-            //{
-            //    Message = "Session Time has been reached.";
-            //    return true;
-            //}
-            else
-            {
-                return false;
-            }
-        }
-
-
         private void DisplayQuestion(QuestionModel question)
         {
 
-            if (question.Option1 != "NULL")
+            if (question.Option1 != "")
             {
                 QuestionRecievedEventArgs args = new QuestionRecievedEventArgs();
                 OnShowMultipleChoiceQuestion(args);
@@ -625,6 +682,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
             AssignAnswerTimeValues(question.Duration);
             answerTimer.Start();
         }
+
         private void AssignQuestionValues(QuestionModel questionData)
         {
             Question = questionData.Question;
@@ -636,17 +694,42 @@ namespace KrishnaRajamannar.NEA.ViewModels
             Option6 = questionData.Option6;
         }
 
-        //private void AssignSessionTimeValues() 
-        //{
-        //    //SessionTime = TimeSpan.FromSeconds();
-        //    sessionTimer.Interval = TimeSpan.FromSeconds(int.Parse(ConditionValue));
-        //    sessionTimer.Start();
-        //}
+        private void AssignSessionTimeValues()
+        {
+            int sessionTime = int.Parse(ConditionValue) * 60;
+            SessionTime = TimeSpan.FromSeconds(sessionTime);
+            sessionTimer.Interval = TimeSpan.FromSeconds(1);
+        }
 
-        //private void SessionTimer_Tick(object? sender, EventArgs e)
-        //{
-        //    TimeOfSession = sessionTimer.Interval.ToString();
-        //}
+        private void SessionTimer_Tick(object? sender, EventArgs e)
+        {
+            if (SessionTime == TimeSpan.Zero)
+            {
+                answerTimer.Stop();
+                Message = "Time for Session is up!";
+                ShowMultipleReviewQuizFeedbackWindow();
+            }
+            else
+            {
+                SessionTime = SessionTime.Add(TimeSpan.FromSeconds(-1));
+                RemainingSessionTimeLimit = SessionTime.TotalSeconds.ToString();
+            }
+        }
+
+        private void ShowMultipleReviewQuizFeedbackWindow() 
+        {
+            if (!(Counter > 0))
+            {
+                ShowAccountParameterWindowEventArgs args = new ShowAccountParameterWindowEventArgs();
+                args.IsShown = true;
+                args.UserID = UserID;
+                OnShowMultipleReviewQuizFeedback(args);
+            }
+            else 
+            {
+                Counter++;
+            }
+        }
 
         private void AssignAnswerTimeValues(int answerTime)
         {
@@ -665,7 +748,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
             else
             {
                 AnswerTime = AnswerTime.Add(TimeSpan.FromSeconds(-1));
-                RemainingTimeLimit = AnswerTime.Seconds.ToString();
+                RemainingAnswerTimeLimit = AnswerTime.Seconds.ToString();
             }
         }
 
@@ -686,24 +769,59 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 ValidAnswerMessage = $"Correct Answer. {CurrentQuestion.NumberOfPoints} points have been awarded!";
                 Message = "Correct Answer!";
                 _userService.UpdatePoints(UserID, TotalPoints);
-                _multiplayerReviewQuizService.InsertMultiplayerQuizFeedbackData(SessionID, UserID, CurrentQuestion.Question, CurrentQuestion.Answer, true);
+                _multiplayerReviewQuizService.InsertMultiplayerQuizFeedbackData(SessionID, UserID, QuizID, CurrentQuestion.Question, CurrentQuestion.Answer, true);
             }
             else
             {
                 Message = "Incorrect Answer!";
                 ValidAnswerMessage = $"Answer was {CurrentQuestion.Answer}. 0 points have been awarded!";
-                _multiplayerReviewQuizService.InsertMultiplayerQuizFeedbackData(SessionID, UserID, CurrentQuestion.Question, CurrentQuestion.Answer, false);
+                _multiplayerReviewQuizService.InsertMultiplayerQuizFeedbackData(SessionID, UserID, QuizID, CurrentQuestion.Question, CurrentQuestion.Answer, false);
             }
 
         }
 
+        private bool CheckEndQuiz()
+        {
+            if ((SelectedCondition == "Number of Questions") && (QuestionNumber >= int.Parse(ConditionValue)))
+            {
+                Message = "No more questions left to review.";
+                return true;
+            }
+            //else if ((SelectedCondition == "Time Limit") && (sessionTime == ConditionValue))
+            //{
+            //    Message = "Session Time has been reached.";
+            //    return true;
+            //}
+            else
+            {
+                return false;
+            }
+        }
 
-        private void SendNextQuestion() 
+        private void SendNextQuestion()
         {
             QuestionNumber++;
-            if (CheckEndQuiz() == false)
+            NumberOfQuestion = QuestionNumber + 1;
+            if (NumberOfQuestion > Questions.Count)
             {
-                NumberOfQuestion = QuestionNumber + 1;
+                Message = "No more questions to review.";
+
+                ShowAccountParameterWindowEventArgs args = new ShowAccountParameterWindowEventArgs();
+                args.IsShown = true;
+                args.UserID = UserID;
+                OnShowMultipleReviewQuizFeedback(args);
+            }
+            if ((SelectedCondition == "Number of Questions") && (NumberOfQuestion > int.Parse(ConditionValue)))
+            {
+                Message = "No more questions to review.";
+
+                ShowAccountParameterWindowEventArgs args = new ShowAccountParameterWindowEventArgs();
+                args.IsShown = true;
+                args.UserID = UserID;
+                OnShowMultipleReviewQuizFeedback(args);
+            }
+            else
+            {
                 QuestionModel question = Questions[QuestionNumber];
                 CurrentQuestion = question;
                 string questionData = JsonSerializer.Serialize<QuestionModel>(question);
@@ -711,14 +829,12 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 TextAnswerInput = null;
                 DisplayQuestion(question);
             }
-            
         }
 
+        
         public void ValidateClientAnswer(string? answer, int userID, string username, int totalPoints) 
         {
             string message = "";
-
-            ValidateServerAnswer();
 
             if (CurrentQuestion.Answer == answer)
             {
@@ -726,23 +842,15 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 int numberOfPointsGained = totalPoints + CurrentQuestion.NumberOfPoints;
                 message = $"Correct Answer. {CurrentQuestion.NumberOfPoints} points have been awarded!";
                 _userService.UpdatePoints(userID, totalPoints);
-                _multiplayerReviewQuizService.InsertMultiplayerQuizFeedbackData(SessionID, userID, CurrentQuestion.Question, CurrentQuestion.Answer, true);
+                _multiplayerReviewQuizService.InsertMultiplayerQuizFeedbackData(SessionID, userID, QuizID, CurrentQuestion.Question, CurrentQuestion.Answer, true);
             }
             else
             {
                 message = $"Answer was {CurrentQuestion.Answer}. 0 points have been awarded!";
-                _multiplayerReviewQuizService.InsertMultiplayerQuizFeedbackData(SessionID, userID, CurrentQuestion.Question, CurrentQuestion.Answer, true);
+                _multiplayerReviewQuizService.InsertMultiplayerQuizFeedbackData(SessionID, userID, QuizID, CurrentQuestion.Question, CurrentQuestion.Answer, true);
             }
 
             _serverService.SendDataToClients(message, "SendCorrectAnswer");
-
-
-            Dispatcher.CurrentDispatcher.BeginInvoke(() =>
-            {
-                
-            });
-
-            
         }
 
         // pass event called end session?

@@ -1,34 +1,23 @@
-﻿using System;
+﻿using KrishnaRajamannar.NEA.Events;
+using KrishnaRajamannar.NEA.Models.Dto;
+using KrishnaRajamannar.NEA.Models.DTO;
+using KrishnaRajamannar.NEA.Services.Interfaces;
+using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Shapes;
-using KrishnaRajamannar.NEA.Services.Interfaces;
-using KrishnaRajamannar.NEA.Models.Dto;
-using KrishnaRajamannar.NEA.Views;
-//using log4net;
-using Microsoft.Identity.Client;
-using System.IO.Packaging;
-using System.Collections.Concurrent;
-using KrishnaRajamannar.NEA.Events;
-using KrishnaRajamannar.NEA.Models.DTO;
-using Azure;
-using System.Text.Json.Serialization;
-using System.Runtime.Serialization.Json;
 
 namespace KrishnaRajamannar.NEA.Services.Connection
 {
     public class ServerService : IServerService
     {
         public event ProcessClientResponseEventHandler ProcessClientResponse;
+        public event ClientConnectedEventHandler ClientConnected;
 
         TcpListener server;
         private string _hostname;
@@ -93,6 +82,15 @@ namespace KrishnaRajamannar.NEA.Services.Connection
         {
             ProcessClientResponseEventHandler handler = ProcessClientResponse;
             if (handler != null)
+            {
+                handler(this, e);
+            }
+        }
+
+        protected virtual void OnClientConnected(ClientConnectedEventArgs e) 
+        {
+            ClientConnectedEventHandler handler = ClientConnected;
+            if (handler != null) 
             {
                 handler(this, e);
             }

@@ -22,7 +22,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
         public event PropertyChangedEventHandler? PropertyChanged;
         public event QuestionRecievedEventHandler TextQuestionRecieved;
         public event QuestionRecievedEventHandler MultipleChoiceQuestionRecieved;
-        public event ShowSessionParameterWindowEventHandler ShowMultipleQuizFeedbackWindow;
+        public event ShowAccountParameterWindowEventHandler ShowMultipleQuizFeedbackWindow;
         public event TimerEventHandler AnswerTimerFinished;
         private readonly IClientService _clientService;
         private readonly ISessionService _sessionService;
@@ -56,8 +56,9 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
         private void OnEndQuizEvent(object sender, EndQuizEventArgs e)
         {
-            ShowSessionParameterWindowEventArgs args = new ShowSessionParameterWindowEventArgs();
-            args.ServerResponse = e.ServerResponse;
+            ShowAccountParameterWindowEventArgs args = new ShowAccountParameterWindowEventArgs();
+            args.IsShown = true;
+            args.UserID = UserID;
             OnShowMultipleQuizFeedbackWindow(args);
         }
 
@@ -368,9 +369,9 @@ namespace KrishnaRajamannar.NEA.ViewModels
             }
         }
 
-        protected virtual void OnShowMultipleQuizFeedbackWindow(ShowSessionParameterWindowEventArgs e)
+        protected virtual void OnShowMultipleQuizFeedbackWindow(ShowAccountParameterWindowEventArgs e)
         {
-            ShowSessionParameterWindowEventHandler handler = ShowMultipleQuizFeedbackWindow;
+            ShowAccountParameterWindowEventHandler handler = ShowMultipleQuizFeedbackWindow;
             if (handler != null)
             {
                 handler(this, e);
@@ -394,7 +395,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
                             AnswerInput = null;
 
-                            if (question.Option1 != "NULL")
+                            if (question.Option1 != "")
                             {
                                 QuestionRecievedEventArgs args = new QuestionRecievedEventArgs();
                                 OnShowMultipleChoiceQuestion(args);
@@ -422,7 +423,6 @@ namespace KrishnaRajamannar.NEA.ViewModels
                             {
                                 Message = "Incorrect Answer!";
                             }
-
                             break;
                     }
                 }

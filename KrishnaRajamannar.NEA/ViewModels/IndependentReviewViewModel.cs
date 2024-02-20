@@ -476,7 +476,12 @@ namespace KrishnaRajamannar.NEA.ViewModels
         // Used to calculate the number of points which should be awarded to users. 
         public int CalculatePoints(bool isCorrect) 
         {
-
+            // If the question has not been answered beforehand (i.e if its a new question)
+            // Then return the number of points specified by users when creating the question. 
+            if ((CurrentQuestion.AnswerStreak == 0) || (CurrentQuestion.PointsGained == 0))
+            {
+                return CurrentQuestion.PointsForQuestion;
+            }
             // If a question was consecutively answered incorrectly but is now correct. 
             if ((isCorrect == true) && (CurrentQuestion.IsCorrect == false)) 
             {
@@ -487,12 +492,6 @@ namespace KrishnaRajamannar.NEA.ViewModels
             if ((isCorrect == false) && (CurrentQuestion.IsCorrect == true))
             {
                 return 0;
-            }
-            // If the question has not been answered beforehand (i.e if its a new question)
-            // Then return the number of points specified by users when creating the question. 
-            if ((CurrentQuestion.AnswerStreak == 0) || (CurrentQuestion.PointsGained == 0))
-            {
-                return CurrentQuestion.PointsForQuestion;
             }
             // If the question has been answered beforehand and matches the answer when answered previously,
             // i.e if the question was first answered correctly and now is again answered correctly, 

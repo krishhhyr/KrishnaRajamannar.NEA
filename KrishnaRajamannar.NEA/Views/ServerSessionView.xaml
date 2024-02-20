@@ -72,10 +72,10 @@
                         <Label x:Name="questionTimeLimitLbl" Content="{Binding AnswerTimeLimit}" FontSize="20" VerticalAlignment="Center"
                                Foreground="White"></Label>
 
-                        <Label Content="Session Time (in Minutes):" FontSize="20" VerticalAlignment="Center"
+                        <Label Content="Session Time (in Seconds):" FontSize="20" VerticalAlignment="Center"
                                Margin="10,5,0,5" Foreground="White"></Label>
 
-                        <Label x:Name="sessionTimeLbl" Content="{Binding TimeOfSession}" FontSize="20" VerticalAlignment="Center"
+                        <Label x:Name="sessionTimeLbl" Content="{Binding RemainingSessionTimeLimit}" FontSize="20" VerticalAlignment="Center"
                                Foreground="White"></Label>
 
                     </StackPanel>
@@ -117,7 +117,7 @@
 
                         <Label Content="Remaining Time To Answer:" VerticalAlignment="Center" FontSize="20" Foreground="White" Margin="0,0,0,0"></Label>
 
-                        <Label x:Name="remainingTimeLbl" Content="{Binding RemainingTimeLimit}" VerticalAlignment="Center" FontSize="20" Foreground="White" Margin="0,5,5,5"></Label>
+                        <Label x:Name="remainingTimeLbl" Content="{Binding RemainingAnswerTimeLimit}" VerticalAlignment="Center" FontSize="20" Foreground="White" Margin="0,5,5,5"></Label>
                     </StackPanel>
 
                     <Border Background="#a1a1ce" Grid.Column="2">
@@ -172,7 +172,7 @@
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Visibility="Visible">
                                 <Label Content="Number Of Joined Users:" FontSize="20" HorizontalAlignment="Center"
                                        Foreground="White"></Label>
-                                <Label x:Name="numberOfUsersJoinedLbl" Content="{Binding NumberOfJoinedUsers}" FontSize="20" HorizontalAlignment="Center"
+                                <Label x:Name="numberOfUsersJoinedLbl" Content="{Binding NumberOfUsersJoined}" FontSize="20" HorizontalAlignment="Center"
                                        Foreground="White"></Label>
                             </StackPanel>
                         </StackPanel>

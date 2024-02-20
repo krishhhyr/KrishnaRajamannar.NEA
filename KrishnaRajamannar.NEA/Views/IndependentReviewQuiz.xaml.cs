@@ -14,6 +14,7 @@ namespace KrishnaRajamannar.NEA.Views
     {
         private IndependentReviewFeedback independentReviewFeedback;
         private readonly IndependentReviewViewModel _independentReviewViewModel;
+        private  IList<IndependentReviewQuizModel> _questions;
 
         public IndependentReviewQuiz(IndependentReviewViewModel independentReviewViewModel)
         {
@@ -55,8 +56,6 @@ namespace KrishnaRajamannar.NEA.Views
         // This is used if the user submits a multiple-choice based answer.
         private void multipleChoiceAnswerBtn_Click(object sender, RoutedEventArgs e)
         {
-            //IList<IndependentReviewQuizModel> questions = _independentReviewViewModel.GetQuestionsInOrder();
-
             List<RadioButton> radioButtons = new List<RadioButton>();
             radioButtons.Add(option1rb);
             radioButtons.Add(option2rb);
@@ -87,8 +86,6 @@ namespace KrishnaRajamannar.NEA.Views
 
         private void nextBtn_Click(object sender, RoutedEventArgs e)
         {
-            IList<IndependentReviewQuizModel> questions = _independentReviewViewModel.GetQuestionsInOrder();
-
             // This hides the next button so that users have to submit an answer before moving onto the next question.
             nextBtn.Visibility = Visibility.Hidden;
             textAnswerBtn.Visibility = Visibility.Visible;
@@ -98,7 +95,7 @@ namespace KrishnaRajamannar.NEA.Views
             answerTxtBox.Text = "";
             correctTextAnswerLbl.Content = "";
 
-            _independentReviewViewModel.SendQuestion(questions);
+            _independentReviewViewModel.SendQuestion(_questions);
 
             // Checks the question type of the next question
             // If it is a text-based question, the stack panel to answer that question type is displayed
@@ -122,6 +119,10 @@ namespace KrishnaRajamannar.NEA.Views
         private void startBtn_Click(object sender, RoutedEventArgs e)
         {
             startBtn.Visibility = Visibility.Hidden;
+
+            IList<IndependentReviewQuizModel> questions = _independentReviewViewModel.GetQuestionsInOrder();
+            _questions = questions;
+
             nextBtn_Click(sender, e);
         }
 

@@ -8,20 +8,26 @@
         Title="MultipleReviewFeedbackWindow" Height="495" Width="880" 
         ResizeMode="NoResize" FontFamily="Segoe UI Light">
 
-    <Border Background="#7474b0" BorderBrush="AntiqueWhite" BorderThickness="2">
+    <Border Background="#a1a1ce" BorderBrush="AntiqueWhite" BorderThickness="2">
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="100"></ColumnDefinition>
-                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition Width="10*"></ColumnDefinition>
+                <ColumnDefinition Width="95"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-
             <Grid.RowDefinitions>
-                <RowDefinition Height="75"></RowDefinition>
-                <RowDefinition Height="430"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="10*"></RowDefinition>
+                <RowDefinition Height="1*"></RowDefinition>
             </Grid.RowDefinitions>
 
-            <Button x:Name="backBtn" Content="Back" Grid.Column="0"
-                    FontSize="20" Background="WhiteSmoke" Margin="5" Height="40" Width="75"></Button>
+            <Button x:Name="backBtn" Content="Back" Height="30" Width="75" Margin="10" FontSize="16"
+                    Background="WhiteSmoke" BorderBrush="Black" Click="backBtn_Click"></Button>
+
+            <DataGrid x:Name="quizFeedbackDataGrid" Grid.Column="1" Grid.Row="1" SelectionMode="Single"
+                  CanUserAddRows="False" FontFamily="Segoe UI Light" ColumnWidth="*" FontSize="16" Background="#7474b0"
+                      AlternatingRowBackground="#cfcfe8">
+            </DataGrid>
         </Grid>
     </Border>
 </Window>
