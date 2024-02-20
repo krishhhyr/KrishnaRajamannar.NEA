@@ -2,6 +2,6 @@
 {
     public interface IMultiplayerReviewQuizService
     {
-        public void InsertMultiplayerQuizFeedbackData(int sessionID, int userID, string question, string answer, bool answeredCorrectly);
+        public void InsertMultiplayerQuizFeedbackData(int sessionID, int userID, int quizID, string question, string answer, bool answeredCorrectly);
     }
 }

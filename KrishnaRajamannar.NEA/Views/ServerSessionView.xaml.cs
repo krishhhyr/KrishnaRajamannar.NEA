@@ -1,17 +1,7 @@
 ﻿using KrishnaRajamannar.NEA.ViewModels;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace KrishnaRajamannar.NEA.Views
 {
@@ -21,6 +11,7 @@ namespace KrishnaRajamannar.NEA.Views
     public partial class ServerSessionView : Window
     {
         private readonly ServerSessionViewModel _serverSessionViewModel;
+        private MultipleReviewFeedbackWindow multipleReviewFeedbackWindow;
         public ServerSessionView(ServerSessionViewModel serverSessionViewModel)
         {
             InitializeComponent();
@@ -35,6 +26,15 @@ namespace KrishnaRajamannar.NEA.Views
             _serverSessionViewModel.TextQuestionRecieved += _serverSessionViewModel_TextQuestionRecieved;
             _serverSessionViewModel.MultipleChoiceQuestionRecieved += _serverSessionViewModel_MultipleChoiceQuestionRecieved;
             _serverSessionViewModel.AnswerTimerFinished += _serverSessionViewModel_AnswerTimerFinished;
+            _serverSessionViewModel.ShowMultipleReviewQuizFeedback += _serverSessionViewModel_ShowMultipleReviewQuizFeedback;
+        }
+
+        private void _serverSessionViewModel_ShowMultipleReviewQuizFeedback(object sender, Events.ShowAccountParameterWindowEventArgs e)
+        {
+            _serverSessionViewModel.MultipleReviewQuizFeedbackViewModel.UserID = e.UserID;
+            multipleReviewFeedbackWindow = new MultipleReviewFeedbackWindow(_serverSessionViewModel.MultipleReviewQuizFeedbackViewModel);
+            this.Close();
+            multipleReviewFeedbackWindow.Show();
         }
 
         private void _serverSessionViewModel_AnswerTimerFinished(object sender, Events.TimerEventArgs e)

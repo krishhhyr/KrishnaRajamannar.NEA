@@ -224,6 +224,8 @@ namespace KrishnaRajamannar.NEA.Services.Database
 
             const string sqlQuery =
                 @"
+                    DELETE FROM QuizFeedback 
+                    WHERE TextQuestionID = @TextQuestionID 
                     DELETE FROM QuizTextQuestionLink
                     WHERE TextQuestionID = @TextQuestionID
                     DELETE FROM TextQuestion
@@ -423,6 +425,8 @@ namespace KrishnaRajamannar.NEA.Services.Database
 
             const string sqlQuery =
                 @"
+                    DELETE FROM QuizFeedback
+                    WHERE MCQuestionID = @MCQuestionID
                     DELETE FROM QuizMultipleChoiceQuestionLink
                     WHERE MCQuestionID = @MCQuestionID
                     DELETE FROM MultipleChoiceQuestion

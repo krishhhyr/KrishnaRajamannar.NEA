@@ -26,6 +26,20 @@ namespace KrishnaRajamannar.NEA.Views
         {
             InitializeComponent();
             _multipleReviewQuizFeedbackViewModel = multipleReviewQuizFeedbackViewModel;
+
+            quizFeedbackDataGrid.ItemsSource = _multipleReviewQuizFeedbackViewModel.GetQuizFeedback();
+
+            _multipleReviewQuizFeedbackViewModel.HideMultipleReviewQuizFeedbackWindow += _multipleReviewQuizFeedbackViewModel_HideMultipleReviewQuizFeedbackWindow;
+        }
+
+        private void _multipleReviewQuizFeedbackViewModel_HideMultipleReviewQuizFeedbackWindow(object sender, Events.HideWindowEventArgs e)
+        {
+            this.Close();
+        }
+
+        private void backBtn_Click(object sender, RoutedEventArgs e)
+        {
+            _multipleReviewQuizFeedbackViewModel.HideMultipleReviewQuizFeedback();
         }
     }
 }
