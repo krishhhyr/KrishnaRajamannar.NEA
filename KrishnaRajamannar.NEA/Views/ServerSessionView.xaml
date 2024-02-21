@@ -21,14 +21,6 @@
                 <RowDefinition Height="650"></RowDefinition>
                 <RowDefinition Height="130"></RowDefinition>
             </Grid.RowDefinitions>
-
-            <!--<Border BorderBrush = "AntiqueWhite" BorderThickness="10" Grid.Column="1">
-                <Button Content="Start Server" Background="#a1a1ce"  Click="Button_Click"></Button>
-            </Border>
-            <Label Content="Server" Foreground="AntiqueWhite" FontSize="40"></Label>
-            <Button Content="Start Server" Background="#a1a1ce" Grid.Column="1" Click="Button_Click"></Button>
-            <Button Content="Start Quiz" Grid.Column="2" Click="Button_Click_1"></Button>-->
-
             <Border Background="#a1a1ce">
                 <Grid Grid.Row="0">
                     <Grid.ColumnDefinitions>

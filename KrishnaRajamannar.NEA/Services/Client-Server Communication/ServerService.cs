@@ -20,7 +20,9 @@ namespace KrishnaRajamannar.NEA.Services.Connection
         public event ClientConnectedEventHandler ClientConnected;
 
         TcpListener server;
+        // This is used to store the name of the host of the session
         private string _hostname;
+        // List of TCPClients
         private List<TcpClient> clients = new List<TcpClient>();
         CancellationTokenSource source = new CancellationTokenSource();
         UserConnectionService _userConnectionService;
@@ -28,6 +30,8 @@ namespace KrishnaRajamannar.NEA.Services.Connection
         ISessionService _sessionService;
 
         private UserSessionData userSessionData;
+        // Concurrent Queue which stores all the responses that clients have made
+        // before dequeuing the queue and reading the response
         private ConcurrentQueue<ClientResponse> clientResponses = new ConcurrentQueue<ClientResponse>();
 
         public ServerService(UserConnectionService userConnectionService, IUserSessionService userSessionService, ISessionService sessionService)
@@ -36,6 +40,7 @@ namespace KrishnaRajamannar.NEA.Services.Connection
             _userSessionService = userSessionService;
             _sessionService = sessionService;
 
+            // Creates a separate thread outside of the main thread to constantly listen for responses from the client
             Thread workerThread = new Thread(() =>
             {
                 ListenAndProcessClientResponses();
@@ -50,6 +55,10 @@ namespace KrishnaRajamannar.NEA.Services.Connection
             ListeningForConnections(ipAddress, portNumber);
         }
 
+        // This is on a separate thread and constantly listens for responses from the client
+        // It uses a procedure to enqueue these responses into a concurrent queue
+        // One by one, the responses are then dequeued and they are processed in the ViewModel 
+        // by passing the data using an event
         public void ListenAndProcessClientResponses()
         {
             while (true)
@@ -61,6 +70,7 @@ namespace KrishnaRajamannar.NEA.Services.Connection
                     if (!clientResponses.IsEmpty)
                     {
                         ClientResponse clientResponse = null;
+                        // This is used to remove the item at the beginning of the queue
                         clientResponses.TryDequeue(out clientResponse);
                         if (clientResponse != null)
                         {
@@ -87,15 +97,7 @@ namespace KrishnaRajamannar.NEA.Services.Connection
             }
         }
 
-        protected virtual void OnClientConnected(ClientConnectedEventArgs e) 
-        {
-            ClientConnectedEventHandler handler = ClientConnected;
-            if (handler != null) 
-            {
-                handler(this, e);
-            }
-        }
-
+        // This procedure starts the server and listens for any clients wanting to connect 
         public void ListeningForConnections(string ipAddress, int portNumber)
         {
             IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse(ipAddress), portNumber);
@@ -113,6 +115,9 @@ namespace KrishnaRajamannar.NEA.Services.Connection
             }, source.Token);
 
         }
+        // This is used to handle the inital connection between the server and a client
+        // After a client has connected, the server will send a response to the client
+        // signalling that the client has successfuly connected
         public void HandleClientRequests(TcpListener server)
         {
             byte[] buffer = new byte[1024];
@@ -133,7 +138,7 @@ namespace KrishnaRajamannar.NEA.Services.Connection
         }
 
         // Sends a response message back to clients after inital connection
-        // (acknowledges the connection, signals clients that a connection has been established)
+        // acknowledges the connection, signals clients that a connection has been established
         // Used to display same data that the clients can see in a different window
         public void SendAcknowledgement(TcpClient client)
         {
@@ -177,6 +182,7 @@ namespace KrishnaRajamannar.NEA.Services.Connection
                 serverResponse.Data = data;
                 NetworkStream stream = client.GetStream();
 
+                // This is used to prevent new lines adn extra white space being added when serialising
                 JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions();
                 jsonSerializerOptions.WriteIndented = false;
 
@@ -191,6 +197,9 @@ namespace KrishnaRajamannar.NEA.Services.Connection
             var buffer = new byte[4096];
             string messageFromClient = null;
 
+            // For each client connected, this checks if there is new data available
+            // The data is deserialised so that the response can be received
+            // The response is then enqueued so that other clients can send responses immediately
             foreach (var client in clients) 
             {
                 NetworkStream stream = client.GetStream();
@@ -206,6 +215,7 @@ namespace KrishnaRajamannar.NEA.Services.Connection
             }
         }
 
+        // Used to end the connection between the clients and the server
         public void StopServer()
         {
             foreach (var client in clients) 
@@ -215,11 +225,8 @@ namespace KrishnaRajamannar.NEA.Services.Connection
                     client.Close();
                 }
             }
-
-
             server.Stop();
             source.Cancel();
-            //source.Dispose();
         }
     }
 }

@@ -1,10 +1,6 @@
 ﻿using KrishnaRajamannar.NEA.Models;
 using Microsoft.Data.SqlClient;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace KrishnaRajamannar.NEA.Services.Database
 {
@@ -12,11 +8,7 @@ namespace KrishnaRajamannar.NEA.Services.Database
     {
         const string connectionString = $"Data Source=KRISHNASXPS\\SQLEXPRESS;Initial Catalog=quizApp;Persist Security Info=True;User ID=sa;Password=passw0rd;TrustServerCertificate=True";
 
-        public LeaderboardService()
-        {
-
-        }
-
+        // This is used to select the top 10 users with the highest number of points
         public IList<LeaderboardModel> GetLeaderboard()
         {
             IList<LeaderboardModel> leaderboard = new List<LeaderboardModel>();
@@ -24,7 +16,6 @@ namespace KrishnaRajamannar.NEA.Services.Database
             int rank = 1;
             string username = "";
             int numberOfPoints = 0;
-
 
             const string sqlQuery =
                 @"
@@ -41,14 +32,8 @@ namespace KrishnaRajamannar.NEA.Services.Database
             command.CommandText = sqlQuery;
 
             var data = command.ExecuteReader();
-
-            // can use a do while loop
             while (data.Read())
             {
-                if (rank > 10)
-                {
-                    break;
-                }
                 username = data.GetString(0);
                 numberOfPoints = data.GetInt32(1);
 

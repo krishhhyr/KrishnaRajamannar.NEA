@@ -8,10 +8,6 @@ namespace KrishnaRajamannar.NEA.Services.Database
     {
         private const string connectionString = $"Data Source=KRISHNASXPS\\SQLEXPRESS;Initial Catalog=quizApp;Persist Security Info=True;User ID=sa;Password=passw0rd;TrustServerCertificate=True";
 
-        public IndependentReviewQuizService()
-        {
-
-        }
 
         //Used to insert the question data into the quiz feedback as soon as a text-based question is created
         public void InsertTextQuestionQuizFeedback(int textQuestionID, int pointsForQuestion, int quizID)
@@ -33,7 +29,7 @@ namespace KrishnaRajamannar.NEA.Services.Database
             connection.Close();
         }
 
-        //Used to insert the question data into the quiz feedback as soon as a text-based question is created
+        //Used to insert the question data into the quiz feedback as soon as a multiple-choice question is created
         public void InsertMultipleChoiceQuestionQuizFeedback(int MCquestionID, int pointsForQuestion, int quizID)
         {
             const string sqlQuery =
@@ -149,6 +145,9 @@ namespace KrishnaRajamannar.NEA.Services.Database
             return questionsToReview;
         }
 
+        // Used to retrieve the feedback of a quiz that has been reviewed independently
+        // This consists of the questions that were answered within the quiz and whether
+        // they were right or wrong
         public IList<IndependentReviewQuizFeedbackModel> GetQuizFeedback(int quizID)
         {
             IList<IndependentReviewQuizFeedbackModel> quizFeedback = new List<IndependentReviewQuizFeedbackModel>();
@@ -194,7 +193,9 @@ namespace KrishnaRajamannar.NEA.Services.Database
         }
 
 
-        //update answer streak, update isCorrect to 1, update points 
+        // This is used to update the three columns in one query.
+        // Used when reviewing a quiz independently
+        // This function is called every time a question is answered in a quiz.
         public void UpdateQuizFeedback(int feedbackID, int answerStreak, bool isCorrect, int pointsGained)
         {
             const string sqlQuery =

@@ -23,13 +23,16 @@ namespace KrishnaRajamannar.NEA.Views
 
             this.DataContext = _mainMenuViewModel;
 
-            _mainMenuViewModel.HideMainMenuWindow += MainMenuViewModel_HideMainMenuWindow;
 
+            // These are events which have been subscribed to
+            _mainMenuViewModel.HideMainMenuWindow += MainMenuViewModel_HideMainMenuWindow;
             _mainMenuViewModel.ShowViewQuizzesWindow += MainMenuViewModel_ShowViewQuizzesWindow;
             _mainMenuViewModel.ShowLeaderboardWindow += MainMenuViewModel_ShowLeaderboardWindow;
             _mainMenuViewModel.ShowServerSessionWindow += MainMenuViewModel_ShowServerSessionWindow;
         }
 
+        // This is used to pass data from the Main Menu window to the Server Session window 
+        // and it also displays the Server Session window as well
         private void MainMenuViewModel_ShowServerSessionWindow(object sender, Events.ShowAccountParameterWindowEventArgs e)
         {
             _mainMenuViewModel.ServerSessionViewModel.UserID = e.UserID;
@@ -60,6 +63,7 @@ namespace KrishnaRajamannar.NEA.Views
             this.Hide();
         }
 
+        // Used when the Log Out button is pressed
         private void logOutBtn_Click(object sender, RoutedEventArgs e)
         {
             _mainMenuViewModel.HideMainMenu();
@@ -87,8 +91,6 @@ namespace KrishnaRajamannar.NEA.Views
         // and that window is displayed
         private void joinSessionBtn_Click(object sender, RoutedEventArgs e)
         {
-            //_mainMenuViewModel.HideMainMenu();
-
             if (_mainMenuViewModel.ValidateSessionID() == true) 
             {
                 _mainMenuViewModel.ClientSessionViewModel.SessionId = _mainMenuViewModel.SessionID.ToString();

@@ -33,8 +33,8 @@ namespace KrishnaRajamannar.NEA.Views
         {
             _serverSessionViewModel.MultipleReviewQuizFeedbackViewModel.UserID = e.UserID;
             multipleReviewFeedbackWindow = new MultipleReviewFeedbackWindow(_serverSessionViewModel.MultipleReviewQuizFeedbackViewModel);
-            this.Close();
             multipleReviewFeedbackWindow.Show();
+            this.Close();
         }
 
         private void _serverSessionViewModel_AnswerTimerFinished(object sender, Events.TimerEventArgs e)

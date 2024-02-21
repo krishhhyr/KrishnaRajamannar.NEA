@@ -70,6 +70,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
             }
         }
 
+        // An event which is used to close the Account Creation window
         public void CloseAccountCreationWindow()
         {
             HideWindowEventArgs args = new HideWindowEventArgs();
@@ -127,6 +128,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
             }
             return false;
         }
+        // Used to check if a password meets the requirements
         private bool ValidatePasswordCreation()
         {
             if (!((Password.Length >= 8) && (Password.Length <= 15)))

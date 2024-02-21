@@ -3,10 +3,6 @@ using KrishnaRajamannar.NEA.Services.Interfaces;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Media;
 
 namespace KrishnaRajamannar.NEA.Services.Database
 {
@@ -50,7 +46,7 @@ namespace KrishnaRajamannar.NEA.Services.Database
             command.ExecuteNonQuery();
             connection.Close();
         }
-        // Used to retrieve a list of objects (UserSessionDto) consisting of the sessionID, userID and username
+        // Used to retrieve a list of objects (UserSessionData) consisting of the sessionID, userID and username
         // of users connected to a particular session.
         public IList<UserSessionData> GetUserSessionDetails(UserSessionData userData)
         {

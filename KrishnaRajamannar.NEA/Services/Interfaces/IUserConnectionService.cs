@@ -1,5 +1,4 @@
 ﻿using KrishnaRajamannar.NEA.Events;
-using System.Collections.ObjectModel;
 
 namespace KrishnaRajamannar.NEA.Services.Interfaces
 {

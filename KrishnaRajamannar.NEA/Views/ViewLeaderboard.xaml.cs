@@ -1,18 +1,5 @@
-﻿using KrishnaRajamannar.NEA.Services;
-using KrishnaRajamannar.NEA.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using KrishnaRajamannar.NEA.ViewModels;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace KrishnaRajamannar.NEA.Views
 {
@@ -37,12 +24,12 @@ namespace KrishnaRajamannar.NEA.Views
         {
             this.Close();
         }
-
+        // Used to close the window when the Back button is pressed
         private void backBtn_Click(object sender, RoutedEventArgs e)
         {
             _viewLeaderboardViewModel.CloseViewLeaderboardWindow();
         }
-
+        // Used to refresh the data grid
         private void refreshBtn_Click(object sender, RoutedEventArgs e)
         {
             leaderboardDataGrid.ItemsSource = _viewLeaderboardViewModel.GetUserLeaderboard();

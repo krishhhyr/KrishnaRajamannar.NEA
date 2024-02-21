@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO.Packaging;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace KrishnaRajamannar.NEA.Models
+﻿namespace KrishnaRajamannar.NEA.Models
 {
     // This class defines the properties of a user only.
     public class UserModel

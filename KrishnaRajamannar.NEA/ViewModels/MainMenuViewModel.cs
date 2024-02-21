@@ -33,6 +33,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
         {
             _sessionService = sessionService;
 
+            // Used to recieve the service type of the ViewModels
             AccountLoginViewModel = App.ServiceProvider.GetService(typeof(AccountLoginViewModel)) as AccountLoginViewModel;
             ViewQuizzesViewModel = App.ServiceProvider.GetService(typeof(ViewQuizzesViewModel)) as ViewQuizzesViewModel;
             ViewLeaderboardViewModel = App.ServiceProvider.GetService(typeof(ViewLeaderboardViewModel)) as ViewLeaderboardViewModel;

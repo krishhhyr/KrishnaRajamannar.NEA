@@ -82,12 +82,6 @@ namespace KrishnaRajamannar.NEA.ViewModels
             OnShowAccountCreationWindow(args);
 
         }
-        private void HideAccountLogin() 
-        {
-            HideWindowEventArgs args = new HideWindowEventArgs();
-            args.IsHidden = true;
-            OnHideAccountLoginWindow(args);
-        }
         // Used to show the main menu after a user has logged in
         // Passes the user details on to be displayed in the main menu window
         private void ShowMainMenu() 
