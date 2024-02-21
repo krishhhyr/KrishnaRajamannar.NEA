@@ -6,6 +6,7 @@ using System.ComponentModel;
 
 namespace KrishnaRajamannar.NEA.ViewModels
 {
+    // Inherits the NotifyPropertyChanged interface
     public class IndependentReviewViewModel: INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -20,6 +21,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
         public int QuizID;
         public int UserID;
         private int QuestionNumber = 0;
+        // Used to keep track of the current question being reviewed in the quiz
         private IndependentReviewQuizModel CurrentQuestion;
 
         public IndependentReviewViewModel(IIndependentReviewQuizService independentReviewQuizService, IUserService userService)
@@ -177,6 +179,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
             args.IsHidden = true;
             OnHideIndependentReviewQuizWindow(args);
         }
+        // An event which is used to show the Independent Quiz Review feedback window
         public void ShowIndependentReviewFeedback() 
         {
             ShowQuizParameterWindowEventArgs args = new ShowQuizParameterWindowEventArgs();
@@ -204,6 +207,8 @@ namespace KrishnaRajamannar.NEA.ViewModels
         }
 
         #region SortingQuestions
+        // This sorts the questions in a quiz based on how well the questions have been previously answered in a previous review of a the quiz
+        // If the quiz has not previously been reviewed, then the questions are displayed in the order they were retrieved from the database
         public IList<IndependentReviewQuizModel> GetQuestionsInOrder() 
         {
             // Calls a function which returns all the questions for a particular quiz from the database.
@@ -364,7 +369,8 @@ namespace KrishnaRajamannar.NEA.ViewModels
         #endregion
 
         // Used to send the current question being answered to the user interface.
-        // If all the questions have been answered, the review session ends. 
+        // If all the questions have been answered, the review session ends
+        // and the feedback window for the quiz is displayed.
         public void SendQuestion(IList<IndependentReviewQuizModel> questions) 
         {
             if (QuestionNumber >= questions.Count)
@@ -392,7 +398,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
         }
 
         // Checks the question type
-        // If Option1 is null, this means 
+        // If Option1 is null, this means it is a text-based question 
         public bool IsQuestionTextBasedQuestion() 
         {
             if (CurrentQuestion.Option1 == "NULL")
@@ -405,7 +411,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
             }
         }
 
-        // For a multiple-choice based question, this sends the possible options to the user.
+        // For a multiple-choice based question, this assigns the possible options to the radio buttons in the UI 
         public void SendOptions()
         {
             Option1 = CurrentQuestion.Option1;

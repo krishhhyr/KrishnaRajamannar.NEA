@@ -720,6 +720,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
         {
             if (!(Counter > 0))
             {
+                _serverService.SendDataToClients("EndQuiz", "EndQuiz");
                 ShowAccountParameterWindowEventArgs args = new ShowAccountParameterWindowEventArgs();
                 args.IsShown = true;
                 args.UserID = UserID;
@@ -780,24 +781,6 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
         }
 
-        private bool CheckEndQuiz()
-        {
-            if ((SelectedCondition == "Number of Questions") && (QuestionNumber >= int.Parse(ConditionValue)))
-            {
-                Message = "No more questions left to review.";
-                return true;
-            }
-            //else if ((SelectedCondition == "Time Limit") && (sessionTime == ConditionValue))
-            //{
-            //    Message = "Session Time has been reached.";
-            //    return true;
-            //}
-            else
-            {
-                return false;
-            }
-        }
-
         private void SendNextQuestion()
         {
             QuestionNumber++;
@@ -806,6 +789,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
             {
                 Message = "No more questions to review.";
 
+                _serverService.SendDataToClients("EndQuiz", "EndQuiz");
                 ShowAccountParameterWindowEventArgs args = new ShowAccountParameterWindowEventArgs();
                 args.IsShown = true;
                 args.UserID = UserID;
@@ -813,8 +797,9 @@ namespace KrishnaRajamannar.NEA.ViewModels
             }
             if ((SelectedCondition == "Number of Questions") && (NumberOfQuestion > int.Parse(ConditionValue)))
             {
-                Message = "No more questions to review.";
+                Message = "End of Review. Question Limit has been reached";
 
+                _serverService.SendDataToClients("EndQuiz", "EndQuiz");
                 ShowAccountParameterWindowEventArgs args = new ShowAccountParameterWindowEventArgs();
                 args.IsShown = true;
                 args.UserID = UserID;

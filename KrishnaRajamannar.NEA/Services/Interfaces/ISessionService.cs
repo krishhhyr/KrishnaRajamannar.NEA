@@ -1,5 +1,4 @@
-﻿using KrishnaRajamannar.NEA.Models;
-using KrishnaRajamannar.NEA.Models.Dto;
+﻿using KrishnaRajamannar.NEA.Models.Dto;
 
 namespace KrishnaRajamannar.NEA.Services
 {

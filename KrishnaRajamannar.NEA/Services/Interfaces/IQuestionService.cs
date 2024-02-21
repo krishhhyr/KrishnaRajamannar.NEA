@@ -30,7 +30,5 @@ namespace KrishnaRajamannar.NEA.Services
         public void DeleteMultipleChoiceQuestion(string question, string answer, int quizID);
 
         public int GetMultipleChoiceQuestionID(string question, string answer, int quizID);
-
-
     }
 }

@@ -39,11 +39,11 @@ namespace KrishnaRajamannar.NEA.ViewModels
             }
         }
 
-        public IList<IndependentReviewQuizFeedbackModel>? GetQuizFeedback()
+        public IList<MultiplayerReviewQuizFeedbackModel> GetQuizFeedback()
         {
-            //IList<IndependentReviewQuizFeedbackModel> feedback = _multipleReviewQuizService.GetQuizFeedback(UserID);
+            IList<MultiplayerReviewQuizFeedbackModel> quizFeedback = _multipleReviewQuizService.GetMultiplayerQuizFeedbackForUser(UserID);
 
-            return null;
+            return quizFeedback;
         }
     }
 }

@@ -17,6 +17,6 @@ namespace KrishnaRajamannar.NEA.Services
 
         public void UpdateNumberOfQuestions(int numberOfQuestions, int quizID);
 
-        
+
     }
 }

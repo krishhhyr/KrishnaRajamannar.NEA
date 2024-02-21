@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace KrishnaRajamannar.NEA.Models
 {
-    // A class which defines the properties of a quiz.
+    // This means that the entire object can be converted into a byte stream
     [Serializable]
+    // A class which defines the properties of a quiz.
     public class QuizModel
     {
         public int QuizID { get; set; }

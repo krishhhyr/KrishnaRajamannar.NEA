@@ -1,11 +1,6 @@
 ﻿using KrishnaRajamannar.NEA.Models;
 using Microsoft.Data.SqlClient;
-using System;
-using System.CodeDom;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace KrishnaRajamannar.NEA.Services.Database
 {
@@ -14,11 +9,6 @@ namespace KrishnaRajamannar.NEA.Services.Database
     {
         // The connection string used to connect to the SQL Server database. 
         const string connectionString = $"Data Source=KRISHNASXPS\\SQLEXPRESS;Initial Catalog=quizApp;Persist Security Info=True;User ID=sa;Password=passw0rd;TrustServerCertificate=True";
-
-        public QuizService()
-        {
-
-        }
 
         // Function which returns a list of quizzes for a particular user by passing the userID as a parameter. 
         public IList<QuizModel> GetQuiz(int? _userID)

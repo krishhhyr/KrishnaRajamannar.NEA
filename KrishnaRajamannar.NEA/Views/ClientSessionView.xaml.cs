@@ -41,10 +41,14 @@ namespace KrishnaRajamannar.NEA.Views
 
         private void _clientSessionViewModel_ShowMultipleQuizFeedbackWindow(object sender, Events.ShowAccountParameterWindowEventArgs e)
         {
-            _clientSessionViewModel.MultipleReviewQuizFeedbackViewModel.UserID = e.UserID;
-            multipleReviewFeedbackWindow = new MultipleReviewFeedbackWindow(_clientSessionViewModel.MultipleReviewQuizFeedbackViewModel);
-            this.Close();
-            multipleReviewFeedbackWindow.Show();
+
+            this.Dispatcher.Invoke(() =>
+            {
+                _clientSessionViewModel.MultipleReviewQuizFeedbackViewModel.UserID = e.UserID;
+                multipleReviewFeedbackWindow = new MultipleReviewFeedbackWindow(_clientSessionViewModel.MultipleReviewQuizFeedbackViewModel);
+                this.Close();
+                multipleReviewFeedbackWindow.Show();
+            });
         }
 
         private void _clientSessionViewModel_AnswerTimerFinished(object sender, Events.TimerEventArgs e)

@@ -1,17 +1,14 @@
-﻿using KrishnaRajamannar.NEA.Models;
-using KrishnaRajamannar.NEA.Models.Dto;
+﻿using KrishnaRajamannar.NEA.Models.Dto;
 using Microsoft.Data.SqlClient;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace KrishnaRajamannar.NEA.Services.Database
 {
     public class SessionService : ISessionService
     {
         const string connectionString = $"Data Source=KRISHNASXPS\\SQLEXPRESS;Initial Catalog=quizApp;Persist Security Info=True;User ID=sa;Password=passw0rd;TrustServerCertificate=True";
+        // This is used to insert the data of a new session into the database.
+        // This is used so that users can connect to the session by retrieving the IP address and the port number of the session they'd like to connect to
         public void InsertSessionData(int sessionID, string quiz, string endQuizCondition, string endQuizValue, string IPAddress, int portNumber, int quizID)
         {
             const string sqlQuery =
@@ -34,6 +31,11 @@ namespace KrishnaRajamannar.NEA.Services.Database
             command.ExecuteNonQuery();
             connection.Close();
         }
+
+        // This uses a tuple to return two values from a function
+        // The function is used to retrieve the IP address and the Port Number 
+        // It's used so that users who want to join a session know which IP address
+        // and port number to connect to
         public (string, int) GetConnectionData(int sessionID)
         {
             (string, int) connectionData;
@@ -57,6 +59,9 @@ namespace KrishnaRajamannar.NEA.Services.Database
             }
             return connectionData;
         }
+
+        // This is used to check if a session ID already exists in the database
+        // Used when generating new unique session IDs to prevent duplicates with existing session IDs
         public bool IsSessionIDExist(int sessionIDInput)
         {
             const string sqlQuery =
@@ -79,6 +84,8 @@ namespace KrishnaRajamannar.NEA.Services.Database
                 return true;
             }
         }
+
+        // Used to check if a port number generated is already being used in another session. 
         public bool IsPortNumberExist(int portNumberInput)
         {
             const string sqlQuery =
@@ -101,6 +108,12 @@ namespace KrishnaRajamannar.NEA.Services.Database
                 return true;
             }
         }
+
+        // This is used to retrieve all the data about an existing session
+        // After a user connects to the session, this data is passed over to the window of
+        // the user who has just joined the session.
+
+        // The data represents how the review of a quiz will end. 
         public SessionData GetSessionData(int sessionID)
         {
             SessionData sessionData = new SessionData();

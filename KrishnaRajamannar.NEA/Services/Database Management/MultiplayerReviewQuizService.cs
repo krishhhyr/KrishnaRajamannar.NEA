@@ -1,4 +1,5 @@
-﻿using KrishnaRajamannar.NEA.Services.Interfaces;
+﻿using KrishnaRajamannar.NEA.Models;
+using KrishnaRajamannar.NEA.Services.Interfaces;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
@@ -33,6 +34,50 @@ namespace KrishnaRajamannar.NEA.Services.Database_Management
             command.Parameters.AddWithValue("@AnswerCorrectly", answeredCorrectly);
             command.ExecuteNonQuery();
             connection.Close();
+        }
+        public IList<MultiplayerReviewQuizFeedbackModel> GetMultiplayerQuizFeedbackForUser(int _userID) 
+        {
+            IList<MultiplayerReviewQuizFeedbackModel> multiplayerQuizFeedback = new List<MultiplayerReviewQuizFeedbackModel>();
+
+            int questionNumber = 1;
+            int userID = 0;
+            int quizID = 0;
+            string question;
+            string answer;
+            bool isCorrect;
+
+            const string sqlQuery =
+                @"
+                    SELECT UserID, QuizID, Question, Answer, AnsweredCorrectly 
+                    FROM MultiplayerQuizFeedback
+                    WHERE UserID = @UserID
+                    AND QuizID = 50
+                ";
+
+            using SqlConnection connection = new SqlConnection(connectionString);
+            connection.Open();
+
+            var command = connection.CreateCommand();
+            command.CommandText = sqlQuery;
+
+            command.Parameters.AddWithValue("@UserID", _userID);
+
+            var data = command.ExecuteReader();
+
+            while (data.Read())
+            {
+                userID = data.GetInt32(0);
+                quizID = data.GetInt32(1);
+                question = data.GetString(2);
+                answer = data.GetString(3);
+                isCorrect = data.GetBoolean(4);
+
+                multiplayerQuizFeedback.Add(new MultiplayerReviewQuizFeedbackModel() 
+                { QuestionNumber = questionNumber, Question = question, Answer = answer, 
+                    AnsweredCorrectly = isCorrect, UserID = userID, QuizID = quizID });
+                questionNumber++;
+            }
+            return multiplayerQuizFeedback;
         }
     }
 }
