@@ -3,30 +3,17 @@ using KrishnaRajamannar.NEA.Models;
 using KrishnaRajamannar.NEA.Models.Dto;
 using KrishnaRajamannar.NEA.Models.DTO;
 using KrishnaRajamannar.NEA.Services;
-using KrishnaRajamannar.NEA.Services.Connection;
-using KrishnaRajamannar.NEA.Services.Database;
 using KrishnaRajamannar.NEA.Services.Interfaces;
-using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.SymbolStore;
-using System.Globalization;
-using System.Linq;
 using System.Net;
-using System.Security.RightsManagement;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Threading;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace KrishnaRajamannar.NEA.ViewModels
 {
+    // Inherits the NotifyPropertyChanged interface
     public class ServerSessionViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -41,18 +28,26 @@ namespace KrishnaRajamannar.NEA.ViewModels
         private readonly IQuestionService _questionService;
         private readonly IUserService _userService;
 
+        // These fields are used to store data which have been passed from the Main Menu window 
+        // They are used to identify the host of a session
         public int UserID;
         public string Username;
         public int TotalPoints;
 
-        private int SessionTimeLimit = 0;
+        // Used to store all the quizzes that the host of a session has made
         IList<QuizModel> Quizzes = new List<QuizModel>();
+        // Used to store the questions for the quiz that the host has selected to review
         IList<QuestionModel> Questions = new List<QuestionModel>();
+        // Used to store the details of the question which is currently being answered
         QuestionModel CurrentQuestion = new QuestionModel();
-        int Counter = 0;
         public int NumberOfQuestions;
+        // Used to retrieve the next question in the IList
         public int QuestionNumber = 0;
+        // Used so that it can be passed to the services in order to identify which 
+        // quiz is being reviewed
         private int QuizID;
+        // Used to prevent a window being displayed more than once
+        private int Counter = 0;
         private DispatcherTimer answerTimer;
         private TimeSpan AnswerTime;
         private DispatcherTimer sessionTimer;
@@ -80,24 +75,15 @@ namespace KrishnaRajamannar.NEA.ViewModels
             MultipleReviewQuizFeedbackViewModel = App.ServiceProvider.GetService(typeof(MultipleReviewQuizFeedbackViewModel)) as MultipleReviewQuizFeedbackViewModel;
         }
 
+        // An event which is used to process responses recieved from the clients
         private void OnProcessClientResponse(object sender, ProcessClientResponseEventArgs e)
         {
             ProcessClientResponse(e.ClientResponse);
         }
 
+        // Properties which are used to bind with the UI
         #region Properties
-
-        private string _timeOfSession;
-        public string TimeOfSession
-        {
-            get { return _timeOfSession; }
-            set
-            {
-                _timeOfSession = value;
-                RaisePropertyChange("TimeOfSession");
-            }
-        }
-
+        
         private int _numberOfQuestion;
         public int NumberOfQuestion
         {
@@ -192,7 +178,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 RaisePropertyChange("ValidAnswerMessage");
             }
         }
-
+        // Used to display the user details of the users who have joined the session
         private List<UserSessionData> _joinedUsers = new List<UserSessionData>();
         public List<UserSessionData> JoinedUsers
         {
@@ -336,6 +322,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
             }
         }
 
+        // Used to display remaining time of the session in the UI
         private string _remainingSessionTimeLimit;
         public string RemainingSessionTimeLimit
         {
@@ -369,6 +356,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
             }
         }
 
+        // Used to bind data with the UI
         public void RaisePropertyChange(string propertyname)
         {
             if (PropertyChanged != null)
@@ -381,6 +369,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
         #region Events
 
+        // An event when a text question is the next question to be reviewed
         protected virtual void OnShowTextQuestion(QuestionRecievedEventArgs e)
         {
             QuestionRecievedEventHandler handler = TextQuestionRecieved;
@@ -399,6 +388,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
             }
         }
 
+        // Used to disable answering after the answer timer has finished
         protected virtual void OnDisableAnsweringQuestion(TimerEventArgs e)
         {
             TimerEventHandler handler = AnswerTimerFinished;
@@ -574,12 +564,13 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 {
                     valid = ValidateTimeInput();
                 }
-
+                // if the condition input is valid 
                 if (valid == true)
                 {
                     string ipAddress = GetIPAddress();
                     int portNumber = GetPortNumber();
 
+                    // Inserts the session data into the database
                     _sessionService.InsertSessionData(SessionID, SelectedQuiz, SelectedCondition, ConditionValue
                     , ipAddress, portNumber, QuizID);
                     _serverService.StartServer(Username, ipAddress, portNumber);
@@ -595,15 +586,16 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
         #endregion
 
-        // Sends the first question + time to answer? to all clients 
-
+        // Used to process the client responses that have been recieved
         private void ProcessClientResponse(ClientResponse response)
         {
             if (response != null)
             {
-                if (!string.IsNullOrEmpty(response.Data))
+                // Checks if the response is not null, unless an answer to a question is being sent which can have a null value
+                if (((response.DataType == "SendAnswer") && (response.Data == null)) || !string.IsNullOrEmpty(response.Data)) 
                 {
                     UserSessionData userData = JsonSerializer.Deserialize<UserSessionData>(response.UserData);
+                    // Used to check the answer that the client has submitted
                     ValidateClientAnswer(response.Data, userData.UserID, userData.Username, userData.TotalPoints);
 
                     System.Windows.Application.Current.Dispatcher.Invoke(System.Windows.Threading.DispatcherPriority.Normal, (Action)delegate ()
@@ -614,41 +606,20 @@ namespace KrishnaRajamannar.NEA.ViewModels
             }
         }
 
-        public void LoadData(ClientResponse response)
-        {
-            if (response != null)
-            {
-                if (!string.IsNullOrEmpty(response.Data))
-                {
-                    SessionData data = JsonSerializer.Deserialize<SessionData>(response.Data);
-                    if (data != null)
-                    {
-                        if (data.UserSessions.Any())
-                        {
-
-                            JoinedUsers.Clear();
-
-                            //_userSessionData.AddRange(data.UserSessions);
-                            JoinedUsers = data.UserSessions.ToList();
-
-                            NumberOfUsersJoined = JoinedUsers.Count;
-                        }
-                    }
-                }
-            }
-
-        }
-
         public void StartQuiz()
         {
             Message = "Quiz Started.";
 
+            // Checks if the condition selected when creating a session 
+            // was a limit
+            // If it was, a session timer is started
             if (SelectedCondition == "Time Limit")
             {
                 AssignSessionTimeValues();
                 sessionTimer.Start();
             }
 
+            // Used to retrieve the questions of the selected quiz
             foreach (QuizModel quiz in Quizzes)
             {
                 if (quiz.QuizTitle == SelectedQuiz)
@@ -658,16 +629,21 @@ namespace KrishnaRajamannar.NEA.ViewModels
             }
 
             QuestionModel firstQuestion = Questions[QuestionNumber];
+
             CurrentQuestion = firstQuestion;
+            // Serialises the data of the question so that it can be passed to the clients
             string questionData = JsonSerializer.Serialize<QuestionModel>(firstQuestion);
+            // Sends the question to the clients
             _serverService.SendDataToClients(questionData, "SendQuestion");
+            // Displays the question on to the UI
             DisplayQuestion(firstQuestion);
             NumberOfQuestion = QuestionNumber + 1;
         }
 
         private void DisplayQuestion(QuestionModel question)
         {
-
+            // Used to check if the question is a text-based or a multiple choice question
+            // If a question.Option1 = "", then it is a text-based question
             if (question.Option1 != "")
             {
                 QuestionRecievedEventArgs args = new QuestionRecievedEventArgs();
@@ -678,8 +654,10 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 QuestionRecievedEventArgs args = new QuestionRecievedEventArgs();
                 OnShowTextQuestion(args);
             }
+            // Used to assign the options to radio buttons in the UI
             AssignQuestionValues(question);
             AssignAnswerTimeValues(question.Duration);
+            // Starts the timer to answer a question
             answerTimer.Start();
         }
 
@@ -696,16 +674,21 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
         private void AssignSessionTimeValues()
         {
+            // Represents the amount of the time that a host specified a session can last for
+            // It's measured in seconds
             int sessionTime = int.Parse(ConditionValue) * 60;
             SessionTime = TimeSpan.FromSeconds(sessionTime);
             sessionTimer.Interval = TimeSpan.FromSeconds(1);
         }
 
+        // Used to decrement the session timer until it reaches 0. 
         private void SessionTimer_Tick(object? sender, EventArgs e)
         {
+            // If the timer reaches 0, the feedback window for the quiz is displayed 
             if (SessionTime == TimeSpan.Zero)
             {
                 answerTimer.Stop();
+                sessionTimer.Stop();
                 Message = "Time for Session is up!";
                 ShowMultipleReviewQuizFeedbackWindow();
             }
@@ -715,14 +698,17 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 RemainingSessionTimeLimit = SessionTime.TotalSeconds.ToString();
             }
         }
-
+        // Used to show the multiplayer quiz feedback window 
         private void ShowMultipleReviewQuizFeedbackWindow() 
         {
+            // Counter is used to prevent a bug where the window is repeatedly created
             if (!(Counter > 0))
             {
+                // Used to notify clients that the session has ended
                 _serverService.SendDataToClients("EndQuiz", "EndQuiz");
                 ShowAccountParameterWindowEventArgs args = new ShowAccountParameterWindowEventArgs();
                 args.IsShown = true;
+                // Used to pass the UserID to the multiplayer quiz feedback window 
                 args.UserID = UserID;
                 OnShowMultipleReviewQuizFeedback(args);
             }
@@ -732,6 +718,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
             }
         }
 
+        // Assigns a value to the answer timer when a new question is displayed
         private void AssignAnswerTimeValues(int answerTime)
         {
             AnswerTimeLimit = answerTime.ToString();
@@ -739,6 +726,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
             answerTimer.Interval = TimeSpan.FromSeconds(1);
         }
 
+        // Used to decrement the answer timer until it reaches 0
         private void AnswerTimer_Tick(object? sender, EventArgs e)
         {
             if (AnswerTime == TimeSpan.Zero)
@@ -753,6 +741,8 @@ namespace KrishnaRajamannar.NEA.ViewModels
             }
         }
 
+        // Used to start an event to disable the host from resubmiting an answer 
+        // by disabling UI elements
         public void SendAnswer()
         {
             TimerEventArgs args = new TimerEventArgs();
@@ -763,9 +753,12 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
         public void ValidateServerAnswer()
         {
+            // Checks if the server input matches the answer to the current question
             if ((CurrentQuestion.Answer == TextAnswerInput) || (CurrentQuestion.Answer == MultipleChoiceAnswerInput))
             {
+                // Used to display the new total of points gained when reviewing the quiz
                 NumberOfPointsGained = NumberOfPointsGained + CurrentQuestion.NumberOfPoints;
+                // Used to update the number of points that a user has obtained over the lifetime of their account
                 TotalPoints = TotalPoints + CurrentQuestion.NumberOfPoints;
                 ValidAnswerMessage = $"Correct Answer. {CurrentQuestion.NumberOfPoints} points have been awarded!";
                 Message = "Correct Answer!";
@@ -781,20 +774,25 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
         }
 
+        // Used to send the next question to the host and the clients
         private void SendNextQuestion()
         {
             QuestionNumber++;
             NumberOfQuestion = QuestionNumber + 1;
+            // Checks if the question number is more than the number of questions in the 
+            // quiz that is being reviewed
             if (NumberOfQuestion > Questions.Count)
             {
                 Message = "No more questions to review.";
-
+                // Used to notify client that the quiz review has ended
                 _serverService.SendDataToClients("EndQuiz", "EndQuiz");
                 ShowAccountParameterWindowEventArgs args = new ShowAccountParameterWindowEventArgs();
                 args.IsShown = true;
                 args.UserID = UserID;
                 OnShowMultipleReviewQuizFeedback(args);
             }
+            // Checks if the number of questions which have been answered is not more than the number of the questions
+            // that was inputted when creating the session (only if the condition was "Number of Points")
             if ((SelectedCondition == "Number of Questions") && (NumberOfQuestion > int.Parse(ConditionValue)))
             {
                 Message = "End of Review. Question Limit has been reached";
@@ -807,11 +805,14 @@ namespace KrishnaRajamannar.NEA.ViewModels
             }
             else
             {
+                // Used to retrieve the next question
                 QuestionModel question = Questions[QuestionNumber];
                 CurrentQuestion = question;
                 string questionData = JsonSerializer.Serialize<QuestionModel>(question);
+                // Sends the next question to the clients
                 _serverService.SendDataToClients(questionData, "SendQuestion");
                 TextAnswerInput = null;
+                // Displays the question in the UI of host window.
                 DisplayQuestion(question);
             }
         }
@@ -821,6 +822,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
         {
             string message = "";
 
+            // Checks if the answer inputted matches the answer of the question
             if (CurrentQuestion.Answer == answer)
             {
                 NumberOfPointsGained = CurrentQuestion.NumberOfPoints;
@@ -834,11 +836,12 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 message = $"Answer was {CurrentQuestion.Answer}. 0 points have been awarded!";
                 _multiplayerReviewQuizService.InsertMultiplayerQuizFeedbackData(SessionID, userID, QuizID, CurrentQuestion.Question, CurrentQuestion.Answer, true);
             }
-
+            // Used to send the correct answer and number of points that have been earned back to the clients 
             _serverService.SendDataToClients(message, "SendCorrectAnswer");
+        
         }
 
-        // pass event called end session?
+        // Used to stop the server
         public void StopServer() 
         {
             _serverService.SendDataToClients("EndQuiz", "EndQuiz");

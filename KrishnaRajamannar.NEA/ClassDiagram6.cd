@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="KrishnaRajamannar.NEA.Views.ViewQuizzes">
+    <Position X="9.75" Y="1.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AACABACAAAAECCgAAAAQAAAEAAAEAAAGAJABBBQAIAA=</HashCode>
+      <FileName>Views\ViewQuizzes.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="KrishnaRajamannar.NEA.ViewModels.ViewQuizzesViewModel">
+    <Position X="5.75" Y="0.5" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>EACBBAEAAAAAACEgAACAIEgCpAAAEAACmAgSIdAEAoA=</HashCode>
+      <FileName>ViewModels\ViewQuizzesViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="KrishnaRajamannar.NEA.Services.Database.QuizService">
+    <Position X="2" Y="6" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAAACAgIAAAAAAAABAAAAAAEAAAQAAAAAAA=</HashCode>
+      <FileName>Services\Database Management\QuizService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="KrishnaRajamannar.NEA.Models.QuizModel">
+    <Position X="1.75" Y="2.75" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAgAIAAgAAAABAAAAAAAAAA=</HashCode>
+      <FileName>Models\QuizModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

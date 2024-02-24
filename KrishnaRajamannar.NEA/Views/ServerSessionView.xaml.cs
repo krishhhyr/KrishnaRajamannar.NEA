@@ -19,8 +19,11 @@ namespace KrishnaRajamannar.NEA.Views
 
             DataContext = _serverSessionViewModel;
 
+            // Used to generate the Session ID once the window has been displayed
             _serverSessionViewModel.CreateSessionID();
+            // Retrieves all the quizzes that a user has created
             _serverSessionViewModel.GetQuizzes();
+            // Displays the EndQuizCondition combo box with values "Number of Questions" and "Time Limit"
             _serverSessionViewModel.AssignQuizConditions();
 
             _serverSessionViewModel.TextQuestionRecieved += _serverSessionViewModel_TextQuestionRecieved;
@@ -29,6 +32,7 @@ namespace KrishnaRajamannar.NEA.Views
             _serverSessionViewModel.ShowMultipleReviewQuizFeedback += _serverSessionViewModel_ShowMultipleReviewQuizFeedback;
         }
 
+        // This is used to show the MultipleReviewFeedback window once a quiz has ended 
         private void _serverSessionViewModel_ShowMultipleReviewQuizFeedback(object sender, Events.ShowAccountParameterWindowEventArgs e)
         {
             _serverSessionViewModel.MultipleReviewQuizFeedbackViewModel.UserID = e.UserID;
@@ -36,7 +40,7 @@ namespace KrishnaRajamannar.NEA.Views
             multipleReviewFeedbackWindow.Show();
             this.Close();
         }
-
+        // Used to prevent submitting another response once the answer timer has finished 
         private void _serverSessionViewModel_AnswerTimerFinished(object sender, Events.TimerEventArgs e)
         {
             this.Dispatcher.Invoke(() =>
@@ -53,6 +57,8 @@ namespace KrishnaRajamannar.NEA.Views
             });
         }
 
+        // Used to display the stack panel of radio buttons if a multiple choice question is recieved
+        // Hides the text-based question stack panel
         private void _serverSessionViewModel_MultipleChoiceQuestionRecieved(object sender, Events.QuestionRecievedEventArgs e)
         {
             questionAndAnswerStackPanel.Visibility = Visibility.Visible;
@@ -71,6 +77,8 @@ namespace KrishnaRajamannar.NEA.Views
             option6rb.IsEnabled = true;
         }
 
+        // Used to display the stack panel for a text-based question
+        // Hides the multiple choice question stack panel
         private void _serverSessionViewModel_TextQuestionRecieved(object sender, Events.QuestionRecievedEventArgs e)
         {
             textAnswerTxtBox.IsEnabled = true;
@@ -118,6 +126,9 @@ namespace KrishnaRajamannar.NEA.Views
             radioButtons.Add(option5rb);
             radioButtons.Add(option6rb);
 
+            // Searches through each radio button to check which button was selected
+            // Assigns the value of the checked radio button as the answer input for 
+            // a multiple choice question and it disables the radio buttons from being selected again
             foreach (RadioButton radioButton in radioButtons)
             {
                 if (radioButton.IsChecked == true)

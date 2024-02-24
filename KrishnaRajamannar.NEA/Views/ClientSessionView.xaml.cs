@@ -1,19 +1,8 @@
 ﻿using KrishnaRajamannar.NEA.ViewModels;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using System.Windows.Threading;
 
 namespace KrishnaRajamannar.NEA.Views
 {
@@ -29,7 +18,7 @@ namespace KrishnaRajamannar.NEA.Views
             InitializeComponent();
             _clientSessionViewModel = clientSessionViewModel;
             DataContext = _clientSessionViewModel;
-
+ 
             _clientSessionViewModel.ConnectToServer();
 
             _clientSessionViewModel.TextQuestionRecieved += _clientSessionViewModel_TextQuestionRecieved;
@@ -41,18 +30,21 @@ namespace KrishnaRajamannar.NEA.Views
 
         private void _clientSessionViewModel_ShowMultipleQuizFeedbackWindow(object sender, Events.ShowAccountParameterWindowEventArgs e)
         {
-
-            this.Dispatcher.Invoke(() =>
+            // This is used to return onto the UI thread
+            System.Windows.Application.Current.Dispatcher.Invoke(System.Windows.Threading.DispatcherPriority.Normal, (Action)delegate ()
             {
+                // This code is used to pass data from the View Model to the MultipleReviewFeedbackWindow
                 _clientSessionViewModel.MultipleReviewQuizFeedbackViewModel.UserID = e.UserID;
                 multipleReviewFeedbackWindow = new MultipleReviewFeedbackWindow(_clientSessionViewModel.MultipleReviewQuizFeedbackViewModel);
-                this.Close();
                 multipleReviewFeedbackWindow.Show();
+                this.Close();
             });
         }
 
+        // Disables the ability to submit another answer to a question after the timer has finished
         private void _clientSessionViewModel_AnswerTimerFinished(object sender, Events.TimerEventArgs e)
         {
+            // This is also used to return onto the UI thread
             this.Dispatcher.Invoke(() =>
             {
                 submitBtn.IsEnabled = false;
@@ -68,6 +60,8 @@ namespace KrishnaRajamannar.NEA.Views
             });
         }
 
+        // Used to display the stack panel for a multiple choice question if a multiple choice based question was recieved
+        // Hides the text-based question stack panel as well
         private void _clientSessionViewModel_MultipleChoiceQuestionRecieved(object sender, Events.QuestionRecievedEventArgs e)
         {
             this.Dispatcher.Invoke(() =>
@@ -105,6 +99,7 @@ namespace KrishnaRajamannar.NEA.Views
             });
         }
 
+        // Used to submit an answer to a question
         private void submitBtn_Click(object sender, RoutedEventArgs e)
         {
             submitBtn.IsEnabled = false;
@@ -125,6 +120,7 @@ namespace KrishnaRajamannar.NEA.Views
             radioButtons.Add(option5rb);
             radioButtons.Add(option6rb);
 
+            // Used to check which radio button was selected as an answer to a question
             foreach (RadioButton radioButton in radioButtons) 
             {
                 if (radioButton.IsChecked == true) 

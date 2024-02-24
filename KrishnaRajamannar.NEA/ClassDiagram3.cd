@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="KrishnaRajamannar.NEA.Views.MainMenu">
+    <Position X="11.25" Y="0.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAABABAIAAAAAEAAAAYggAADAAAEEAAAQ=</HashCode>
+      <FileName>Views\MainMenu.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="KrishnaRajamannar.NEA.ViewModels.MainMenuViewModel">
+    <Position X="5.75" Y="0.5" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AAACAAICACBAFAAAAQZAoCgIgBAYCAAcmAYAKABACRA=</HashCode>
+      <FileName>ViewModels\MainMenuViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="KrishnaRajamannar.NEA.Services.Database.SessionService">
+    <Position X="11.5" Y="5.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAIAAAgAAAgAAAAAAAAAAAAAAAAAAIAAAAgAAAA=</HashCode>
+      <FileName>Services\Database Management\SessionService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

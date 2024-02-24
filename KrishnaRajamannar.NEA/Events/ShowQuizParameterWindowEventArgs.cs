@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace KrishnaRajamannar.NEA.Events
 {
+    // This is used to show a new window and pass data about the quiz that has been selected
+    // Used as an example when showing the independent review quiz window after
+    // selecting a quiz to review
     public class ShowQuizParameterWindowEventArgs
     {
         public bool IsShown { get; set; }

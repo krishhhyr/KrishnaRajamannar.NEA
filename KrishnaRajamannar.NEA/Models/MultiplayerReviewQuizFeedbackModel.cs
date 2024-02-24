@@ -8,8 +8,6 @@ namespace KrishnaRajamannar.NEA.Models
 {
     public class MultiplayerReviewQuizFeedbackModel
     {
-        public int UserID { get; set; }
-        public int QuizID { get; set; }
         public int QuestionNumber { get; set; }
         public string Question { get; set; }
 

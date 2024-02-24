@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace KrishnaRajamannar.NEA.Events
 {
+    // This is used to hide a window 
+    // It would be used when a back button is pressed on a window as an examplep
     public class HideWindowEventArgs : EventArgs
     {
         public bool IsHidden { get; set; }

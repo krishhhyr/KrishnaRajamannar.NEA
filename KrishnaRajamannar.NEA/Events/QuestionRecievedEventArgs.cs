@@ -1,12 +1,11 @@
 ﻿using KrishnaRajamannar.NEA.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace KrishnaRajamannar.NEA.Events
 {
+    // This is used to communciate with the View
+    // to update the user interface based on the question type of the question that was recieved
+    // when reviewing a quiz with other users
     public class QuestionRecievedEventArgs
     {
         public QuestionModel QuestionData { get; set; }

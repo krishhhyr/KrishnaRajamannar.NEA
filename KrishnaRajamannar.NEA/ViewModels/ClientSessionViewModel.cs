@@ -4,19 +4,16 @@ using KrishnaRajamannar.NEA.Models.Dto;
 using KrishnaRajamannar.NEA.Services;
 using KrishnaRajamannar.NEA.Services.Connection;
 using KrishnaRajamannar.NEA.Services.Interfaces;
-using KrishnaRajamannar.NEA.Views;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Security;
 using System.Text.Json;
-using System.Threading;
-using System.Windows.Controls;
 using System.Windows.Threading;
 
 namespace KrishnaRajamannar.NEA.ViewModels
 {
+    // Inherits the NotifyPropertyChanged interface 
     public class ClientSessionViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -29,10 +26,14 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
         public MultipleReviewQuizFeedbackViewModel MultipleReviewQuizFeedbackViewModel;
 
+        // These are variables which have data being passed from the Main Menu window
+        // This represents the user data of the client connecting to a session
         public string Username;
         public int UserID;
         public int TotalPoints;
+        // This is used to keep track of the question that the quiz is currently on
         public int QuestionNumber = 1;
+
         private DispatcherTimer answerTimer;
         private TimeSpan AnswerTime;
 
@@ -46,6 +47,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
             MultipleReviewQuizFeedbackViewModel = App.ServiceProvider.GetService(typeof(MultipleReviewQuizFeedbackViewModel)) as MultipleReviewQuizFeedbackViewModel;
 
+            // These represent events which have been subscribed to
             answerTimer.Tick += AnswerTimer_Tick;
             _clientService.ClientConnected += OnClientConnected;
             _clientService.StartQuizEvent += OnStartQuizEvent;
@@ -54,6 +56,8 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
         }
 
+        // This is used to display the quiz feedback once the client side receives a response from the server/host about 
+        // ending the quiz review 
         private void OnEndQuizEvent(object sender, EndQuizEventArgs e)
         {
             ShowAccountParameterWindowEventArgs args = new ShowAccountParameterWindowEventArgs();
@@ -62,6 +66,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
             OnShowMultipleQuizFeedbackWindow(args);
         }
 
+        // Passes the server responses that have been received
         private void OnProcessServerResponse(object sender, Events.ProcessServerResponseEventArgs e)
         {
             ProcessServerResponse(e.ServerResponse);
@@ -72,6 +77,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
             ProcessServerResponse(e.ServerResponse);
         }
 
+        // Used to load the session data to the UI after the server has responded after a client connects to a session
         private void OnClientConnected(object sender, Events.ClientConnectedEventArgs e)
         {
             LoadData(e.ServerResponse);
@@ -79,6 +85,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
         #region Properties
 
+        // Used to bind with UI
         public void RaisePropertyChange(string propertyname)
         {
             if (PropertyChanged != null)
@@ -153,6 +160,8 @@ namespace KrishnaRajamannar.NEA.ViewModels
             }
         }
 
+        // Used to bind with a data grid that displays the user details of all the users
+        // who have joined a session
         private List<UserSessionData> _joinedUsers = new List<UserSessionData>();
         public List<UserSessionData> JoinedUsers
         {
@@ -342,6 +351,8 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
         #endregion
 
+        // An event which is used to change the values of UI elements when 
+        // a text-based question is displayed
         protected virtual void OnShowTextQuestion(QuestionRecievedEventArgs e) 
         {
             QuestionRecievedEventHandler handler = TextQuestionRecieved;
@@ -351,6 +362,8 @@ namespace KrishnaRajamannar.NEA.ViewModels
             }
         }
 
+        // An event which is used to change the values of UI elements when 
+        // a multiple-choice question is displayed
         protected virtual void OnShowMultipleChoiceQuestion(QuestionRecievedEventArgs e) 
         {
             QuestionRecievedEventHandler handler = MultipleChoiceQuestionRecieved;
@@ -360,6 +373,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
             }
         }
 
+        // Used to disable UI elements when the answer timer has reached 0
         protected virtual void OnDisableAnsweringQuestion(TimerEventArgs e) 
         {
             TimerEventHandler handler = AnswerTimerFinished;
@@ -368,7 +382,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 handler(this, e);
             }
         }
-
+        // Used to display the MultipleQuizFeedbackWindow
         protected virtual void OnShowMultipleQuizFeedbackWindow(ShowAccountParameterWindowEventArgs e)
         {
             ShowAccountParameterWindowEventHandler handler = ShowMultipleQuizFeedbackWindow;
@@ -378,7 +392,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
             }
         }
 
-        // need an event for each question type?
+        // Used to process all the general server responses that a client recieves 
         public void ProcessServerResponse(ServerResponse response)
         {
             if (response != null)
@@ -389,12 +403,13 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 {
                     switch (response.DataType) 
                     {
+                        // For this case, this is used when the server sends a question to the client to review
                         case "SendQuestion":
                             QuestionModel question = JsonSerializer.Deserialize<QuestionModel>(response.Data);
-                            // mc question
-
                             AnswerInput = null;
 
+                            // Checks the type of question 
+                            // If question.Option = "", then it is a text-based question
                             if (question.Option1 != "")
                             {
                                 QuestionRecievedEventArgs args = new QuestionRecievedEventArgs();
@@ -407,10 +422,12 @@ namespace KrishnaRajamannar.NEA.ViewModels
                             }
                             NumberOfQuestion = QuestionNumber;
                             QuestionNumber++;
+                            // Used to assign the values of the question to UI elements
                             AssignQuestionValues(question);
                             AssignAnswerTimeValues(question.Duration);
                             answerTimer.Start();
                             break;
+                            // For this case, this is used when the server sends the correct answer for a question back to the client 
                         case "SendCorrectAnswer":
                             ValidAnswerMessage = response.Data;
                             RetrieveNumberOfPoints(ValidAnswerMessage);
@@ -429,11 +446,9 @@ namespace KrishnaRajamannar.NEA.ViewModels
             }
         }
 
-        // change NULL bit in Question service!
         private void AssignQuestionValues(QuestionModel questionData) 
         {
             Question = questionData.Question;
-            AnswerTimeLimit = questionData.Duration.ToString();
             Option1 = questionData.Option1;
             Option2 = questionData.Option2;
             Option3 = questionData.Option3;
@@ -442,6 +457,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
             Option6 = questionData.Option6;
         }
 
+        // Used to assign the value of the answer timer
         private void AssignAnswerTimeValues(int answerTime) 
         {
             AnswerTimeLimit = answerTime.ToString();
@@ -449,9 +465,10 @@ namespace KrishnaRajamannar.NEA.ViewModels
             answerTimer.Interval = TimeSpan.FromSeconds(1);
         }
 
-        // need to send event to stop answering when timer is up...
+        // Used to decrement the answer timer
         private void AnswerTimer_Tick(object? sender, EventArgs e)
         {
+            // When the answerTime reaches 0, the answer inputted is sent back to the server
             if (AnswerTime == TimeSpan.Zero) 
             {
                 answerTimer.Stop();
@@ -464,8 +481,11 @@ namespace KrishnaRajamannar.NEA.ViewModels
             }
         }
 
+        // This is used to connect to the server in order to join a session
         public void ConnectToServer()
         {
+            // Used to retrieve the IP address and port number of the host's machine to connect to
+            // Uses a Tuple structure to store the both values in one place
             (string, int) connectionInfo = _sessionService.GetConnectionData(Convert.ToInt32(SessionId));
 
             string ipAddressConnect = connectionInfo.Item1;
@@ -476,25 +496,34 @@ namespace KrishnaRajamannar.NEA.ViewModels
             Message = "Connected.";
         }
 
+        // Used to send the answer inputted to the server once the time reaches 0
         public void SendAnswer() 
         {
             TimerEventArgs args = new TimerEventArgs();
             OnDisableAnsweringQuestion(args);
             Message = "Times up! Validating Response...";
+            // Sends the answer to the server
             _clientService.SendDataToServer(AnswerInput, "SendAnswer", UserID, Username, TotalPoints);
         }
 
+        // Used to break down the message that the server sent back 
+        // Used to retrieve the number of points that have been gained for a question
         public void RetrieveNumberOfPoints(string validAnswerMessage) 
         {
+            // Splits the two sentences "Correct Answer. 3 points have been awarded!"
+            // into "3 points been awarded!"
             string[] spiltMessage = validAnswerMessage.Split('.');
+            // Splits the sentence into an array of words 
+            // {"", "3", "points", "have","been","awarded!"}
             string[] test = spiltMessage[1].Split(' ');
             NumberOfPointsGained = NumberOfPointsGained + Convert.ToInt32(test[1]);
         }
 
+        // Used to load the data grid with the details of the users who join a session
+        // and it is used to notify the UI of the details of the session which has 
+        // been joined
         public void LoadData(ServerResponse response)
         {
-            List<string> test = new List<string>(); 
-
             if (response != null)
             {
                 SessionId = response.SessionId;
@@ -502,6 +531,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
                 if (!string.IsNullOrEmpty(response.Data))
                 {
                     SessionData data = JsonSerializer.Deserialize<SessionData>(response.Data);
+                    // This data represents the details of the session which has been joined
                     if (data != null)
                     {
                         QuizSelected = data.QuizSelected;
@@ -511,10 +541,7 @@ namespace KrishnaRajamannar.NEA.ViewModels
 
                         if (data.UserSessions.Any())
                         {
-
                             JoinedUsers.Clear();
-
-                            //_userSessionData.AddRange(data.UserSessions);
                             JoinedUsers = data.UserSessions.ToList();
 
                             NumberofJoinedUsers = JoinedUsers.Count;

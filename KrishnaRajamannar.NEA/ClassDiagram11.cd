@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="KrishnaRajamannar.NEA.Views.ServerSessionView">
+    <Position X="9.75" Y="0.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAACAEgAACBIAAAgQAAAAAAAIAQAAAAAAA=</HashCode>
+      <FileName>Views\ServerSessionView.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="KrishnaRajamannar.NEA.ViewModels.ServerSessionViewModel">
+    <Position X="6" Y="0.5" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>DAAAF9V7AkIEd5hIA0S4YAgJ4x4yDKhMtBAMOaCEgwg=</HashCode>
+      <FileName>ViewModels\ServerSessionViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="KrishnaRajamannar.NEA.Services.Connection.ServerService">
+    <Position X="3" Y="0.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>ACIAEAAABEAAEAIgAAAAICAhQABAAAADBBAQAAAAAAI=</HashCode>
+      <FileName>Services\Client-Server Communication\ServerService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="KrishnaRajamannar.NEA.Services.Database.SessionService">
+    <Position X="3" Y="6.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAIAAAgAAAgAAAAAAAAAAAAAAAAAAIAAAAgAAAA=</HashCode>
+      <FileName>Services\Database Management\SessionService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="KrishnaRajamannar.NEA.Services.Database.UserService">
+    <Position X="9.75" Y="4.25" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AQAAABAAAQAEAAgAAIAAAAAAQAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Services\Database Management\UserService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="KrishnaRajamannar.NEA.Services.Database.QuizService">
+    <Position X="9.75" Y="7.25" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAAACAgIAAAAAAAABAAAAAAEAAAQAAAAAAA=</HashCode>
+      <FileName>Services\Database Management\QuizService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="KrishnaRajamannar.NEA.Services.Database.QuestionService">
+    <Position X="13" Y="4.25" Width="3" />
+    <TypeIdentifier>
+      <HashCode>ABAAACAAEAAEAAgAAEAACAAAKABCAAAgAAAAQAAAAAQ=</HashCode>
+      <FileName>Services\Database Management\QuestionService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="KrishnaRajamannar.NEA.Services.Database_Management.MultiplayerReviewQuizService">
+    <Position X="13" Y="0.5" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAACAAAA=</HashCode>
+      <FileName>Services\Database Management\MultiplayerReviewQuizService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

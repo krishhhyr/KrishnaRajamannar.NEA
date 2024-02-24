@@ -5,8 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:KrishnaRajamannar.NEA.Views"
         mc:Ignorable="d"
-        Title="MultipleReviewFeedbackWindow" Height="495" Width="880" 
-        ResizeMode="NoResize" FontFamily="Segoe UI Light">
+        Title="MultipleReviewFeedbackWindow" Height="495" Width="880" FontFamily="Segoe UI Light">
 
     <Border Background="#a1a1ce" BorderBrush="AntiqueWhite" BorderThickness="2">
         <Grid>
