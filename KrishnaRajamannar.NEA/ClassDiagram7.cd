@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="KrishnaRajamannar.NEA.Views.IndependentReviewQuiz">
+    <Position X="10.5" Y="3" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>QAAAAQACAAAAEAAEIAAAAAAASAAAAAAAAAAAAAAICAA=</HashCode>
+      <FileName>Views\IndependentReviewQuiz.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="KrishnaRajamannar.NEA.ViewModels.IndependentReviewViewModel">
+    <Position X="6.25" Y="0.5" Width="4" />
+    <TypeIdentifier>
+      <HashCode>ACAAANNzAABICABAAkIgIgoYoSgAAQJGGgBMICAQgQI=</HashCode>
+      <FileName>ViewModels\IndependentReviewViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="KrishnaRajamannar.NEA.Services.Database.IndependentReviewQuizService">
+    <Position X="1" Y="7.5" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEACAAgAgAAAAAAAAAACAAAAACAAAAAAAAAAA=</HashCode>
+      <FileName>Services\Database Management\IndependentReviewQuizService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="KrishnaRajamannar.NEA.Models.IndependentReviewQuizModel">
+    <Position X="1" Y="2.5" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AAAABIBzAAAAAAgAAAAAAAAQAAAAEAAEAAIAAgAAAAA=</HashCode>
+      <FileName>Models\IndependentReviewQuizModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

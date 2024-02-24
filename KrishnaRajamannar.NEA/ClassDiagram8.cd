@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="KrishnaRajamannar.NEA.Views.IndependentReviewFeedback">
+    <Position X="10" Y="2.5" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAACAAAAAAAAEAAAAgAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Views\IndependentReviewFeedback.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="KrishnaRajamannar.NEA.ViewModels.IndependentReviewQuizFeedbackViewModel">
+    <Position X="5.75" Y="2.25" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAABAAAgAAAAAAAAAAAIAAAIAAAAAAAAgAAAAA=</HashCode>
+      <FileName>ViewModels\IndependentReviewQuizFeedbackViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="KrishnaRajamannar.NEA.Services.Database.IndependentReviewQuizService">
+    <Position X="6" Y="6" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEACAAgAgAAAAAAAAAACAAAAACAAAAAAAAAAA=</HashCode>
+      <FileName>Services\Database Management\IndependentReviewQuizService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="KrishnaRajamannar.NEA.Models.IndependentReviewQuizFeedbackModel">
+    <Position X="2" Y="6.25" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAEAAAAAAAAAAA=</HashCode>
+      <FileName>Models\IndependentReviewQuizFeedbackModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

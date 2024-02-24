@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="KrishnaRajamannar.NEA.Views.ClientSessionView">
+    <Position X="13.25" Y="0.5" Width="4.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAAQAAAAACAAAAAAQAAABAAAAgAAAAAAAA=</HashCode>
+      <FileName>Views\ClientSessionView.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="KrishnaRajamannar.NEA.ViewModels.ClientSessionViewModel">
+    <Position X="9" Y="0.5" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>hWAAEMB/AEISFIBAK0AgKAgIix6ADAjEEARcMAKIwQg=</HashCode>
+      <FileName>ViewModels\ClientSessionViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="KrishnaRajamannar.NEA.Services.Database.SessionService">
+    <Position X="5.25" Y="0.5" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAIAAAgAAAgAAAAAAAAAAAAAAAAAAIAAAAgAAAA=</HashCode>
+      <FileName>Services\Database Management\SessionService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="KrishnaRajamannar.NEA.Services.Connection.ClientService">
+    <Position X="5.25" Y="3.25" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AQCAIAAAAEACgAAAAAgAAAACAAAAAAACBAAABAAAQAA=</HashCode>
+      <FileName>Services\Client-Server Communication\ClientService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="KrishnaRajamannar.NEA.Events.ProcessServerResponseEventArgs">
+    <Position X="0.5" Y="0.5" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Events\ProcessServerResponseEventArgs.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="KrishnaRajamannar.NEA.Models.Dto.UserSessionData">
+    <Position X="6" Y="8.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAACAAAAAAAAAQAAAAgIAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\DTO\UserSessionData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="KrishnaRajamannar.NEA.Models.DTO.ClientResponse">
+    <Position X="3.5" Y="8.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAIAAAAAAAAAAAAIAAAAABAAAAAAAAAIAAA=</HashCode>
+      <FileName>Models\DTO\ClientResponse.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="KrishnaRajamannar.NEA.Models.Dto.ServerResponse">
+    <Position X="0.75" Y="8.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAIAAAAAAAAAAAAIAAAAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\DTO\ServerResponse.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="KrishnaRajamannar.NEA.Events.ClientConnectedEventArgs">
+    <Position X="0.5" Y="3.25" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Events\ClientConnectedEventArgs.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="KrishnaRajamannar.NEA.Events.StartQuizEventArgs">
+    <Position X="0.5" Y="6" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Events\StartQuizEventArgs.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="KrishnaRajamannar.NEA.Events.EndQuizEventArgs">
+    <Position X="2.75" Y="6" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Events\EndQuizEventArgs.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Delegate Name="KrishnaRajamannar.NEA.Events.ProcessServerResponseEventHandler">
+    <Position X="0.5" Y="1.75" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAQAAEAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Events\ProcessServerResponseEventArgs.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="KrishnaRajamannar.NEA.Events.ClientConnectedEventHandler">
+    <Position X="0.5" Y="4.5" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Events\ClientConnectedEventArgs.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="KrishnaRajamannar.NEA.Events.StartQuizEventHandler" Collapsed="true">
+    <Position X="0.5" Y="7.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Events\StartQuizEventArgs.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="KrishnaRajamannar.NEA.Events.EndQuizEventHandler" Collapsed="true">
+    <Position X="2.75" Y="7.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>Events\EndQuizEventArgs.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

@@ -51,7 +51,6 @@ namespace KrishnaRajamannar.NEA.Services.Database_Management
                     SELECT UserID, QuizID, Question, Answer, AnsweredCorrectly 
                     FROM MultiplayerQuizFeedback
                     WHERE UserID = @UserID
-                    AND QuizID = 50
                 ";
 
             using SqlConnection connection = new SqlConnection(connectionString);
@@ -74,7 +73,7 @@ namespace KrishnaRajamannar.NEA.Services.Database_Management
 
                 multiplayerQuizFeedback.Add(new MultiplayerReviewQuizFeedbackModel() 
                 { QuestionNumber = questionNumber, Question = question, Answer = answer, 
-                    AnsweredCorrectly = isCorrect, UserID = userID, QuizID = quizID });
+                    AnsweredCorrectly = isCorrect});
                 questionNumber++;
             }
             return multiplayerQuizFeedback;
